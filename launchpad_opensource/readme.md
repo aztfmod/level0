@@ -1,10 +1,4 @@
-# Blueprint level0_launchpad
-
-## Deployment
-To initialize the deployment of the level0_launchpad, just run:
-```bash
-./launchpad.sh launchpad_opensource
-```
+# Blueprint launchpad_opensource
 
 ## Capabilities
 

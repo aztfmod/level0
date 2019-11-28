@@ -20,5 +20,5 @@ resource "random_string" "prefix" {
 }
 
 locals {
-  tfstate-blob-name = "level0_launchpad.tfstate"
+  tfstate-blob-name = var.tf_name
 }
