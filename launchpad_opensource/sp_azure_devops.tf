@@ -3,11 +3,11 @@ resource "azuread_application" "devops" {
 }
 
 resource "azuread_service_principal" "devops" {
-  application_id = "${azuread_application.devops.application_id}"
+  application_id = azuread_application.devops.application_id
 }
 
 resource "azuread_service_principal_password" "devops" {
-  service_principal_id = "${azuread_service_principal.devops.id}"
+  service_principal_id = azuread_service_principal.devops.id
   value                = random_string.devops_password.result
   end_date_relative    = "43200m"
 }
@@ -21,7 +21,7 @@ resource "random_string" "devops_password" {
 
 ## Grant devops app contributor on the current subscription to be able to deploy the blueprint_azure_devops
 resource "azurerm_role_assignment" "devops_role1" {
-  scope                = "${data.azurerm_subscription.primary.id}"
+  scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Owner"
   principal_id         = azuread_service_principal.devops.object_id
 }
