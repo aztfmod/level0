@@ -49,7 +49,7 @@ resource "azurerm_key_vault_secret" "devops_client_id" {
     provider      = azurerm.sp_tfstate
     
     name         = "devops-service-principal-client-id"
-    value        = azuread_service_principal.devops.id
+    value        = azuread_service_principal.devops.application_id
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
