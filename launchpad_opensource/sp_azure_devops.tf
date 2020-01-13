@@ -8,7 +8,13 @@ resource "azuread_application" "devops" {
     # Directory.ReadWrite.All
     resource_access {
       id   = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
-      type = "Scope"
+      type = "Role"
+    }
+
+    # Application.ReadWrite.All
+    resource_access {
+      id   = "1cda74f2-2616-4834-b122-5cb1b07f8a59"
+      type = "Role"
     }
   }
 }
