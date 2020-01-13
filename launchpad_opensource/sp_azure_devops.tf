@@ -1,5 +1,16 @@
 resource "azuread_application" "devops" {
   name                       = "${random_string.prefix.result}devops"
+  
+  # Access to Azure Active Directory Graph
+  required_resource_access {
+    resource_app_id = "00000002-0000-0000-c000-000000000000"
+
+    # Read and Write all applications
+    resource_access {
+      id   = "1cda74f2-2616-4834-b122-5cb1b07f8a59"
+      type = "Role"
+    }
+  }
 }
 
 resource "azuread_service_principal" "devops" {
