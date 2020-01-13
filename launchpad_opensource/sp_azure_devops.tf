@@ -71,3 +71,23 @@ resource "azurerm_key_vault_secret" "devops_password" {
     value        = random_string.devops_password.result
     key_vault_id = azurerm_key_vault.tfstate.id
 }
+
+
+##
+#    Grant conscent to the azure ad application
+##
+
+locals {
+  grant_admin_concent_command = "az ad app permission admin-consent --id ${azuread_application.devops.application_id}"
+}
+resource "null_resource" "grant_admin_concent" {
+    depends_on = [azuread_application.devops]
+
+    provisioner "local-exec" {
+        command = local.grant_admin_concent_command
+    }
+
+    triggers = {
+        grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
+    }
+}
