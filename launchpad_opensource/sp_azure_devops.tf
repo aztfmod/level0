@@ -81,7 +81,7 @@ locals {
   grant_admin_concent_command = "az ad app permission admin-consent --id ${azuread_application.devops.application_id}"
 }
 resource "null_resource" "grant_admin_concent" {
-    depends_on = [azuread_application.devops]
+    depends_on = [azurerm_role_assignment.devops_role1]
 
     provisioner "local-exec" {
         command = local.grant_admin_concent_command

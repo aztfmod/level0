@@ -1,6 +1,11 @@
 # The data object waits for the permissions to be set before it can be used by the provider
 data "azuread_application" "tfstate" {
-    depends_on      = [azurerm_key_vault.tfstate, azurerm_role_assignment.sp_tfstate_reader, azurerm_role_assignment.tfstate_role1]
+    depends_on      = [
+        azurerm_key_vault.tfstate, 
+        azurerm_role_assignment.sp_tfstate_reader, 
+        azurerm_role_assignment.tfstate_role1,
+        null_resource.grant_admin_concent
+    ]
     name            = azuread_application.tfstate.name
 }
 
