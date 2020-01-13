@@ -1,11 +1,11 @@
 # The data object waits for the permissions to be set before it can be used by the provider
-data "azuread_service_principal" "tfstate" {
+data "azuread_application" "tfstate" {
     depends_on      = [azurerm_key_vault.tfstate, azurerm_role_assignment.sp_tfstate_reader, azurerm_role_assignment.tfstate_role1]
-    display_name    = azuread_application.tfstate.name
+    name            = azuread_application.tfstate.name
 }
 
 provider "azurerm" {
-    client_id       = data.azuread_service_principal.tfstate.application_id
+    client_id       = data.azuread_application.tfstate.application_id
     client_secret   = random_string.tfstate_password.result
     subscription_id = data.azurerm_client_config.current.subscription_id
     tenant_id       = data.azurerm_client_config.current.tenant_id
