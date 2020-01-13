@@ -41,3 +41,4 @@ resource "azurerm_role_assignment" "tfstate_role1" {
   role_definition_name = "Owner"
   principal_id         = azuread_service_principal.tfstate.object_id
 }
+
