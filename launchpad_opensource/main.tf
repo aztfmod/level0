@@ -10,6 +10,10 @@ provider "random" {
   version = "=2.2.1"
 }
 
+provider "null" {
+  version = "=2.1"
+}
+
 data "azurerm_subscription" "primary" {}
 
 
