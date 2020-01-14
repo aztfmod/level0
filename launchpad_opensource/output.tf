@@ -25,13 +25,13 @@ output "tfstate_map" {
   )
 }
 
-output "deployment_msi" {
-  value = map(
-    "id", azurerm_user_assigned_identity.tfstate.id,
-    "principal_id", azurerm_user_assigned_identity.tfstate.principal_id,
-    "client_id", azurerm_user_assigned_identity.tfstate.client_id
-  )
-}
+# output "deployment_msi" {
+#   value = map(
+#     "id", azurerm_user_assigned_identity.tfstate.id,
+#     "principal_id", azurerm_user_assigned_identity.tfstate.principal_id,
+#     "client_id", azurerm_user_assigned_identity.tfstate.client_id
+#   )
+# }
 
 output "keyvault_id" {
   value = azurerm_key_vault.tfstate.id

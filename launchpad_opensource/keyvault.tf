@@ -61,17 +61,17 @@ resource "azurerm_key_vault" "tfstate" {
       ]
     }
 
-    # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
-    access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azurerm_user_assigned_identity.tfstate.principal_id
+    # # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = azurerm_user_assigned_identity.tfstate.principal_id
 
-      key_permissions = []
+    #   key_permissions = []
 
-      secret_permissions = [
-          "get",
-      ]
-    }
+    #   secret_permissions = [
+    #       "get",
+    #   ]
+    # }
 
 }
 
