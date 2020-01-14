@@ -10,7 +10,8 @@ data "azuread_application" "tfstate" {
 }
 
 provider "azurerm" {
-    client_id       = data.azuread_application.tfstate.application_id
+    # client_id       = data.azuread_application.tfstate.application_id
+    client_id          = "c7607f52-2e2e-4953-a421-aa48a025db6d"
     client_secret   = random_string.tfstate_password.result
     subscription_id = data.azurerm_client_config.current.subscription_id
     tenant_id       = data.azurerm_client_config.current.tenant_id
