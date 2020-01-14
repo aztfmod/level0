@@ -75,7 +75,7 @@ resource "azurerm_key_vault" "tfstate" {
 
 }
 
-# To allow deployment from developer machine
+# To allow deployment from developer machine - bootstrap
 # Todo: add a condition
 resource "azurerm_key_vault_access_policy" "developer" {
   key_vault_id = azurerm_key_vault.tfstate.id
@@ -86,7 +86,10 @@ resource "azurerm_key_vault_access_policy" "developer" {
   key_permissions = []
 
   secret_permissions = [
-    "get",
+      "set",
+      "get",
+      "list",
+      "delete"
   ]
 }
 
