@@ -31,23 +31,23 @@ resource "azurerm_key_vault_secret" "tfstate_blob_name" {
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
-resource "azurerm_key_vault_secret" "tfstate_msi_client_id" {
-    name         = "tfstate-msi-client-id"
-    value        = azurerm_user_assigned_identity.tfstate.client_id
-    key_vault_id = azurerm_key_vault.tfstate.id
-}
+# resource "azurerm_key_vault_secret" "tfstate_msi_client_id" {
+#     name         = "tfstate-msi-client-id"
+#     value        = azurerm_user_assigned_identity.tfstate.client_id
+#     key_vault_id = azurerm_key_vault.tfstate.id
+# }
 
-resource "azurerm_key_vault_secret" "tfstate_msi_principal_id" {
-    name         = "tfstate-msi-principal-id"
-    value        = azurerm_user_assigned_identity.tfstate.principal_id
-    key_vault_id = azurerm_key_vault.tfstate.id
-}
+# resource "azurerm_key_vault_secret" "tfstate_msi_principal_id" {
+#     name         = "tfstate-msi-principal-id"
+#     value        = azurerm_user_assigned_identity.tfstate.principal_id
+#     key_vault_id = azurerm_key_vault.tfstate.id
+# }
 
-resource "azurerm_key_vault_secret" "tfstate_msi_id" {
-    name         = "tfstate-msi-id"
-    value        = azurerm_user_assigned_identity.tfstate.id
-    key_vault_id = azurerm_key_vault.tfstate.id
-}
+# resource "azurerm_key_vault_secret" "tfstate_msi_id" {
+#     name         = "tfstate-msi-id"
+#     value        = azurerm_user_assigned_identity.tfstate.id
+#     key_vault_id = azurerm_key_vault.tfstate.id
+# }
 
 ### Service Principal for devops 
 resource "azurerm_key_vault_secret" "tfstate_sp_devops_subscription_id" {
