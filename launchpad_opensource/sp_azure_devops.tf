@@ -47,32 +47,24 @@ resource "azurerm_role_assignment" "devops_role1" {
 
 ## Store the details in keyvault
 resource "azurerm_key_vault_secret" "devops_application_id" {
-    provider      = azurerm.sp_tfstate
-    
     name         = "devops-application-id"
     value        = azuread_application.devops.application_id
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
 resource "azurerm_key_vault_secret" "devops_object_id" {
-    provider      = azurerm.sp_tfstate
-    
     name         = "devops-service-principal-object-id"
     value        = azuread_service_principal.devops.object_id
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
 resource "azurerm_key_vault_secret" "devops_client_id" {
-    provider      = azurerm.sp_tfstate
-    
     name         = "devops-service-principal-client-id"
     value        = azuread_service_principal.devops.id
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
 resource "azurerm_key_vault_secret" "devops_password" {
-    provider      = azurerm.sp_tfstate
-    
     name         = "devops-service-principal-password"
     value        = random_string.devops_password.result
     key_vault_id = azurerm_key_vault.tfstate.id
