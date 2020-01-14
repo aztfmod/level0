@@ -63,7 +63,7 @@ resource "azurerm_key_vault" "tfstate" {
 
     access_policy {
       tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = var.logged_user_objectId
+      object_id       = azuread_group.developers_rover.id
 
       key_permissions = []
 
@@ -110,3 +110,6 @@ resource "azurerm_key_vault" "tfstate" {
 
 
 
+resource "azuread_group" "developers_rover" {
+  name = "caf-level0-rover-developers"
+}
