@@ -63,7 +63,7 @@ resource "azurerm_key_vault" "tfstate" {
 
     access_policy {
       tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azurerm_user_assigned_identity.tfstate.principal_id
+      object_id       = var.logged_user_objectId
 
       key_permissions = []
 
