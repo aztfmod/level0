@@ -78,23 +78,23 @@ resource "azurerm_key_vault" "tfstate" {
 
 }
 
-# # To allow deployment from developer machine - bootstrap
-# # Todo: add a condition
-# resource "azurerm_key_vault_access_policy" "developer" {
-#   key_vault_id = azurerm_key_vault.tfstate.id
+# To allow deployment from developer machine - bootstrap
+# Todo: add a condition
+resource "azurerm_key_vault_access_policy" "developer" {
+  key_vault_id = azurerm_key_vault.tfstate.id
 
-#   tenant_id = data.azurerm_client_config.current.tenant_id
-#   object_id = var.logged_user_objectId
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = var.logged_user_objectId
 
-#   key_permissions = []
+  key_permissions = []
 
-#   secret_permissions = [
-#       "set",
-#       "get",
-#       "list",
-#       "delete"
-#   ]
-# }
+  secret_permissions = [
+      "set",
+      "get",
+      "list",
+      "delete"
+  ]
+}
 
 
 
