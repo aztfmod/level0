@@ -3,8 +3,6 @@ provider "azurerm" {
 }
 
 terraform {
-    backend "azurerm" {
-    }
 }
 
 provider "azuread" {
