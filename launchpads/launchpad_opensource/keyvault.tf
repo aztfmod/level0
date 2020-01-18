@@ -28,7 +28,7 @@ resource "azurerm_key_vault" "tfstate" {
     sku_name = "standard"
 
     tags = {
-      kvtfstate="level0"
+      workspace = var.workspace
     }
 
     # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
@@ -60,25 +60,41 @@ resource "azurerm_key_vault" "tfstate" {
       ]
     }
 
+    ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
+    access_policy {
+      tenant_id       = data.azurerm_client_config.current.tenant_id
+      object_id       = var.logged_user_objectId
+
+      key_permissions = []
+
+      secret_permissions = [
+          "set",
+          "get",
+          "list",
+          "delete"
+      ]
+    }
+
+
 }
 
-# To allow deployment from developer machine - bootstrap
-# Todo: add a condition
-resource "azurerm_key_vault_access_policy" "developer" {
-  key_vault_id = azurerm_key_vault.tfstate.id
+# # To allow deployment from developer machine - bootstrap
+# # Todo: add a condition
+# resource "azurerm_key_vault_access_policy" "developer" {
+#   key_vault_id = azurerm_key_vault.tfstate.id
 
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.logged_user_objectId
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = var.logged_user_objectId
 
-  key_permissions = []
+#   key_permissions = []
 
-  secret_permissions = [
-      "set",
-      "get",
-      "list",
-      "delete"
-  ]
-}
+#   secret_permissions = [
+#       "set",
+#       "get",
+#       "list",
+#       "delete"
+#   ]
+# }
 
 
 

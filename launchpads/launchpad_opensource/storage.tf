@@ -1,11 +1,3 @@
-resource "azurerm_resource_group" "rg" {
-  name     = "${random_string.prefix.result}-terraform-state"
-  location = var.location
-
-    tags = {
-    blueprint  = "tfstate"
-  }
-}
 
 resource "random_string" "stg" {
     length  = 17
@@ -29,14 +21,13 @@ resource "azurerm_storage_account" "stg" {
   account_replication_type = "RAGRS"
 
   tags = {
-    stgtfstate  = "level0"
-    container   = "tfstate"
+    workspace   = var.workspace
     prefix      = random_string.prefix.result
   }
 }
 
 resource "azurerm_storage_container" "tfstate" {
-  name                  = "tfstate"
+  name                  = "level0"
   storage_account_name  = azurerm_storage_account.stg.name
   container_access_type = "private"
 }

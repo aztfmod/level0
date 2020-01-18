@@ -2,6 +2,11 @@ provider "azurerm" {
   version = "=1.40"
 }
 
+terraform {
+    backend "azurerm" {
+    }
+}
+
 provider "azuread" {
   version = "=0.7.0"
 }
@@ -27,5 +32,10 @@ resource "random_string" "prefix" {
 }
 
 locals {
+  landingzone_tag          = {
+    "landingzone" = basename(abspath(path.root))
+  }
+  tags              = merge(var.tags, local.landingzone_tag)
   tfstate-blob-name = var.tf_name
+  prefix            = random_string.prefix.result
 }
