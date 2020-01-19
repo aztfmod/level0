@@ -69,6 +69,14 @@ resource "azurerm_key_vault_secret" "tfstate_sp_devops_client_id" {
     key_vault_id = azurerm_key_vault.tfstate.id
 }
 
+resource "azurerm_key_vault_secret" "tfstate_sp_devops_object_id" {
+    depends_on    = [azurerm_key_vault_access_policy.developer]
+    name         = "tfstate-sp-devops-object-id"
+    value        = azuread_service_principal.devops.object_id
+    key_vault_id = azurerm_key_vault.tfstate.id
+}
+
+
 resource "azurerm_key_vault_secret" "tfstate_sp_devops_client_secret" {
     depends_on    = [azurerm_key_vault_access_policy.developer]
     name         = "tfstate-sp-devops-client-secret"
