@@ -31,23 +31,23 @@ resource "azurerm_key_vault" "launchpad" {
       workspace = var.workspace
     }
 
-    # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
+    # # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = azuread_service_principal.launchpad.object_id
+    #   application_id  = azuread_service_principal.launchpad.application_id
+
+    #   key_permissions = []
+
+    #   secret_permissions = [
+    #       "set",
+    #       "get",
+    #       "list",
+    #       "delete"
+    #   ]
+    # }
+
     access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azuread_service_principal.launchpad.object_id
-      application_id  = azuread_service_principal.launchpad.application_id
-
-      key_permissions = []
-
-      secret_permissions = [
-          "set",
-          "get",
-          "list",
-          "delete"
-      ]
-    }
-
-      access_policy {
       tenant_id       = data.azurerm_client_config.current.tenant_id
       object_id       = azuread_service_principal.launchpad.application_id
 
