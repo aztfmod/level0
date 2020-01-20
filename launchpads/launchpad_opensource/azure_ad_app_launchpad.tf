@@ -96,11 +96,6 @@ resource "azurerm_key_vault_secret" "launchpad_application_id" {
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
-resource "azurerm_key_vault_secret" "launchpad_object_id" {
-    name         = "launchpad-service-principal-object-id"
-    value        = azuread_service_principal.launchpad.object_id
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
 
 resource "azurerm_key_vault_secret" "launchpad_client_id" {
     name         = "launchpad-service-principal-client-id"

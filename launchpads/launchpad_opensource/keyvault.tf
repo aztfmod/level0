@@ -75,20 +75,20 @@ resource "azurerm_key_vault" "launchpad" {
       ]
     }
 
-    ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
-    access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = var.logged_user_objectId
+    # ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = var.logged_user_objectId
 
-      key_permissions = []
+    #   key_permissions = []
 
-      secret_permissions = [
-          "set",
-          "get",
-          "list",
-          "delete"
-      ]
-    }
+    #   secret_permissions = [
+    #       "set",
+    #       "get",
+    #       "list",
+    #       "delete"
+    #   ]
+    # }
 
 
 }
@@ -112,12 +112,12 @@ resource "azurerm_key_vault_access_policy" "developer" {
 }
 
 resource "azurerm_key_vault_access_policy" "rover" {
-  count = var.rover_pilot_object_id == "" ? 0 : 1
+  count = var.rover_pilot_application_id == "" ? 0 : 1
 
   key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.rover_pilot_object_id
+  object_id = var.rover_pilot_application_id
 
   key_permissions = []
 
