@@ -1,0 +1,18 @@
+[submodule "launchpad_opensource/modules/terraform-azurerm-caf-container-registry"]
+	path = launchpad_opensource/modules/terraform-azurerm-caf-container-registry
+	url = git@github.com:aztfmod/terraform-azurerm-caf-container-registry.git
+[submodule "launchpad_opensource/modules/terraform-azurerm-caf-vm"]
+	path = launchpad_opensource/modules/terraform-azurerm-caf-vm
+	url = git@github.com:aztfmod/terraform-azurerm-caf-vm.git
+	branch = 1912
+[submodule "launchpad_opensource/modules/terraform-azurerm-caf-public-ip"]
+	path = launchpad_opensource/modules/terraform-azurerm-caf-public-ip
+	url = git@github.com:aztfmod/terraform-azurerm-caf-public-ip
+	branch=1912
+[submodule "launchpad_opensource/modules/terraform-azurerm-caf-nic"]
+	path = launchpad_opensource/modules/terraform-azurerm-caf-nic
+	url = git@github.com:aztfmod/terraform-azurerm-caf-nic
+[submodule "launchpad_opensource/modules/terraform-azurerm-caf-provisioner"]
+	path = launchpad_opensource/modules/terraform-azurerm-caf-provisioner
+	url = git@github.com:aztfmod/terraform-azurerm-caf-provisioner.git
+	branch = 1912
