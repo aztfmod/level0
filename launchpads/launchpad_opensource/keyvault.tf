@@ -59,20 +59,20 @@ resource "azurerm_key_vault" "launchpad" {
       ]
     }
 
-    # ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
-    # access_policy {
-    #   tenant_id       = data.azurerm_client_config.current.tenant_id
-    #   object_id       = var.logged_user_objectId
+    ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
+    access_policy {
+      tenant_id       = data.azurerm_client_config.current.tenant_id
+      object_id       = var.logged_user_objectId
 
-    #   key_permissions = []
+      key_permissions = []
 
-    #   secret_permissions = [
-    #       "set",
-    #       "get",
-    #       "list",
-    #       "delete"
-    #   ]
-    # }
+      secret_permissions = [
+          "Set",
+          "Get",
+          "List",
+          "Delete"
+      ]
+    }
 
 
 }
