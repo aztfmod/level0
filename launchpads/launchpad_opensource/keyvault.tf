@@ -49,7 +49,7 @@ resource "azurerm_key_vault" "launchpad" {
 
     access_policy {
       tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azuread_service_principal.launchpad.application_id
+      object_id       = azuread_service_principal.launchpad.object_id
 
       key_permissions = []
 
