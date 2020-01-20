@@ -1,3 +1,6 @@
+###
+#   Azure AD Application
+###
 resource "azuread_application" "launchpad" {
   name                       = "${random_string.prefix.result}launchpad"
 }
@@ -19,7 +22,9 @@ resource "random_string" "launchpad_password" {
     number  = true
 }
 
-## Grant devops app contributor on the current subscription to be able to deploy the blueprint_azure_devops
+###
+#   Grant devops app contributor on the current subscription to be able to deploy the blueprint_azure_devops
+###
 resource "azurerm_role_assignment" "launchpad_role1" {
   scope                = data.azurerm_subscription.primary.id
   role_definition_name = "Owner"
@@ -38,6 +43,30 @@ resource "azurerm_role_assignment" "launchpad_role1" {
 #   role_definition_name = "Owner"
 #   principal_id         = azuread_service_principal.tfstate.object_id
 # }
+
+
+###
+#    Grant conscent to the azure ad application
+###
+
+locals {
+  grant_admin_concent_command = "az ad app permission admin-consent --id ${azuread_application.launchpad.application_id}"
+}
+resource "null_resource" "grant_admin_concent" {
+    depends_on = [azurerm_role_assignment.launchpad_role1]
+
+    provisioner "local-exec" {
+        command = local.grant_admin_concent_command
+    }
+
+    triggers = {
+        grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
+    }
+}
+
+###
+#   Store values in keyvault secrets
+###
 
 resource "azurerm_key_vault_secret" "launchpad_name" {
     name         = "launchpad-name"
