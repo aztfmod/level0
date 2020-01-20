@@ -19,6 +19,13 @@ resource "random_string" "launchpad_password" {
     number  = true
 }
 
+## Grant devops app contributor on the current subscription to be able to deploy the blueprint_azure_devops
+resource "azurerm_role_assignment" "launchpad_role1" {
+  scope                = data.azurerm_subscription.primary.id
+  role_definition_name = "Owner"
+  principal_id         = azuread_service_principal.launchpad.object_id
+}
+
 # resource "azurerm_user_assigned_identity" "tfstate" {
 #   resource_group_name = azurerm_resource_group.rg.name
 #   location            = azurerm_resource_group.rg.location
