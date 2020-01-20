@@ -26,8 +26,8 @@ resource "azurerm_storage_account" "stg" {
   }
 }
 
-resource "azurerm_storage_container" "tfstate" {
-  name                  = "level0"
+resource "azurerm_storage_container" "launchpad" {
+  name                  = var.workspace
   storage_account_name  = azurerm_storage_account.stg.name
   container_access_type = "private"
 }

@@ -34,6 +34,6 @@ locals {
     "landingzone" = basename(abspath(path.root))
   }
   tags              = merge(var.tags, local.landingzone_tag)
-  tfstate-blob-name = var.tf_name
+  launchpad-blob-name = var.tf_name
   prefix            = random_string.prefix.result
 }

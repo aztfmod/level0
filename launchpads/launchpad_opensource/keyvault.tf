@@ -19,7 +19,7 @@ locals {
 }
 
 
-resource "azurerm_key_vault" "tfstate" {
+resource "azurerm_key_vault" "launchpad" {
     name                = local.kv_name
     location            = azurerm_resource_group.rg.location
     resource_group_name = azurerm_resource_group.rg.name
@@ -34,7 +34,7 @@ resource "azurerm_key_vault" "tfstate" {
     # Must be set as bellow to force the permissions to be re-applied by TF if changed outside of TF (portal, powershell...)
     access_policy {
       tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azuread_service_principal.devops.object_id
+      object_id       = azuread_service_principal.launchpad.object_id
 
       key_permissions = []
 
@@ -81,7 +81,7 @@ resource "azurerm_key_vault" "tfstate" {
 # To allow deployment from developer machine - bootstrap
 # Todo: add a condition
 resource "azurerm_key_vault_access_policy" "developer" {
-  key_vault_id = azurerm_key_vault.tfstate.id
+  key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
   object_id = var.logged_user_objectId
@@ -96,6 +96,23 @@ resource "azurerm_key_vault_access_policy" "developer" {
   ]
 }
 
+resource "azurerm_key_vault_access_policy" "rover" {
+  count = var.rover_pilot_object_id == "" ? 0 : 1
+
+  key_vault_id = azurerm_key_vault.launchpad.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = var.rover_pilot_object_id
+
+  key_permissions = []
+
+  secret_permissions = [
+      "set",
+      "get",
+      "list",
+      "delete"
+  ]
+}
 
 
 

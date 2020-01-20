@@ -3,7 +3,7 @@ output "storage_account_name" {
 }
 
 output "container" {
-  value = azurerm_storage_container.tfstate.name
+  value = azurerm_storage_container.launchpad.name
 }
 
 output "resource_group" {
@@ -19,7 +19,7 @@ output "prefix" {
 output "tfstate_map" {
   value = map(
     "storage_account_name", azurerm_storage_account.stg.name,
-    "container", azurerm_storage_container.tfstate.name,
+    "container", azurerm_storage_container.launchpad.name,
     "resource_group", azurerm_resource_group.rg.name,
     "prefix", random_string.prefix.result
   )
@@ -34,19 +34,19 @@ output "tfstate_map" {
 # }
 
 output "keyvault_id" {
-  value = azurerm_key_vault.tfstate.id
+  value = azurerm_key_vault.launchpad.id
 }
 
-output "devops_application_id" {
-  value = azuread_service_principal.devops.application_id
+output "launchpad_application_id" {
+  value = azuread_service_principal.launchpad.application_id
   sensitive = true
 }
 
 output "devops_client_secret" {
-  value = random_string.devops_password.result
+  value = random_string.launchpad_password.result
   sensitive = true
 }
 
 output "tfstate-blob-name" {
-  value = local.tfstate-blob-name
+  value = local.launchpad-blob-name
 }

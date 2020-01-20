@@ -6,6 +6,12 @@ variable "logged_user_objectId" {
     description = "objectId of the logged user initializing the launchpad"
 }
 
+variable "rover_pilot_object_id" {
+    description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
+    default = ""
+}
+
+
 variable "location" {
     description = "Azure region to deploy the launchpad in the form or 'southeastasia' or 'westeurope'"
 }
