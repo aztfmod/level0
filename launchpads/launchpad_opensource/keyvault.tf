@@ -31,51 +31,86 @@ resource "azurerm_key_vault" "launchpad" {
       workspace = var.workspace
     }
 
-    access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azuread_service_principal.launchpad.object_id
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = azuread_service_principal.launchpad.object_id
 
-      key_permissions = []
+    #   key_permissions = []
 
-      secret_permissions = [
-          "Set",
-          "Get",
-          "List",
-          "Delete"
-      ]
-    }
+    #   secret_permissions = [
+    #       "Set",
+    #       "Get",
+    #       "List",
+    #       "Delete"
+    #   ]
+    # }
 
-    access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = azuread_group.developers_rover.id
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = azuread_group.developers_rover.id
 
-      key_permissions = []
+    #   key_permissions = []
 
-      secret_permissions = [
-          "Set",
-          "Get",
-          "List",
-          "Delete"
-      ]
-    }
+    #   secret_permissions = [
+    #       "Set",
+    #       "Get",
+    #       "List",
+    #       "Delete"
+    #   ]
+    # }
 
-    ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
-    access_policy {
-      tenant_id       = data.azurerm_client_config.current.tenant_id
-      object_id       = var.logged_user_objectId
+    # ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
+    # access_policy {
+    #   tenant_id       = data.azurerm_client_config.current.tenant_id
+    #   object_id       = var.logged_user_objectId
 
-      key_permissions = []
+    #   key_permissions = []
 
-      secret_permissions = [
-          "Set",
-          "Get",
-          "List",
-          "Delete"
-      ]
-    }
+    #   secret_permissions = [
+    #       "Set",
+    #       "Get",
+    #       "List",
+    #       "Delete"
+    #   ]
+    # }
 
 
 }
+
+resource "azurerm_key_vault_access_policy" "launchdap" {
+  key_vault_id = azurerm_key_vault.launchpad.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = azuread_service_principal.launchpad.object_id
+
+  key_permissions = []
+
+  secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete"
+  ]
+
+}
+
+resource "azurerm_key_vault_access_policy" "developer_group" {
+  key_vault_id = azurerm_key_vault.launchpad.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = azuread_group.developers_rover.id
+
+  key_permissions = []
+
+  secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete"
+  ]
+
+}
+
 
 # To allow deployment from developer machine - bootstrap
 # Todo: add a condition
@@ -88,27 +123,27 @@ resource "azurerm_key_vault_access_policy" "developer" {
   key_permissions = []
 
   secret_permissions = [
-      "Set",
       "Get",
       "List",
+      "Set",
       "Delete"
   ]
 }
 
 resource "azurerm_key_vault_access_policy" "rover" {
-  count = var.rover_pilot_application_id == "" ? 0 : 1
+  count = var.rover_pilot_client_id == "" ? 0 : 1
 
   key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.rover_pilot_application_id
+  object_id = var.rover_pilot_client_id
 
   key_permissions = []
 
   secret_permissions = [
-      "Set",
       "Get",
       "List",
+      "Set",
       "Delete"
   ]
 }

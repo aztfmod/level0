@@ -85,12 +85,14 @@ resource "null_resource" "grant_admin_concent" {
 ###
 
 resource "azurerm_key_vault_secret" "launchpad_name" {
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-name"
     value        = azuread_application.launchpad.name
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
 resource "azurerm_key_vault_secret" "launchpad_application_id" {
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-application-id"
     value        = azuread_application.launchpad.application_id
     key_vault_id = azurerm_key_vault.launchpad.id
@@ -98,26 +100,28 @@ resource "azurerm_key_vault_secret" "launchpad_application_id" {
 
 
 resource "azurerm_key_vault_secret" "launchpad_client_id" {
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-service-principal-client-id"
     value        = azuread_service_principal.launchpad.object_id
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
 resource "azurerm_key_vault_secret" "launchpad_client_secret" {
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-service-principal-client-secret"
     value        = random_string.launchpad_password.result
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
 resource "azurerm_key_vault_secret" "launchpad_tenant_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developer]
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-tenant-id"
     value        = data.azurerm_client_config.current.tenant_id
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
 resource "azurerm_key_vault_secret" "launchpad_subscription_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developer]
+    depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.rover]
     name         = "launchpad-subscription-id"
     value        = data.azurerm_client_config.current.subscription_id
     key_vault_id = azurerm_key_vault.launchpad.id
