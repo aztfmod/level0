@@ -1,11 +1,3 @@
-# variable "resource_groups" {
-
-# }
-
-# variable "resource_group_key" {
-#     description = "Resource group's key of the resource group to deploy the resources"
-# }
-
 variable "tags" {
 
 }
@@ -14,9 +6,12 @@ variable "prefix" {
 
 }
 
-
 variable "convention" {
     description = "Naming convention to apply to the resources at creating time"
+}
+
+variable "workspace" {
+
 }
 
 variable "acr_object" {
@@ -35,3 +30,9 @@ variable "diagnostics_map" {
 variable "log_analytics_workspace" {
 
 }
+
+variable "resource_group_name" {
+
+}
+
+variable "location" {}

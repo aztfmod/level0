@@ -1,28 +1,12 @@
-variable "prefix" {
+variable "prefix" {}
+variable "tags" {}
+variable "resource_group_name" {}
+variable "location" {}
+variable "convention" {}
 
-}
+variable "diagnostics_map" {}
+variable "log_analytics_workspace" {}
 
-variable "tags" {
-
-}
-
-
-variable "diagnostics_map" {
-
-}
-
-variable "log_analytics_workspace" {
-
-}
-
-variable "vm_object" {
-  
-}
-
-variable "subnet_id" {
-
-}
-
-variable "acr_object" {
-    description = "Output object of the landingzone_container_registry"
-}
+variable "vm_object" {}
+variable "public_ip" {}
+variable "subnet_id" {}

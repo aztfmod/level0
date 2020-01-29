@@ -1,17 +1,26 @@
+# module "caf_name_rg" {
+#   source  = "aztfmod/caf-naming/azurerm"
+#   version = "~> 0.1.0"
+  
+#   name        = "${var.prefix}${var.workspace}-${var.networking_object.resource_group.name}"
+#   type        = "rg"
+#   convention  = var.convention
+# }
 
-resource "azurerm_resource_group" "rg" {
-  name      = var.networking_object.resource_group.name
-  location  = var.networking_object.resource_group.location
-  tags      = local.tags
-}
+# resource "azurerm_resource_group" "rg" {
+#   name      = module.caf_name_rg.rg
+#   location  = var.networking_object.resource_group.location
+#   tags      = local.tags
+# }
 
 module "virtual_network" {
   source  = "aztfmod/caf-virtual-network/azurerm"
-  version = "0.2.0"
+  version = "~> 1.0.0"
 
   prefix                    = var.prefix
-  location                  = azurerm_resource_group.rg.location
-  virtual_network_rg        = azurerm_resource_group.rg.name
+  convention                = var.convention
+  location                  = var.location
+  virtual_network_rg        = var.resource_group_name
   networking_object         = var.networking_object
   tags                      = local.tags
   diagnostics_map           = var.diagnostics_map

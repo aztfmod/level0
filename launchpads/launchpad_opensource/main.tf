@@ -33,7 +33,7 @@ locals {
   landingzone_tag          = {
     "landingzone" = basename(abspath(path.root))
   }
-  tags              = merge(var.tags, local.landingzone_tag)
+  tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
-  prefix            = random_string.prefix.result
+  prefix            = "${random_string.prefix.result}-"
 }

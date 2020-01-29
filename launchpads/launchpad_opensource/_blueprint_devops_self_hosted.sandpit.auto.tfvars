@@ -38,6 +38,9 @@ blueprint_devops_self_hosted_agent = {
             # write_accelerator_enabled   = true
         }
 
+        nic_object = {
+            name = "nic"
+        }
         
         caf-provisioner = {
             os_platform = "centos"
@@ -51,9 +54,13 @@ blueprint_devops_self_hosted_agent = {
 
     
     public_ip = {
-        name = "pip"
-
-        ip_addr = {}
+        ip_name = "pip"    
+        allocation_method   = "Static"
+        #Dynamic Public IP Addresses aren't allocated until they're assigned to a resource (such as a Virtual Machine or a Load Balancer) by design within Azure 
+        
+        #properties below are optional 
+        sku                 = "Standard"                        #defaults to Basic
+        ip_version          = "IPv4"                            #defaults to IP4, Only dynamic for IPv6, Supported arguments are IPv4 or IPv6, NOT Both
 
         diagnostics_settings = {
             log = [

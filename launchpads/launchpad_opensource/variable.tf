@@ -22,14 +22,11 @@ variable "tf_name" {
 }
 
 variable "tags" {
-    default = {
-        "level" = "level0"
-    }
+    default = {}
 }
  
 variable "convention" {
     description = "Naming convention to apply to the resources at creating time"
-    default = "cafrandom"
 }
 
 

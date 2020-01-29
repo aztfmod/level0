@@ -1,20 +1,21 @@
+module "caf_name_stg" {
+  source  = "aztfmod/caf-naming/azurerm"
+  version = "~> 0.1.0"
+  
+  name        = local.stg_name
+  type        = "st"
+  convention  = var.convention
 
-resource "random_string" "stg" {
-    length  = 17
-    upper   = false
-    special = false
 }
 
-
 locals {
-
-  # must start with a letter
-  stg_name = "tfstate${random_string.stg.result}"
+  # storage account prefix
+  stg_name = "tfstate"
 }
 
 
 resource "azurerm_storage_account" "stg" {
-  name                     = local.stg_name
+  name                     = module.caf_name_stg.st
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"
