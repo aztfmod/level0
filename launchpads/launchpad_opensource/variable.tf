@@ -52,4 +52,8 @@ variable "azure_devops_pat_token" {}
 variable "azure_devops_project" {}
 variable "azure_devops_url_organization" {
     description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
+    default = "https://dev.azure.com/azure-terraform"
+}
+variable "azure_devops_agent_pool" {
+    default = "self-hosted-level0"
 }

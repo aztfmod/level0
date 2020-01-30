@@ -117,42 +117,44 @@ resource "null_resource" "build_docker_image" {
     }
 }
 
-# ##
-# #   3 - Register the ssh key of the devops selfhosted server in the ~/.ssh/config
-# ##
-# resource "null_resource" "ssh_config_update" {
-#     depends_on = [module.blueprint_devops_self_hosted_agent]
+##
+#   3 - Register the ssh key of the devops selfhosted server in the ~/.ssh/config
+##
+resource "null_resource" "ssh_config_update" {
+    depends_on = [module.blueprint_devops_self_hosted_agent]
 
-#     provisioner "local-exec" {
-#         command = local.ssh_config_update
-#     }
+    provisioner "local-exec" {
+        command = local.ssh_config_update
+    }
 
-#     triggers = {
-#         docker_build_command    = sha256(local.ssh_config_update)
-#         ssh_key_sha             = sha512(file("~/.ssh/${module.blueprint_devops_self_hosted_agent.object.host_connection}.private"))
-#     }
-# }
+    triggers = {
+        docker_build_command    = sha256(local.ssh_config_update)
+        ssh_key_sha             = sha512(file("~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private"))
+    }
+}
 
 
 
-# ##
-# #   4 - Connect to the Azure devops server and pull the devops container from the registry
-# ##
-# resource "null_resource" "pull_docker_image" {
-#     depends_on = [
-#         null_resource.build_docker_image,
-#         null_resource.ssh_config_update
-#     ]
+##
+#   4 - Connect to the Azure devops server and pull the devops container from the registry
+##
+resource "null_resource" "pull_docker_image" {
+    depends_on = [
+        null_resource.build_docker_image,
+        null_resource.ssh_config_update,
+        azurerm_role_assignment.acr_pull,
+        azurerm_role_assignment.acr_reader
+    ]
 
-#     provisioner "local-exec" {
-#         command = local.docker_ssh_command
-#     }
+    provisioner "local-exec" {
+        command = local.docker_ssh_command
+    }
 
-#     triggers = {
-#         docker_build_command    = sha256(local.docker_ssh_command)
-#         login_server            = module.blueprint_container_registry.object.login_server
-#         admin_username          = module.blueprint_container_registry.object.admin_username
-#         admin_password          = module.blueprint_container_registry.object.admin_password
-#     }
-# }
+    triggers = {
+        docker_build_command    = sha256(local.docker_ssh_command)
+        login_server            = module.blueprint_container_registry.object.login_server
+        admin_username          = module.blueprint_container_registry.object.admin_username
+        admin_password          = module.blueprint_container_registry.object.admin_password
+    }
+}
 

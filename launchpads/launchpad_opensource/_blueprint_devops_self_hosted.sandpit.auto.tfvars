@@ -82,27 +82,27 @@ blueprint_devops_self_hosted_agent = {
 azure_devops_url_organization = "https://dev.azure.com/azure-terraform"
 azure_devops_project = "release-management"
 
-azure_devops = {
+# azure_devops = {
         
 
-        # az devops project create --org https://dev.azure.com/azure-terraform --name release-management
-        projects = {
-            release = {
-                name = "release-management"
-                description = "This project stores the release pipelines and configuration registry"
-            }
-        }
+#         # az devops project create --org https://dev.azure.com/azure-terraform --name release-management
+#         projects = {
+#             release = {
+#                 name = "release-management"
+#                 description = "This project stores the release pipelines and configuration registry"
+#             }
+#         }
 
-        pools = {
-            pool1 = {
-                name = "self-hosted-level0"
-            }
-            pool2 = {
-                name = "self-hosted-level1"
-            }
-            pool3 = {
-                name = "self-hosted-level2"
-            }
+#         pools = {
+#             pool1 = {
+#                 name = "self-hosted-level0"
+#             }
+#             pool2 = {
+#                 name = "self-hosted-level1"
+#             }
+#             pool3 = {
+#                 name = "self-hosted-level2"
+#             }
             
-        }
-    }
+#         }
+#     }
