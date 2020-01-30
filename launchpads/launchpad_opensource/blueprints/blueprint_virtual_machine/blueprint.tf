@@ -62,7 +62,7 @@ module "vm" {
   storage_image_reference       = var.vm_object.storage_image_reference
   storage_os_disk               = var.vm_object.storage_os_disk
   vm_size                       = var.vm_object.vm_size
-  keyvault_id                   = var.keyvault_id
+  key_vault_id                  = var.key_vault_id
 }
 
 

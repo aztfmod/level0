@@ -1,20 +1,24 @@
 provider "azurerm" {
-  version = "=1.40"
+  version = "~> 1.40.0"
 }
 
 terraform {
 }
 
 provider "azuread" {
-  version = "=0.7.0"
+  version = "~> 0.7.0"
 }
 
 provider "random" {
-  version = "=2.2.1"
+  version = "~> 2.2.1"
 }
 
 provider "null" {
-  version = "=2.1"
+  version = "~> 2.1.0"
+}
+
+provider "tls" {
+  version = "~> 2.1.0"
 }
 
 data "azurerm_subscription" "primary" {}
