@@ -75,9 +75,15 @@ blueprint_devops_self_hosted_agent = {
         }
     }
 
-    azure_devops = {
+    
+
+}
+
+azure_devops_url_organization = "https://dev.azure.com/azure-terraform"
+azure_devops_project = "release-management"
+
+azure_devops = {
         
-        organization = "https://dev.azure.com/azure-terraform"
 
         # az devops project create --org https://dev.azure.com/azure-terraform --name release-management
         projects = {
@@ -100,5 +106,3 @@ blueprint_devops_self_hosted_agent = {
             
         }
     }
-
-}

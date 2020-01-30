@@ -40,3 +40,16 @@ variable "use_prefix" {
     description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
     default = true
 }
+
+
+### Azure Devops variables
+variable "enable_azure_devops" {
+    description = "Feature flag to install Azure devops self hosted agent and setup the Azure devops project"
+    default = true
+}
+
+variable "azure_devops_pat_token" {}
+variable "azure_devops_project" {}
+variable "azure_devops_url_organization" {
+    description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
+}
