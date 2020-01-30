@@ -1,9 +1,18 @@
 #####
 # Step 1 - Provision a VM
-# Setp 2 - Login Azure Devops
-# Step 3 - 
+# Setp 2 - Install docker and azure cli
+# Step 3 - Login Azure Devops
+# Step 4 - Pull azure devops private image
+# Step 5 - Register to agent pool
 
 #####
+
+# workaround to add a depends_on the module blueprint_devops_self_hosted_agent
+data "azurerm_key_vault" "launchpad" {
+  depends_on            = [azurerm_key_vault.launchpad, azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover]
+  name                  = azurerm_key_vault.launchpad.name
+  resource_group_name   = azurerm_resource_group.rg.name
+}
 
 module "blueprint_devops_self_hosted_agent" {
   source = "./blueprints/blueprint_virtual_machine"
@@ -18,10 +27,10 @@ module "blueprint_devops_self_hosted_agent" {
   vm_object               = var.blueprint_devops_self_hosted_agent.vm_object
   public_ip               = var.blueprint_devops_self_hosted_agent.public_ip
   subnet_id               = lookup(module.blueprint_networking.subnet_id_by_name, "devopsAgent", null)
-  key_vault_id             = azurerm_key_vault.launchpad.id
+  key_vault_id            = data.azurerm_key_vault.launchpad.id
 }
 
-module "vm_provisioner" {
+module "vm_provisioner" {  
   source = "git://github.com/aztfmod/terraform-azurerm-caf-provisioner.git?ref=1912"
 
   host_connection               = module.blueprint_devops_self_hosted_agent.object.public_ip_address
@@ -121,7 +130,7 @@ resource "null_resource" "build_docker_image" {
 #   3 - Register the ssh key of the devops selfhosted server in the ~/.ssh/config
 ##
 resource "null_resource" "ssh_config_update" {
-    depends_on = [module.blueprint_devops_self_hosted_agent]
+    depends_on = [module.vm_provisioner]
 
     provisioner "local-exec" {
         command = local.ssh_config_update
@@ -143,7 +152,8 @@ resource "null_resource" "pull_docker_image" {
         null_resource.build_docker_image,
         null_resource.ssh_config_update,
         azurerm_role_assignment.acr_pull,
-        azurerm_role_assignment.acr_reader
+        azurerm_role_assignment.acr_reader,
+        module.vm_provisioner
     ]
 
     provisioner "local-exec" {

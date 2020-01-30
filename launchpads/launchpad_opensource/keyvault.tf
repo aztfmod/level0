@@ -1,5 +1,10 @@
 data "azurerm_client_config" "current" {}
 
+
+resource "azuread_group" "developers_rover" {
+  name = "${random_string.prefix.result}-caf-level0-rover-developers"
+}
+
 resource "random_string" "kv_name" {
   length  = 23 - length(random_string.prefix.result)
   special = false
@@ -38,10 +43,10 @@ resource "azurerm_key_vault" "launchpad" {
     #   key_permissions = []
 
     #   secret_permissions = [
-    #       "Set",
-    #       "Get",
-    #       "List",
-    #       "Delete"
+    #     "Get",
+    #     "List",
+    #     "Set",
+    #     "Delete"
     #   ]
     # }
 
@@ -52,10 +57,10 @@ resource "azurerm_key_vault" "launchpad" {
     #   key_permissions = []
 
     #   secret_permissions = [
-    #       "Set",
-    #       "Get",
-    #       "List",
-    #       "Delete"
+    #     "Get",
+    #     "List",
+    #     "Set",
+    #     "Delete"
     #   ]
     # }
 
@@ -77,7 +82,7 @@ resource "azurerm_key_vault" "launchpad" {
 
 }
 
-resource "azurerm_key_vault_access_policy" "launchdap" {
+resource "azurerm_key_vault_access_policy" "launchpad" {
   key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
@@ -148,8 +153,3 @@ resource "azurerm_key_vault_access_policy" "rover" {
   ]
 }
 
-
-
-resource "azuread_group" "developers_rover" {
-  name = "${random_string.prefix.result}-caf-level0-rover-developers"
-}
