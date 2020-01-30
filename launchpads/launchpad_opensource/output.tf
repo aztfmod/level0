@@ -50,3 +50,7 @@ output "devops_client_secret" {
 output "tfstate-blob-name" {
   value = local.launchpad-blob-name
 }
+
+output "log_analytics" {
+  value = module.log_analytics
+}
