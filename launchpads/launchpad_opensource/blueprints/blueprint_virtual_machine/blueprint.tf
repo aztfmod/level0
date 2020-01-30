@@ -39,37 +39,30 @@ module "networking_interface" {
   public_ip_address_id  = module.public_ip.id
 }
 
+module "vm" {
+  # source  = "aztfmod/caf-vm/azurerm"
+  # version = "~> 0.1.0"
+  source = "git://github.com/aztfmod/terraform-azurerm-caf-vm.git?ref=LL-2001"
 
-# # Create the virtual machine
-# module "vm" {
-#   source = "../../modules/terraform-azurerm-caf-vm"
+  prefix                      = var.prefix
+  convention                  = var.convention
+  name                        = var.vm_object.name
+  resource_group_name         = var.resource_group_name
+  location                    = var.location 
+  tags                        = merge( lookup(var.vm_object, "tags", {}), local.tags)
 
-#   prefix                        = var.prefix
-#   resource_group_name           = azurerm_resource_group.rg.name
-#   location                      = azurerm_resource_group.rg.location
-#   tags                          = local.tags
-#   convention                    = var.convention
+  diagnostics_map             = var.diagnostics_map
+  log_analytics_workspace_id  = var.log_analytics_workspace.id
+  diagnostics_settings        = lookup(var.vm_object, "diagnostics_settings", null)
 
-#   name                          = var.vm_object.name
-#   os                            = var.vm_object.os
-#   os_profile                    = var.vm_object.os_profile
-#   storage_os_disk               = var.vm_object.storage_os_disk
-#   storage_image_reference       = var.vm_object.storage_image_reference
-#   network_interface_ids         = module.networking_interface.nic_ids
-#   primary_network_interface_id  = module.networking_interface.objects[var.vm_object.nic_objects.primary_nic_key].id
-#   vm_size                       = var.vm_object.vm_size  
-# }
+  network_interface_ids         = [ module.networking_interface.id ]
+  primary_network_interface_id  = module.networking_interface.id
+  os                            = var.vm_object.os
+  os_profile                    = var.vm_object.os_profile
+  storage_image_reference       = var.vm_object.storage_image_reference
+  storage_os_disk               = var.vm_object.storage_os_disk
+  vm_size                       = var.vm_object.vm_size
+  keyvault_id                   = var.keyvault_id
+}
 
 
-# module "vm_provisioner" {
-#   source = "../../modules/terraform-azurerm-caf-provisioner"
-
-#   host_connection               = lookup(module.public_ip.fqdn_by_key, var.vm_object.nic_objects.remote_host_pip)
-#   scripts                       = var.vm_object.caf-provisioner.scripts
-#   scripts_param                 = [
-#                                   var.vm_object.os_profile.admin_username
-#                                 ]
-#   admin_username                = module.vm.admin_username
-#   ssh_private_key_pem           = module.vm.ssh_private_key_pem
-#   os_platform                   = var.vm_object.caf-provisioner.os_platform
-# }

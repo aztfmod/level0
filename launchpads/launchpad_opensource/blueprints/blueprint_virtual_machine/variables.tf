@@ -10,3 +10,4 @@ variable "log_analytics_workspace" {}
 variable "vm_object" {}
 variable "public_ip" {}
 variable "subnet_id" {}
+variable "keyvault_id" {}

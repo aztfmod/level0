@@ -35,5 +35,5 @@ locals {
   }
   tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
-  prefix            = "${random_string.prefix.result}-"
+  prefix            = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
 }

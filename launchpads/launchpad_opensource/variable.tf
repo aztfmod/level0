@@ -26,10 +26,17 @@ variable "tags" {
 }
  
 variable "convention" {
-    description = "Naming convention to apply to the resources at creating time"
+    description = "(Optional) (Default = cafrandom) Naming convention to apply to the resources at creating time"
+    default = "cafrandom"
 }
 
 
 variable "workspace" {
     description = "Define the workspace to deploy the launchapd [level0, sandpit]"
+}
+
+
+variable "use_prefix" {
+    description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
+    default = true
 }

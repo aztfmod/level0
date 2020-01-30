@@ -11,5 +11,5 @@ module "blueprint_container_registry" {
   log_analytics_workspace   = module.log_analytics.object
   diagnostics_map           = module.diagnostics.diagnostics_map
   acr_object                = var.blueprint_container_registry.acr_object
-  subnet_id               =  module.blueprint_networking.subnet_id_by_name.devopsAgent
+  subnet_id                 =  lookup(module.blueprint_networking.subnet_id_by_name, "devopsAgent", null)
 }
