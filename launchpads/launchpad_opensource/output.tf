@@ -54,3 +54,7 @@ output "tfstate-blob-name" {
 output "log_analytics" {
   value = module.log_analytics
 }
+
+output "diagnostics" {
+  value = module.diagnostics
+}
