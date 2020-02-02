@@ -1,17 +1,3 @@
-# module "caf_name_rg" {
-#   source  = "aztfmod/caf-naming/azurerm"
-#   version = "~> 0.1.0"
-  
-#   name        = "${var.prefix}${var.workspace}-${var.networking_object.resource_group.name}"
-#   type        = "rg"
-#   convention  = var.convention
-# }
-
-# resource "azurerm_resource_group" "rg" {
-#   name      = module.caf_name_rg.rg
-#   location  = var.networking_object.resource_group.location
-#   tags      = local.tags
-# }
 
 module "virtual_network" {
   source  = "aztfmod/caf-virtual-network/azurerm"

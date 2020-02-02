@@ -26,7 +26,7 @@ module "blueprint_devops_self_hosted_agent" {
   diagnostics_map         = module.diagnostics.diagnostics_map
   vm_object               = var.blueprint_devops_self_hosted_agent.vm_object
   public_ip               = var.blueprint_devops_self_hosted_agent.public_ip
-  subnet_id               = lookup(module.blueprint_networking.subnet_id_by_name, "devopsAgent", null)
+  subnet_id               = lookup(module.blueprint_networking.subnet_id_by_name, "DevopsBuildSandpit", null)
   key_vault_id            = data.azurerm_key_vault.launchpad.id
 }
 

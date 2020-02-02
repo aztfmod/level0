@@ -36,49 +36,6 @@ resource "azurerm_key_vault" "launchpad" {
       workspace = var.workspace
     }
 
-    # access_policy {
-    #   tenant_id       = data.azurerm_client_config.current.tenant_id
-    #   object_id       = azuread_service_principal.launchpad.object_id
-
-    #   key_permissions = []
-
-    #   secret_permissions = [
-    #     "Get",
-    #     "List",
-    #     "Set",
-    #     "Delete"
-    #   ]
-    # }
-
-    # access_policy {
-    #   tenant_id       = data.azurerm_client_config.current.tenant_id
-    #   object_id       = azuread_group.developers_rover.id
-
-    #   key_permissions = []
-
-    #   secret_permissions = [
-    #     "Get",
-    #     "List",
-    #     "Set",
-    #     "Delete"
-    #   ]
-    # }
-
-    # ## Temp - to simply improvement of the launchpad. Let the loggedin user to have permissions
-    # access_policy {
-    #   tenant_id       = data.azurerm_client_config.current.tenant_id
-    #   object_id       = var.logged_user_objectId
-
-    #   key_permissions = []
-
-    #   secret_permissions = [
-    #       "Set",
-    #       "Get",
-    #       "List",
-    #       "Delete"
-    #   ]
-    # }
-
 
 }
 
