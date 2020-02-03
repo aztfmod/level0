@@ -35,6 +35,7 @@ resource "azurerm_key_vault" "launchpad" {
     sku_name = "standard"
 
     tags = {
+      tfstate   = var.workspace
       workspace = var.workspace
     }
 
