@@ -22,6 +22,7 @@ resource "azurerm_storage_account" "stg" {
   account_replication_type = "RAGRS"
 
   tags = {
+    tfstate     = var.workspace
     workspace   = var.workspace
     prefix      = random_string.prefix.result
   }
