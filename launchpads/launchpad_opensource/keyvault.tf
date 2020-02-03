@@ -2,6 +2,8 @@ data "azurerm_client_config" "current" {}
 
 
 resource "azuread_group" "developers_rover" {
+  count = var.enable_collaboration == true ? 1 : 0
+
   name = "${random_string.prefix.result}-caf-level0-rover-developers"
 }
 
@@ -57,10 +59,12 @@ resource "azurerm_key_vault_access_policy" "launchpad" {
 }
 
 resource "azurerm_key_vault_access_policy" "developer_group" {
+  count = var.enable_collaboration == true ? 1 : 0
+
   key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azuread_group.developers_rover.id
+  object_id = azuread_group.developers_rover.0.id
 
   key_permissions = []
 

@@ -43,17 +43,27 @@ variable "use_prefix" {
 
 
 ### Azure Devops variables
+variable "azure_devops_pat_token" {
+    default = ""
+}
+variable "azure_devops_project" {
+    default = ""
+}
+variable "azure_devops_url_organization" {
+    description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
+    default = ""
+}
+variable "azure_devops_agent_pool" {
+    default = ""
+}
+
+## Feature flags
+variable "enable_collaboration" {
+    description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad"
+    default = false
+}
+
 variable "enable_azure_devops" {
     description = "Feature flag to install Azure devops self hosted agent and setup the Azure devops project"
     default = true
-}
-
-variable "azure_devops_pat_token" {}
-variable "azure_devops_project" {}
-variable "azure_devops_url_organization" {
-    description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
-    default = "https://dev.azure.com/azure-terraform"
-}
-variable "azure_devops_agent_pool" {
-    default = "self-hosted-level0"
 }
