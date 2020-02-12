@@ -33,3 +33,9 @@ resource "azurerm_storage_container" "launchpad" {
   storage_account_name  = azurerm_storage_account.stg.name
   container_access_type = "private"
 }
+
+resource "azurerm_role_assignment" "storage_blob_contributor" {
+  scope                = azurerm_storage_account.stg.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.logged_user_objectId
+}
