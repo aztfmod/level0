@@ -28,6 +28,7 @@ resource "null_resource" "run_devops_container" {
         login_server            = module.blueprint_container_registry.object.login_server
         admin_username          = module.blueprint_container_registry.object.admin_username
         admin_password          = module.blueprint_container_registry.object.admin_password
+        azure_devops_agent_pool = var.azure_devops_agent_pool
     }
 }
 

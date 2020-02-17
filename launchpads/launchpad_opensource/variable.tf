@@ -54,7 +54,6 @@ variable "azure_devops_url_organization" {
     default = ""
 }
 variable "azure_devops_agent_pool" {
-    default = ""
 }
 
 ## Feature flags
