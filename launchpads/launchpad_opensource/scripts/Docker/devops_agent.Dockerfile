@@ -13,6 +13,16 @@ RUN rm -rf /var/lib/apt/lists/* && \
         curl \
         gnupg-agent \
         software-properties-common && \
+    #
+    # Install dotnet core 
+    #
+    curl -fsSl  -o /tmp/packages-microsoft-prod.deb https://packages.microsoft.com/config/ubuntu/16.04/packages-microsoft-prod.deb \
+    && dpkg -i /tmp/packages-microsoft-prod.deb \
+    && apt-get update\
+    && apt-get install -y dotnet-sdk-3.1  && \
+    #
+    # Other tools: git, jq, docker-client
+    #
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add - && \
     apt-key fingerprint 0EBFCD88 && \
     add-apt-repository \
@@ -28,7 +38,7 @@ RUN rm -rf /var/lib/apt/lists/* && \
         libicu55 \
         libunwind8 \
         netcat \
-        docker-ce-cli
+        docker-ce-cli 
 
 WORKDIR /azp
 
