@@ -53,8 +53,13 @@ output "tfstate-blob-name" {
 
 output "log_analytics" {
   value = module.log_analytics
+  sensitive = true
 }
 
 output "diagnostics" {
   value = module.diagnostics
+}
+
+output "vnet" {
+  value = module.blueprint_networking.vnet
 }
