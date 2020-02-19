@@ -44,21 +44,24 @@ variable "use_prefix" {
 
 ### Azure Devops variables
 variable "azure_devops_pat_token" {
-    default = ""
+    description = "Azure DevOps Personal Access Token to register the self hosted agent"
 }
+
 variable "azure_devops_project" {
-    default = ""
+    description = "Azure DevOps project name"
 }
+
 variable "azure_devops_url_organization" {
     description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
-    default = ""
 }
+
 variable "azure_devops_agent_pool" {
+    description = "Azure DevOps agent pool name to host the self hosted agent"
 }
 
 ## Feature flags
 variable "enable_collaboration" {
-    description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad"
+    description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
     default = false
 }
 
