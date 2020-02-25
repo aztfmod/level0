@@ -3,6 +3,15 @@
 ###
 resource "azuread_application" "launchpad" {
   name                       = "${random_string.prefix.result}launchpad"
+
+  required_resource_access {
+    resource_app_id = "00000002-0000-0000-c000-000000000000"
+
+    resource_access {
+        id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+        type = "Role"
+      }
+  }
 }
 
 resource "azuread_service_principal" "launchpad" {

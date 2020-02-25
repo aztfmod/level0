@@ -38,6 +38,6 @@ variable "use_prefix" {
 }
 
 variable "enable_collaboration" {
-    description = "(Optional) (Default = false) When enabled create an Azure AD group to allow multiple developers to access the launchpad"
-    default = false
+    description = "(Optional) (Default = 0) When set to 1 create an Azure AD group to allow multiple developers to access the launchpad"
+    default = 0
 }
