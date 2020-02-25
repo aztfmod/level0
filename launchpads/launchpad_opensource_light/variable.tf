@@ -36,3 +36,8 @@ variable "use_prefix" {
     description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
     default = true
 }
+
+variable "enable_collaboration" {
+    description = "(Optional) (Default = false) When enabled create an Azure AD group to allow multiple developers to access the launchpad"
+    default = false
+}
