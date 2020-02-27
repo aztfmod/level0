@@ -19,7 +19,7 @@ provider "null" {
 }
 
 provider "tls" {
-  version = "~> 2.1.0"
+  version = "~> 2.1.1"
 }
 
 data "azurerm_subscription" "primary" {}
