@@ -1,23 +1,8 @@
-# resource "azurerm_role_definition" "mgmt_role1" {
-#   name               = "management-group"
-#   scope              = data.azurerm_subscription.primary.id
-
-#   permissions {
-#     actions     = [
-#       "Microsoft.Management/managementGroups/read",
-#       "Microsoft.Authorization/roleDefinitions/write"
-#     ]
-#     not_actions = []
-#   }
-
-#   assignable_scopes = [
-#     "/providers/Microsoft.Management/managementGroups/",
-#     data.azurerm_subscription.primary.id
-#   ]
-# }
-
-resource "azurerm_role_assignment" "mgmt_role1" {
+#
+# Grant permissions to the launchpad application to create management groups
+#
+resource "azurerm_role_assignment" "management_group_contributor" {
   scope                 = "/providers/Microsoft.Management/managementGroups/"
   role_definition_name  = "Management Group Contributor"
-  principal_id          = azuread_service_principal.launchpad.object_id
+  principal_id          = azuread_service_principal.launchpad.id
 }
