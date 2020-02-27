@@ -11,7 +11,8 @@ resource "azurerm_role_definition" "mgmt_role1" {
   }
 
   assignable_scopes = [
-    "/providers/Microsoft.Management/managementGroups/"
+    "/providers/Microsoft.Management/managementGroups/",
+    data.azurerm_subscription.primary.id
   ]
 }
 
