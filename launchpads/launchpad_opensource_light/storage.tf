@@ -35,6 +35,7 @@ resource "azurerm_storage_container" "launchpad" {
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor" {
+  count = var.limited_privilege == 0 ? 1 : 0
   scope                = azurerm_storage_account.stg.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = var.logged_user_objectId
