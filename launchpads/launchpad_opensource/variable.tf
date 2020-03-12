@@ -69,3 +69,9 @@ variable "enable_azure_devops" {
     description = "Feature flag to install Azure devops self hosted agent and setup the Azure devops project"
     default = true
 }
+
+variable "save_devops_agent_ssh_key_to_disk" {
+  type        = bool
+  default     = false
+  description = "Dump the ssh private key in the ~/.ssh folder with the name [public ip address].private"
+}

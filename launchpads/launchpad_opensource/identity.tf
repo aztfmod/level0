@@ -69,15 +69,18 @@ locals {
   grant_admin_concent_command = "az ad app permission admin-consent --id ${azuread_application.launchpad.application_id}"
 }
 resource "null_resource" "grant_admin_concent" {
-    depends_on = [azurerm_role_assignment.launchpad_role1]
+  depends_on = [azurerm_role_assignment.launchpad_role1]
 
-    provisioner "local-exec" {
-        command = local.grant_admin_concent_command
-    }
+  provisioner "local-exec" {
+      command = "sleep 60"
+  }
+  provisioner "local-exec" {
+      command = local.grant_admin_concent_command
+  }
 
-    triggers = {
-        grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
-    }
+  triggers = {
+      grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
+  }
 }
 
 ###

@@ -127,10 +127,12 @@ resource "null_resource" "build_docker_image" {
 }
 
 ##
-#   3 - Register the ssh key of the devops selfhosted server in the ~/.ssh/config
+#   3 - Save the ssh key of the devops selfhosted server in the ~/.ssh/config
 ##
 resource "null_resource" "ssh_config_update" {
     depends_on = [module.vm_provisioner]
+
+    count = var.save_devops_agent_ssh_key_to_disk ? 1 : 0
 
     provisioner "local-exec" {
         command = local.ssh_config_update
@@ -138,7 +140,7 @@ resource "null_resource" "ssh_config_update" {
 
     triggers = {
         docker_build_command    = sha256(local.ssh_config_update)
-        ssh_key_sha             = sha512(file("~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private"))
+        
     }
 }
 
