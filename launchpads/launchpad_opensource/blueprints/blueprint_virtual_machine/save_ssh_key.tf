@@ -16,11 +16,8 @@ resource "null_resource" "save_ssh_key" {
     depends_on  = [module.vm]
     count       = var.vm_object.save_ssh_private_key_pem == true ? 1 : 0
 
-    triggers = {
-        command = local.save_ssh_key_cmd
-    }
-
     provisioner "local-exec" {
         command = local.save_ssh_key_cmd
     }
+
 }

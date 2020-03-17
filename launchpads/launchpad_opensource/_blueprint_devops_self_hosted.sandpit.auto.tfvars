@@ -70,7 +70,7 @@ blueprint_devops_self_hosted_agent = {
                 ["DDoSMitigationReports", true, true, 30],
                 ]
             metric = [
-                    ["AllMetrics", true, true, 30],
+                ["AllMetrics", true, true, 30],
             ]
         }
     }
@@ -79,30 +79,22 @@ blueprint_devops_self_hosted_agent = {
 
 }
 
-azure_devops_url_organization = "https://dev.azure.com/azure-terraform"
-azure_devops_project = "release-management"
+azure_devops = {
 
-# azure_devops = {
-        
+    azure_devops_url_organization = "https://dev.azure.com/azure-terraform"
 
-#         # az devops project create --org https://dev.azure.com/azure-terraform --name release-management
-#         projects = {
-#             release = {
-#                 name = "release-management"
-#                 description = "This project stores the release pipelines and configuration registry"
-#             }
-#         }
+    azure_devops_project = {
+        name                = "tflz-release-management"
+        visibility          = "private"
+        version_control     = "Tfvc"
+        work_item_template  = "Agile"
+    }
 
-#         pools = {
-#             pool1 = {
-#                 name = "self-hosted-level0"
-#             }
-#             pool2 = {
-#                 name = "self-hosted-level1"
-#             }
-#             pool3 = {
-#                 name = "self-hosted-level2"
-#             }
-            
-#         }
-#     }
+    agent_pools = {
+        level0 = {
+            name            = "self-hosted-level0"
+            auto_provision  = true                  # Auto pro
+        }
+    }
+
+}

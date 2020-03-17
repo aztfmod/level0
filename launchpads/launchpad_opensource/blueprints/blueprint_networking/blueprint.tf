@@ -1,7 +1,7 @@
 
 module "virtual_network" {
   source  = "aztfmod/caf-virtual-network/azurerm"
-  version = "~> 1.0.0"
+  version = "~> 1.1.0"
 
   prefix                    = var.prefix
   convention                = var.convention

@@ -47,17 +47,19 @@ variable "azure_devops_pat_token" {
     description = "Azure DevOps Personal Access Token to register the self hosted agent"
 }
 
-variable "azure_devops_project" {
-    description = "Azure DevOps project name"
-}
+# variable "azure_devops_project" {
+#     description = "Azure DevOps project name"
+# }
 
 variable "azure_devops_url_organization" {
     description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
 }
 
-variable "azure_devops_agent_pool" {
-    description = "Azure DevOps agent pool name to host the self hosted agent"
-}
+# variable "azure_devops_agent_pool" {
+#     description = "Azure DevOps agent pool name to host the self hosted agent"
+# }
+
+variable "azure_devops" {}
 
 ## Feature flags
 variable "enable_collaboration" {
@@ -72,6 +74,6 @@ variable "enable_azure_devops" {
 
 variable "save_devops_agent_ssh_key_to_disk" {
   type        = bool
-  default     = false
+  default     = true
   description = "Dump the ssh private key in the ~/.ssh folder with the name [public ip address].private"
 }
