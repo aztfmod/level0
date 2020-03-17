@@ -81,8 +81,6 @@ blueprint_devops_self_hosted_agent = {
 
 azure_devops = {
 
-    azure_devops_url_organization = "https://dev.azure.com/azure-terraform"
-
     azure_devops_project = {
         name                = "tflz-release-management"
         visibility          = "private"

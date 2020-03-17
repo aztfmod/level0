@@ -13,7 +13,7 @@ provider "azuread" {
 provider "azuredevops" {
   version = "~> 0.0.1"
 
-  org_service_url       = var.azure_devops.azure_devops_url_organization
+  org_service_url       = var.azure_devops_url_organization
   personal_access_token = var.azure_devops_pat_token
 }
 
