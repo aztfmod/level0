@@ -41,8 +41,3 @@ variable "enable_collaboration" {
     description = "(Optional) (Default = 0) When set to 1 create an Azure AD group to allow multiple developers to access the launchpad"
     default = false
 }
-
-variable "limited_privilege" {
-    description = "When set to 1 (default) delegate the execution of the rover to the users who initialize the launchpad. Only recommened for demo environments"
-    default = 1
-}
