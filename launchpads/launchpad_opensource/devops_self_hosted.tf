@@ -72,28 +72,27 @@ module "vm_provisioner" {
 
 locals {
     docker_build_command = <<EOT
-        sudo docker build -t devops -f ./scripts/Docker/devops_agent.Dockerfile ./scripts/Docker
-
-        sudo docker tag devops ${module.blueprint_container_registry.object.login_server}/devops
-
-        sudo docker push ${module.blueprint_container_registry.object.login_server}/devops
-    EOT
+sudo docker build -t devops -f ./scripts/Docker/devops_agent.Dockerfile ./scripts/Docker
+sudo docker tag devops ${module.blueprint_container_registry.object.login_server}/devops
+sudo docker push ${module.blueprint_container_registry.object.login_server}/devops
+EOT
 
     ## This command saves on the local rover volume the private ssh key required to allow the rover to login the docker host in the self hosted agent
     ssh_config_update = <<EOT
-        chmod 600 ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private
-        echo "" >> ~/.ssh/config
-        echo "Host ${module.blueprint_devops_self_hosted_agent.object.public_ip_address}" >> ~/.ssh/config
-        echo "    IdentityFile ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private" >> ~/.ssh/config
-        echo "    StrictHostKeyChecking no" >> ~/.ssh/config
-    EOT
+chmod 600 ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private
+echo "" >> ~/.ssh/config
+echo "Host ${module.blueprint_devops_self_hosted_agent.object.public_ip_address}" >> ~/.ssh/config
+echo "    IdentityFile ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private" >> ~/.ssh/config
+echo "    StrictHostKeyChecking no" >> ~/.ssh/config
+EOT
 
     docker_ssh_command = <<EOT
-        ssh -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} << EOF
-            az login --identity
-            az acr login --name ${module.blueprint_container_registry.object.admin_username}
-            docker pull ${module.blueprint_container_registry.object.login_server}/devops
-    EOT
+ssh -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
+    az login --identity
+    az acr login --name ${module.blueprint_container_registry.object.admin_username}
+    docker pull ${module.blueprint_container_registry.object.login_server}/devops
+EOF
+EOT
 }
 
 ###
