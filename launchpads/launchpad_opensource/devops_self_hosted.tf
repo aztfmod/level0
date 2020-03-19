@@ -9,7 +9,7 @@
 
 # workaround to add a depends_on the module blueprint_devops_self_hosted_agent
 data "azurerm_key_vault" "launchpad" {
-  depends_on            = [azurerm_key_vault.launchpad, azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover]
+  depends_on            = [azurerm_key_vault.launchpad, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
   name                  = azurerm_key_vault.launchpad.name
   resource_group_name   = azurerm_resource_group.rg.name
 }

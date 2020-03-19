@@ -88,14 +88,14 @@ resource "null_resource" "grant_admin_concent" {
 ###
 
 resource "azurerm_key_vault_secret" "launchpad_name" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover]
+    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
     name         = "launchpad-name"
     value        = azuread_application.launchpad.name
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
 resource "azurerm_key_vault_secret" "launchpad_application_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover]
+    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
     name         = "launchpad-application-id"
     value        = azuread_application.launchpad.application_id
     key_vault_id = azurerm_key_vault.launchpad.id
