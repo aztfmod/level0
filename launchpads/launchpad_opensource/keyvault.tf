@@ -1,12 +1,5 @@
 data "azurerm_client_config" "current" {}
 
-
-resource "azuread_group" "developers_rover" {
-  count = var.enable_collaboration == true ? 1 : 0
-
-  name = "${random_string.prefix.result}-caf-level0-rover-developers"
-}
-
 resource "random_string" "kv_name" {
   length  = 23 - length(random_string.prefix.result)
   special = false
@@ -59,59 +52,39 @@ resource "azurerm_key_vault_access_policy" "launchpad" {
 
 }
 
-resource "azurerm_key_vault_access_policy" "developer_group" {
-  count = var.enable_collaboration == true ? 1 : 0
+# # To allow deployment from developer machine - bootstrap
+# # Todo: add a condition
+# resource "azurerm_key_vault_access_policy" "developer" {
+#   key_vault_id = azurerm_key_vault.launchpad.id
 
-  key_vault_id = azurerm_key_vault.launchpad.id
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = var.logged_user_objectId
 
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = azuread_group.developers_rover.0.id
+#   key_permissions = []
 
-  key_permissions = []
+#   secret_permissions = [
+#       "Get",
+#       "List",
+#       "Set",
+#       "Delete"
+#   ]
+# }
 
-  secret_permissions = [
-      "Get",
-      "List",
-      "Set",
-      "Delete"
-  ]
+# resource "azurerm_key_vault_access_policy" "rover" {
+#   count = var.rover_pilot_client_id == "" ? 0 : 1
 
-}
+#   key_vault_id = azurerm_key_vault.launchpad.id
 
+#   tenant_id = data.azurerm_client_config.current.tenant_id
+#   object_id = var.rover_pilot_client_id
 
-# To allow deployment from developer machine - bootstrap
-# Todo: add a condition
-resource "azurerm_key_vault_access_policy" "developer" {
-  key_vault_id = azurerm_key_vault.launchpad.id
+#   key_permissions = []
 
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.logged_user_objectId
-
-  key_permissions = []
-
-  secret_permissions = [
-      "Get",
-      "List",
-      "Set",
-      "Delete"
-  ]
-}
-
-resource "azurerm_key_vault_access_policy" "rover" {
-  count = var.rover_pilot_client_id == "" ? 0 : 1
-
-  key_vault_id = azurerm_key_vault.launchpad.id
-
-  tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = var.rover_pilot_client_id
-
-  key_permissions = []
-
-  secret_permissions = [
-      "Get",
-      "List",
-      "Set",
-      "Delete"
-  ]
-}
+#   secret_permissions = [
+#       "Get",
+#       "List",
+#       "Set",
+#       "Delete"
+#   ]
+# }
 
