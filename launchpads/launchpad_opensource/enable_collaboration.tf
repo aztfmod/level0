@@ -5,7 +5,9 @@ resource "azuread_group" "developers_rover" {
 }
 
 resource "azuread_group_member" "bootstrap_user" {
-  group_object_id   = azuread_group.developers_rover.id
+  count = var.enable_collaboration == true ? 1 : 0
+  
+  group_object_id   = azuread_group.developers_rover.0.id
   member_object_id  = var.logged_user_objectId
 
   lifecycle {
