@@ -1,76 +1,68 @@
-###
-## Resource group to store the networking cards and the VM
-###
-resource "azurerm_resource_group" "rg" {
-  name      = var.vm_object.resource_group.name
-  location  = var.vm_object.resource_group.location
-  tags      = local.tags
-}
 
 # TODO: Remove when PAW included in the launchpad
 # Create the public ip to connect the server through ssh
 module "public_ip" {
-  source = "../../modules/terraform-azurerm-caf-public-ip"
+  source  = "aztfmod/caf-public-ip/azurerm"
+  version = "~> 1.0.0"
 
-  
+  # Resource location
+  rg                               = var.resource_group_name
+  location                         = var.location
+  tags                             = local.tags
 
-  name                      = lookup(var.vm_object.public_ip, "name", null)
-  rg                        = azurerm_resource_group.rg.name
-  location                  = azurerm_resource_group.rg.location
-  tags                      = merge(lookup(var.vm_object.public_ip, "tags", null), local.tags)
+  # IP Address details
+  name                             = var.public_ip.ip_name
+  convention                       = var.convention
+  ip_addr                          = var.public_ip
 
-  ip_addr                   = lookup(var.vm_object.public_ip, "ip_addr", null)
-
-  diagnostics_settings      = lookup(var.vm_object.public_ip, "diagnostics_settings", null)
-  diagnostics_map           = var.diagnostics_map
-  log_analytics_workspace_id  = var.log_analytics_workspace.id
+  # Diagnostics
+  diagnostics_map                  = var.diagnostics_map
+  log_analytics_workspace_id       = var.log_analytics_workspace.id
+  diagnostics_settings             = var.public_ip.diagnostics_settings
 }
 
 # TODO: more work to support multiple nic on different subnets
 # Create the networking card of the server
 module "networking_interface" {
-  source = "../../modules/terraform-azurerm-caf-nic"
+  source  = "aztfmod/caf-nic/azurerm"
+  version = "~> 0.2.0"
 
-  prefix                    = var.prefix
-  resource_group_name       = azurerm_resource_group.rg.name
-  location                  = azurerm_resource_group.rg.location
-  tags                      = local.tags
-  nic_objects               = var.vm_object.nic_objects.nics
-  pips_id_by_key            = module.public_ip.id_by_key
-  subnet_id                 = var.subnet_id
+  prefix                = var.prefix
+  tags                  = local.tags
+  resource_group_name   = var.resource_group_name
+  location              = var.location
+
+  name                  = var.vm_object.nic_object.name
+  convention            = var.convention
+
+  subnet_id             = var.subnet_id
+  public_ip_address_id  = module.public_ip.id
 }
 
-
-# Create the virtual machine
 module "vm" {
-  source = "../../modules/terraform-azurerm-caf-vm"
+  # source  = "aztfmod/caf-vm/azurerm"
+  # version = "~> 0.1.0"
+  source = "git://github.com/aztfmod/terraform-azurerm-caf-vm.git?ref=LL-2001"
 
-  prefix                        = var.prefix
-  resource_group_name           = azurerm_resource_group.rg.name
-  location                      = azurerm_resource_group.rg.location
-  tags                          = local.tags
-  convention                    = var.convention
+  prefix                      = var.prefix
+  convention                  = var.convention
+  name                        = var.vm_object.name
+  resource_group_name         = var.resource_group_name
+  location                    = var.location 
+  tags                        = merge( lookup(var.vm_object, "tags", {}), local.tags)
 
-  name                          = var.vm_object.name
+  diagnostics_map             = var.diagnostics_map
+  log_analytics_workspace_id  = var.log_analytics_workspace.id
+  diagnostics_settings        = lookup(var.vm_object, "diagnostics_settings", null)
+
+  network_interface_ids         = [ module.networking_interface.id ]
+  primary_network_interface_id  = module.networking_interface.id
   os                            = var.vm_object.os
   os_profile                    = var.vm_object.os_profile
-  storage_os_disk               = var.vm_object.storage_os_disk
   storage_image_reference       = var.vm_object.storage_image_reference
-  network_interface_ids         = module.networking_interface.nic_ids
-  primary_network_interface_id  = module.networking_interface.objects[var.vm_object.nic_objects.primary_nic_key].id
-  vm_size                       = var.vm_object.vm_size  
+  storage_os_disk               = var.vm_object.storage_os_disk
+  vm_size                       = var.vm_object.vm_size
+  key_vault_id                  = var.key_vault_id
 }
 
 
-module "vm_provisioner" {
-  source = "../../modules/terraform-azurerm-caf-provisioner"
-
-  host_connection               = lookup(module.public_ip.fqdn_by_key, var.vm_object.nic_objects.remote_host_pip)
-  scripts                       = var.vm_object.caf-provisioner.scripts
-  scripts_param                 = [
-                                  var.vm_object.os_profile.admin_username
-                                ]
-  admin_username                = module.vm.admin_username
-  ssh_private_key_pem           = module.vm.ssh_private_key_pem
-  os_platform                   = var.vm_object.caf-provisioner.os_platform
-}
