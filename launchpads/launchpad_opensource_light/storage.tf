@@ -1,16 +1,23 @@
-module "caf_name_stg" {
-  source  = "aztfmod/caf-naming/azurerm"
-  version = "~> 0.1.0"
+# module "caf_name_stg" {
+#   source  = "aztfmod/caf-naming/azurerm"
+#   version = "~> 0.1.0"
   
-  name        = local.stg_name
-  type        = "st"
-  convention  = var.convention
+#   name        = local.stg_name
+#   type        = "st"
+#   convention  = var.convention
 
-}
+# }
 
 locals {
   # storage account prefix
   stg_name = "tfstate"
+}
+
+resource "azurecaf_naming_convention" "rg" {
+  name          = local.stg_name
+  prefix        = local.prefix
+  resource_type = "st"
+  convention    = var.convention
 }
 
 

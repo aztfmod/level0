@@ -32,13 +32,13 @@ resource "random_string" "prefix" {
     special = false
     upper   = false
     number  = false
-}
+
 
 locals {
   landingzone_tag          = {
-    "landingzone" = basename(abspath(path.root))
+    "landingzone"     = basename(abspath(path.root))
   }
-  tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
+  tags                = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
-  prefix            = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
+  prefix              = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
 }
