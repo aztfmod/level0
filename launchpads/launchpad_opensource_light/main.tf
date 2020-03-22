@@ -22,6 +22,9 @@ provider "tls" {
   version = "~> 2.1.1"
 }
 
+provider "azurecaf" {
+}
+
 data "azurerm_subscription" "primary" {}
 
 
