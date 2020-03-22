@@ -23,6 +23,7 @@ provider "tls" {
 }
 
 provider "azurecaf" {
+  
 }
 
 data "azurerm_subscription" "primary" {}

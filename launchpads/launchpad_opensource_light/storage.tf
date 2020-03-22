@@ -13,7 +13,7 @@ locals {
   stg_name = "tfstate"
 }
 
-resource "azurecaf_naming_convention" "rg" {
+resource "azurecaf_naming_convention" "stg" {
   name          = local.stg_name
   prefix        = local.prefix
   resource_type = "st"
@@ -22,7 +22,7 @@ resource "azurecaf_naming_convention" "rg" {
 
 
 resource "azurerm_storage_account" "stg" {
-  name                     = module.caf_name_stg.st
+  name                     = azurecaf_naming_convention.stg.result
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
   account_tier             = "Standard"

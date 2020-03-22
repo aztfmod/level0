@@ -34,6 +34,7 @@ variable "workspace" {
 
 variable "use_prefix" {
     description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
+    type    = bool
     default = true
 }
 
