@@ -1,12 +1,3 @@
-# module "caf_name_stg" {
-#   source  = "aztfmod/caf-naming/azurerm"
-#   version = "~> 0.1.0"
-  
-#   name        = local.stg_name
-#   type        = "st"
-#   convention  = var.convention
-
-# }
 
 locals {
   # storage account prefix
@@ -19,7 +10,6 @@ resource "azurecaf_naming_convention" "stg" {
   resource_type = "st"
   convention    = var.convention
 }
-
 
 resource "azurerm_storage_account" "stg" {
   name                     = azurecaf_naming_convention.stg.result

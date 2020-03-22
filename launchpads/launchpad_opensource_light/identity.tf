@@ -5,12 +5,21 @@ resource "azuread_application" "launchpad" {
   name                       = "${random_string.prefix.result}launchpad"
 
   required_resource_access {
+
+    # Azure Active Directory Graph
     resource_app_id = "00000002-0000-0000-c000-000000000000"
 
+    # Application.ReadWrite.OwnedBy
     resource_access {
-        id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
-        type = "Role"
-      }
+			id    = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+			type  = "Role"
+    }
+
+    # Directory.Read.All
+    resource_access {
+      id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+      type = "Role"
+    }
   }
 }
 
