@@ -36,7 +36,7 @@ resource "random_string" "prefix" {
     special = false
     upper   = false
     number  = false
-
+}
 
 locals {
   landingzone_tag          = {
