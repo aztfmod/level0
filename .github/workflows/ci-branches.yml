@@ -19,27 +19,28 @@ env:
 
 jobs:
   integration-tests:
-    name: Execute terraform ${{ matrix.tf_command }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
+    name: Execute terraform ${{ matrix.command }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
 
     container:
       image: 'aztfmod/rover:2003.2011'
-      options: --user 0
-
+      options: --user 0 --entry-point /bin/bash
     
     strategy:
       matrix:
         region: ["southeastasia"]
-        tf_command: ["plan"]
+        command: ["plan"]
         arguments: [""]
     steps:
       - uses: actions/checkout@v2
+        with:
+          path: '/tf/caf'
       - name: Login Azure subscription
         run: |
-          az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant  ${{ secrets.ARM_TENANT_ID }}
-          az account set -s ${{ secrets.ARM_SUBSCRIPTION_ID }}
-      - name: Terraform ${{ matrix.tf_command }}
+          az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+      - name: Terraform ${{ matrix.command }}
         run: |
           echo $(pwd)
           ls -lsa
-          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
+          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
