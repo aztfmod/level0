@@ -36,5 +36,5 @@ jobs:
       - name: Terraform ${{ matrix.tf_command }}
         run: |
           pwd
-          ls /tf
-          rover /tf/caf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
+          ls /tf/__w/level0/level0
+          ./rover/rover.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
