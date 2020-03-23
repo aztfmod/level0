@@ -12,10 +12,10 @@ on:
 
 env:
   #Terraform Auth
-  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET  }}
-  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID  }}
-  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID  }}
-  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID  }}
+  ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+  ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+  ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+  ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
   integration-tests:
@@ -30,9 +30,8 @@ jobs:
       matrix:
         region: ["southeastasia"]
         tf_command: ["plan"]
-        arguments: ["-var location=westeurope"]
+        arguments: [""]
     steps:
-    - uses: actions/checkout@v2
-    - name: Terraform ${{ matrix.tf_command }}
-    run: |
-      rover /tf/caf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} ${{ matrix.arguments }}
+      - name: Terraform ${{ matrix.tf_command }}
+        run: |
+          rover /tf/caf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
