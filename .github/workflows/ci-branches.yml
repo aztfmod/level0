@@ -24,7 +24,7 @@ jobs:
 
     container:
       image: 'aztfmod/rover:2003.2011'
-      options: --user 0 --workdir /tf/caf
+      options: --user vscode
     
     strategy:
       matrix:
