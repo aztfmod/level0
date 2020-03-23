@@ -19,7 +19,7 @@ env:
 
 jobs:
   integration-tests:
-    name: Execute terraform ${{ matrix.command }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
+    name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
 
     container:
@@ -27,9 +27,10 @@ jobs:
       options: --user 0
     
     strategy:
+      fail-fast: false
       matrix:
+        launchpad: ["launchpad_opensource_light"]
         region: ["southeastasia"]
-        command: ["plan"]
         arguments: [""]
     steps:
       - uses: actions/checkout@v2
@@ -37,8 +38,15 @@ jobs:
         run: |
           az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-      - name: Depploy launchpad
+      - name: Plan launchpad
         run: |
           echo $(pwd)
           ls -lsa
-          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
+          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
+      - name: Apply launchpad
+        run: |
+          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
+      - name: Destroy launchpad
+          run: |
+            /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
+  
