@@ -25,6 +25,7 @@ jobs:
     container:
       image: 'aztfmod/rover:2003.2011'
       options: --user 0
+
     
     strategy:
       matrix:
@@ -33,8 +34,12 @@ jobs:
         arguments: [""]
     steps:
       - uses: actions/checkout@v2
+      - name: Login Azure subscription
+        run: |
+          az login --service-principal -u ${{ secrets.ARM_CLIENT_ID }} -p ${{ secrets.ARM_CLIENT_SECRET }} --tenant  ${{ secrets.ARM_TENANT_ID }}
+          az account set -s ${{ secrets.ARM_SUBSCRIPTION_ID }}
       - name: Terraform ${{ matrix.tf_command }}
         run: |
-          pwd
-          ls /tf/__w/level0/level0
-          ./rover/rover.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
+          ls -lsa
+          # ./rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
+          /tf/rover/launchpad.sh
