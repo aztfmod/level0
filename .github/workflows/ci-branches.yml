@@ -26,14 +26,13 @@ jobs:
       image: 'aztfmod/rover:2003.2011'
       options: --user 0
     
-
-
     strategy:
       matrix:
         region: ["southeastasia"]
         tf_command: ["plan"]
         arguments: ["-var location=westeurope"]
     steps:
+    - uses: actions/checkout@v2
     - name: Terraform ${{ matrix.tf_command }}
     run: |
       rover /tf/caf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} ${{ matrix.arguments }}
