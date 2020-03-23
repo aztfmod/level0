@@ -40,6 +40,7 @@ jobs:
           az account set -s ${{ secrets.ARM_SUBSCRIPTION_ID }}
       - name: Terraform ${{ matrix.tf_command }}
         run: |
+        echo $(pwd)
           ls -lsa
           # ./rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
           /tf/rover/launchpad.sh
