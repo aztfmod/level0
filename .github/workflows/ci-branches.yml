@@ -33,14 +33,13 @@ jobs:
         arguments: [""]
     steps:
       - uses: actions/checkout@v2
-        with:
-          path: '/tf/caf'
       - name: Login Azure subscription
         run: |
           az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
       - name: Terraform ${{ matrix.command }}
         run: |
+          ls -lsa /home/vscode
           echo $(pwd)
           ls -lsa
           /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light ${{ matrix.command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
