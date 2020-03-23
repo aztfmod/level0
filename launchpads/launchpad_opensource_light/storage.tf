@@ -1,14 +1,8 @@
-
-locals {
-  # storage account prefix
-  stg_name = "tfstate"
-}
-
 resource "azurecaf_naming_convention" "stg" {
-  name          = local.stg_name
+  name          = var.workspace
   prefix        = local.prefix
   resource_type = "st"
-  convention    = var.convention
+  convention    = "cafrandom"
 }
 
 resource "azurerm_storage_account" "stg" {

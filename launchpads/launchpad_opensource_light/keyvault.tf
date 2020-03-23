@@ -1,25 +1,11 @@
 data "azurerm_client_config" "current" {}
 
 
-# resource "random_string" "kv_name" {
-#   length  = 23 - length(random_string.prefix.result)
-#   special = false
-#   upper   = false
-#   number  = true
-# }
-
-# resource "random_string" "kv_middle" {
-#   length  = 1
-#   special = false
-#   upper   = false
-#   number  = false
-# }
-
 resource "azurecaf_naming_convention" "keyvault" {
-  name          = "level0"
+  name          = var.workspace
   prefix        = local.prefix
   resource_type = "kv"
-  convention    = var.convention
+  convention    = "cafrandom"
 }
 
 resource "azurerm_key_vault" "launchpad" {

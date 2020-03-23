@@ -1,7 +1,7 @@
 resource "azuread_group" "developers_rover" {
   count = var.enable_collaboration == true ? 1 : 0
 
-  name = "${local.prefix}caf-level0-rover-developers"
+  name = "${local.prefix}caf-${var.workspace}-rover-developers"
 }
 
 
