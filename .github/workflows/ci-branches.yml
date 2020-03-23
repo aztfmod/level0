@@ -35,4 +35,6 @@ jobs:
       - uses: actions/checkout@v2
       - name: Terraform ${{ matrix.tf_command }}
         run: |
+          pwd
+          ls /tf
           rover /tf/caf/launchpads/launchpad_opensource_light ${{ matrix.tf_command }} -var location=${{ matrix.region}} ${{ matrix.arguments }}
