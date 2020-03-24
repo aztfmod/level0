@@ -9,12 +9,14 @@ resource "azuread_application" "launchpad" {
     # Azure Active Directory Graph
     resource_app_id = "00000002-0000-0000-c000-000000000000"
 
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
     # Application.ReadWrite.OwnedBy
     resource_access {
 			id    = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
 			type  = "Role"
     }
 
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
     # Directory.Read.All
     resource_access {
       id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
@@ -23,6 +25,22 @@ resource "azuread_application" "launchpad" {
 
   }
 }
+
+# Service Principal's objectId for Azure Active Directory Graph (resourceId)
+# az ad sp show --id "00000002-0000-0000-c000-000000000000" --query "objectId" --> "d74f8620-1972-4a99-87f0-41ba5c6d149a"
+#
+# Appl role id (aapRoleId): 
+# az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']" --> "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+#
+# "principalId": azuread_service_principal.launchpad.id
+
+az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/d74f8620-1972-4a99-87f0-41ba5c6d149a/appRoleAssignments \
+        --header Content-Type=application/json --body '{
+          "principalId": "8e42819e-a0d0-4c71-bf7c-06f63fed7d69",
+          "resourceId": "d74f8620-1972-4a99-87f0-41ba5c6d149a",
+          "appRoleId": "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+        }'
+
 
 resource "azuread_service_principal" "launchpad" {
   application_id = azuread_application.launchpad.application_id
