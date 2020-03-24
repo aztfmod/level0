@@ -62,7 +62,7 @@ resource "azurerm_key_vault_access_policy" "developer" {
 
 # Required to test deployment of new versions of the launchpad with the rover.
 resource "azurerm_key_vault_access_policy" "rover" {
-  count = var.rover_pilot_client_id == "" ? 0 : 1
+  count = var.rover_pilot_client_id == var.logged_user_objectId ? 0 : 1
 
   key_vault_id = azurerm_key_vault.launchpad.id
 
