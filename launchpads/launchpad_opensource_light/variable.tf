@@ -4,7 +4,6 @@ variable "logged_user_objectId" {
 
 variable "rover_pilot_client_id" {
     description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
-    default = ""
 }
 
 
