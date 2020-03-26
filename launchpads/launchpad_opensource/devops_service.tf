@@ -14,11 +14,11 @@ resource "azuredevops_project" "release" {
 }
 
 
-// Create the agent pools
-resource "azuredevops_agent_pool" "pools" {
-  for_each        = var.azure_devops.agent_pools
+# // Create the agent pools
+# resource "azuredevops_agent_pool" "pools" {
+#   for_each        = var.azure_devops.agent_pools
 
-  name            = each.value.name
-  pool_type       = lookup(each.value, "pool_type", null)
-  auto_provision  = lookup(each.value, "auto_provision", null)
-}
+#   name            = each.value.name
+#   pool_type       = lookup(each.value, "pool_type", null)
+#   auto_provision  = lookup(each.value, "auto_provision", null)
+# }
