@@ -5,21 +5,63 @@ resource "azuread_application" "launchpad" {
   name                       = "${random_string.prefix.result}launchpad"
   # Access to Azure Active Directory Graph
   required_resource_access {
-    resource_app_id = "00000002-0000-0000-c000-000000000000"
+    resource_app_id = local.active_directory_graph_id
 
-    # Directory.ReadWrite.All
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
+    # Application.ReadWrite.OwnedBy
     resource_access {
-      id   = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
-      type = "Role"
+			id    = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+			type  = "Role"
     }
 
-    # Application.ReadWrite.All
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
+    # Directory.Read.All
     resource_access {
-      id   = "1cda74f2-2616-4834-b122-5cb1b07f8a59"
+      id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
       type = "Role"
     }
   }
 }
+
+locals {
+  # Azure Active Directory Graph
+  active_directory_graph_id         = "00000002-0000-0000-c000-000000000000"
+  active_directory_graph_object_id  = "d74f8620-1972-4a99-87f0-41ba5c6d149a"
+  active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+  active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+
+  grant_admin_concent_command = <<EOT
+    set -e
+
+    TYPE=$(az account show --query user.type -o tsv)
+    if [ $TYPE == "user" ]; then
+        echo "granting consent to logged in user"
+        az ad app permission admin-consent --id ${azuread_application.launchpad.application_id}
+
+        echo "Initializing state with user: $(az ad signed-in-user show --query userPrincipalName -o tsv)"
+    else
+        echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
+
+        # grant consent (Application.ReadWrite.OwnedBy)
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.active_directory_graph_object_id}/appRoleAssignments \
+        --header Content-Type=application/json --body '{
+          "principalId": "${azuread_service_principal.launchpad.id}",
+          "resourceId": "${local.active_directory_graph_object_id}",
+          "appRoleId": "${local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
+        }'
+
+        # grant consent (Directory.Read.All)
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.active_directory_graph_object_id}/appRoleAssignments \
+        --header Content-Type=application/json --body '{
+          "principalId": "${azuread_service_principal.launchpad.id}",
+          "resourceId": "${local.active_directory_graph_object_id}",
+          "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_Read_All}"
+        }'
+    fi
+EOT
+
+}
+
 
 resource "azuread_service_principal" "launchpad" {
   application_id = azuread_application.launchpad.application_id
@@ -65,9 +107,6 @@ resource "azurerm_role_assignment" "launchpad_role1" {
 #    Grant conscent to the azure ad application
 ###
 
-locals {
-  grant_admin_concent_command = "az ad app permission admin-consent --id ${azuread_application.launchpad.application_id}"
-}
 resource "null_resource" "grant_admin_concent" {
   depends_on = [azurerm_role_assignment.launchpad_role1]
 
@@ -76,6 +115,7 @@ resource "null_resource" "grant_admin_concent" {
   }
   provisioner "local-exec" {
       command = local.grant_admin_concent_command
+      interpreter = ["/bin/bash", "-c"]
   }
 
   triggers = {
@@ -83,49 +123,3 @@ resource "null_resource" "grant_admin_concent" {
   }
 }
 
-###
-#   Store values in keyvault secrets
-###
-
-resource "azurerm_key_vault_secret" "launchpad_name" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-name"
-    value        = azuread_application.launchpad.name
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
-
-resource "azurerm_key_vault_secret" "launchpad_application_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-application-id"
-    value        = azuread_application.launchpad.application_id
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
-
-
-resource "azurerm_key_vault_secret" "launchpad_client_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-service-principal-client-id"
-    value        = azuread_service_principal.launchpad.object_id
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
-
-resource "azurerm_key_vault_secret" "launchpad_client_secret" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-service-principal-client-secret"
-    value        = random_string.launchpad_password.result
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
-
-resource "azurerm_key_vault_secret" "launchpad_tenant_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-tenant-id"
-    value        = data.azurerm_client_config.current.tenant_id
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
-
-resource "azurerm_key_vault_secret" "launchpad_subscription_id" {
-    depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
-    name         = "launchpad-subscription-id"
-    value        = data.azurerm_client_config.current.subscription_id
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
