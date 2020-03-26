@@ -3,6 +3,7 @@
 ###
 resource "azuread_application" "launchpad" {
   name                       = "${random_string.prefix.result}launchpad"
+  
   # Access to Azure Active Directory Graph
   required_resource_access {
     resource_app_id = local.active_directory_graph_id
@@ -10,14 +11,33 @@ resource "azuread_application" "launchpad" {
     # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
     # Application.ReadWrite.OwnedBy
     resource_access {
-			id    = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
 			type  = "Role"
     }
 
     # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
     # Directory.Read.All
     resource_access {
-      id   = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+      id   = local.active_directory_graph_resource_access_id_Directory_Read_All
+      type = "Role"
+    }
+  }
+
+  # Access to Microsoft Graph
+  required_resource_access {
+    resource_app_id = local.active_directory_graph_id
+
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
+    # Application.ReadWrite.OwnedBy
+    resource_access {
+			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+			type  = "Role"
+    }
+
+    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
+    # Directory.Read.All
+    resource_access {
+      id   = local.active_directory_graph_resource_access_id_Directory_Read_All
       type = "Role"
     }
   }
@@ -29,6 +49,9 @@ locals {
   active_directory_graph_object_id  = "d74f8620-1972-4a99-87f0-41ba5c6d149a"
   active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
   active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+
+  microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
+  microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
 
   grant_admin_concent_command = <<EOT
     set -e
@@ -56,6 +79,14 @@ locals {
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "${local.active_directory_graph_object_id}",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_Read_All}"
+        }'
+
+        # grant consent (AppRoleAssignment.ReadWrite.All)
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.microsoft_graph_id}/appRoleAssignments \
+        --header Content-Type=application/json --body '{
+          "principalId": "${azuread_service_principal.launchpad.id}",
+          "resourceId": "${local.microsoft_graph_id}",
+          "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
         }'
     fi
 EOT
