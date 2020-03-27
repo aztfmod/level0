@@ -1,17 +1,17 @@
 provider "azurerm" {
-  version = "~> 2.2.0"
   features {}
 }
 
-provider "azurecaf" {
-  
-}
+provider "azurecaf" {}
 
 terraform {
-}
-
-provider "azuread" {
-  version = "~> 0.7.0"
+  required_providers {
+    azurerm = "~> 2.2.0"
+    azuread = "~> 0.7.0"
+    random  = "~> 2.2.1"
+    null    = "~> 2.1.0"
+    tls     = "~> 2.1.1"
+  }
 }
 
 provider "azuredevops" {
@@ -21,18 +21,6 @@ provider "azuredevops" {
   personal_access_token = var.azure_devops_pat_token
 }
 
-
-provider "random" {
-  version = "~> 2.2.1"
-}
-
-provider "null" {
-  version = "~> 2.1.0"
-}
-
-provider "tls" {
-  version = "~> 2.1.0"
-}
 
 data "azurerm_subscription" "primary" {}
 

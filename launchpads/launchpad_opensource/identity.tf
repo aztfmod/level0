@@ -25,21 +25,13 @@ resource "azuread_application" "launchpad" {
 
   # Access to Microsoft Graph
   required_resource_access {
-    resource_app_id = local.active_directory_graph_id
+    resource_app_id = local.microsoft_graph_object_id
 
-    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
-    # Application.ReadWrite.OwnedBy
     resource_access {
-			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+			id    = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
 			type  = "Role"
     }
 
-    # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
-    # Directory.Read.All
-    resource_access {
-      id   = local.active_directory_graph_resource_access_id_Directory_Read_All
-      type = "Role"
-    }
   }
 }
 
@@ -50,7 +42,9 @@ locals {
   active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
   active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
 
+  # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
+  microsoft_graph_object_id         = "1d9d27c7-4e21-41bb-a855-9668d40cf59a"
   microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
 
   grant_admin_concent_command = <<EOT
@@ -82,12 +76,11 @@ locals {
         }'
 
         # grant consent (AppRoleAssignment.ReadWrite.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.microsoft_graph_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.microsoft_graph_object_id}/appRoleAssignments \
         --header Content-Type=application/json --body '{
-          "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${local.microsoft_graph_id}",
+          "principalId": "${azuread_service_principal.server.id}",
+          "resourceId": "${local.microsoft_graph_object_id}",
           "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
-        }'
     fi
 EOT
 

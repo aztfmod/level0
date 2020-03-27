@@ -63,7 +63,7 @@ variable "azure_devops" {}
 
 ## Feature flags
 variable "enable_collaboration" {
-      type        = bool
+    type        = bool
     description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
     default = false
 }
