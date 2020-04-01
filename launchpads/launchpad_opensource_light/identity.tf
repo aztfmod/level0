@@ -34,12 +34,12 @@ resource "azuread_application" "launchpad" {
 #
 # "principalId": azuread_service_principal.launchpad.id
 
-az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/d74f8620-1972-4a99-87f0-41ba5c6d149a/appRoleAssignments \
-        --header Content-Type=application/json --body '{
-          "principalId": "8e42819e-a0d0-4c71-bf7c-06f63fed7d69",
-          "resourceId": "d74f8620-1972-4a99-87f0-41ba5c6d149a",
-          "appRoleId": "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
-        }'
+# az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/d74f8620-1972-4a99-87f0-41ba5c6d149a/appRoleAssignments \
+#         --header Content-Type=application/json --body '{
+#           "principalId": "8e42819e-a0d0-4c71-bf7c-06f63fed7d69",
+#           "resourceId": "d74f8620-1972-4a99-87f0-41ba5c6d149a",
+#           "appRoleId": "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+#         }'
 
 
 resource "azuread_service_principal" "launchpad" {
