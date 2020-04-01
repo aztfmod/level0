@@ -3,9 +3,8 @@ locals {
 }
 
 module "diagnostics" {
-  # source  = "aztfmod/caf-diagnostics-logging/azurerm"
-  # version = "~>1.0.0"
-  source = "git://github.com/aztfmod/terraform-azurerm-caf-diagnostics-logging.git?ref=v2.0.1"
+  source  = "aztfmod/caf-diagnostics-logging/azurerm"
+  version = "2.0.1"
 
   name                  = "diag"
   convention            = "cafrandom"

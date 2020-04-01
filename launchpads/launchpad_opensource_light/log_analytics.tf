@@ -9,9 +9,8 @@ locals {
 }
 
 module "log_analytics" {
-    # source  = "aztfmod/caf-log-analytics/azurerm"
-    # version = "~> 1.0"
-    source = "git://github.com/aztfmod/terraform-azurerm-caf-log-analytics.git?ref=v2.0.1"
+    source  = "aztfmod/caf-log-analytics/azurerm"
+    version = "2.0.1"
 
     name                              = var.workspace
     convention                        = var.convention
@@ -20,5 +19,4 @@ module "log_analytics" {
     prefix                            = local.prefix
     location                          = var.location
     tags                              = var.tags
-    
 }
