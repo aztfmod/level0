@@ -28,21 +28,33 @@ jobs:
         launchpad: ["launchpad_opensource_light"]
         region: ["southeastasia"]
         arguments: [""]
+    
+        container:
+      image: 'aztfmod/roverdev:2004.030817'
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login registry
-        uses: azure/docker-login@v1
-        with:
-          username: '${{ secrets.DOCKER_USER }}'
-          password: '${{ secrets.DOCKER_PASSWORD }}'
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+      
+      - name: Plan launchpad for ${{ matrix.region }}
+        run: |
+        /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+        
+      # - name: Login registry
+      #   uses: azure/docker-login@v1
+      #   with:
+      #     username: '${{ secrets.DOCKER_USER }}'
+      #     password: '${{ secrets.DOCKER_PASSWORD }}'
 
-      - name: Pull rover  
-        uses: ./.github/workflows/action
-        with:
-          entrypoint: /bin/bash
-          args: "sudo az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}' && sudo az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }} && /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan"
+      # - name: Pull rover  
+      #   uses: ./.github/workflows/action
+      #   with:
+      #     entrypoint: /bin/bash
+      #     args: "sudo az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}' && sudo az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }} && /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan"
 
       # - name: Execute deployment
       #   run: |
