@@ -47,6 +47,11 @@ jobs:
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
           echo $(pwd)
           ls -lsa
+
+          echo "ls /" && ls -lsa /
+          echo "ls /tf" && ls -lsa /tf
+          echo "ls /tf/rover" && ls -lsa /tf/rover
+          
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
