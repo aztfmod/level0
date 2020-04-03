@@ -22,8 +22,6 @@ jobs:
     name: Pull rover dev
     runs-on: ubuntu-latest
    
-    steps:
-      
 
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
