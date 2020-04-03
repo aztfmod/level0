@@ -42,7 +42,7 @@ jobs:
       - name: Pull rover  
         uses: ./.github/workflows/action
         with:
-          rover-version: ${{ env.ROVER_TAG }}
+          tag: ${{ env.ROVER_TAG }}
           entrypoint: /tf/rover/rover.sh
 
       # - name: Execute deployment

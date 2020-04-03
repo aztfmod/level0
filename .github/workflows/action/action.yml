@@ -3,9 +3,9 @@ branding:
     icon: 'cloud-lightning'  
     color: 'green'
 inputs:
-  rover-version: # Docker tag
+  tag: # Docker tag
     description: 'Tag of the rover'
     required: true
 runs:
   using: 'docker'
-  image: 'docker://aztfmod/roverdev:${{ inputs.rover-version }}'
+  image: 'docker://aztfmod/roverdev:${{ inputs.tag }}'
