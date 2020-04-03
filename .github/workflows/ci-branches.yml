@@ -39,7 +39,7 @@ jobs:
           password: '${{ secrets.DOCKER_PASSWORD }}'
 
       - name: Pull rover  
-        uses: ./action
+        uses: ./.github/workflows/action
 
       - name: Execute deployment
         run: |
