@@ -25,6 +25,7 @@ resource "azurerm_storage_account" "stg" {
     tfstate     = var.workspace
     workspace   = var.workspace
     prefix      = random_string.prefix.result
+    launchpad   = local.launchpad
   }
 }
 

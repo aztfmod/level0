@@ -28,9 +28,10 @@ resource "random_string" "prefix" {
 
 locals {
   landingzone_tag          = {
-    "landingzone"     = basename(abspath(path.root))
+    "landingzone"     = local.launchpad
   }
   tags                = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
   prefix              = var.use_prefix == true ? random_string.prefix.result : null
+  launchpad           = basename(abspath(path.root))
 }
