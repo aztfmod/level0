@@ -11,6 +11,7 @@ on:
         - master
 
 env:
+  ROVER_TAG: '2004.030817'
   #Terraform Auth
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -41,9 +42,8 @@ jobs:
       - name: Pull rover  
         uses: ./.github/workflows/action
         with:
-          rover-version: '2004.030817'
-          run: |
-            echo $(pwd)
+          rover-version: ${{ env.ROVER_TAG }}
+          entrypoint: /tf/rover/rover.sh
 
       # - name: Execute deployment
       #   run: |

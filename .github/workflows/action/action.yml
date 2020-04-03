@@ -6,8 +6,6 @@ inputs:
   rover-version: # Docker tag
     description: 'Tag of the rover'
     required: true
-  run:
-    description: 'Arguments to pass to the rover'
 runs:
-  docker run --rm -i -v $(pwd):/tf/caf --entrypoint '/bin/bash -c' aztfmod/roverdev:${{ inputs.rover-version }} ${{ inputs.run }}
-
+  using: 'docker'
+  image: 'docker://aztfmod/roverdev:${{ inputs.rover-version }}'
