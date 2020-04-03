@@ -23,22 +23,11 @@ jobs:
     runs-on: ubuntu-latest
    
     steps:
-      - uses: azure/docker-login@v1
-        with:
-          username: '${{ secrets.DOCKER_USER }}'
-          password: '${{ secrets.DOCKER_PASSWORD }}'
-      - name: Pull image
-        run: |
-          docker pull aztfmod/roverdev:2004.030817
-
+      
 
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
-
-    container:
-      image: 'aztfmod/roverdev:2004.030817'
-      options: --user 0
 
     
     strategy:
@@ -47,21 +36,27 @@ jobs:
         launchpad: ["launchpad_opensource_light"]
         region: ["southeastasia"]
         arguments: [""]
+
     steps:
       - uses: actions/checkout@v2
-      - name: Login Azure subscription
+
+
+      - uses: azure/docker-login@v1
+        with:
+          username: '${{ secrets.DOCKER_USER }}'
+          password: '${{ secrets.DOCKER_PASSWORD }}'
+  
+      - run: |
+          docker pull aztfmod/roverdev:2004.030817
+
+      - name: Execute deployment
+        uses: docker://aztfmod/roverdev:2004.030817
         run: |
           az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-      - name: Plan launchpad
-        run: |
           echo $(pwd)
           ls -lsa
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
-      - name: Apply launchpad
-        run: |
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
-      - name: Destroy launchpad
-        run: |
           /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
   
