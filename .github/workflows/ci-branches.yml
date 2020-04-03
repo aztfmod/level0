@@ -43,7 +43,7 @@ jobs:
         with:
           rover-version: '2004.030817'
           run: |
-          echo $(pwd)
+            echo $(pwd)
 
       # - name: Execute deployment
       #   run: |
