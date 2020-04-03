@@ -11,4 +11,5 @@ inputs:
 runs:
   using: 'docker'
   image: 'docker://aztfmod/roverdev:${{ inputs.rover-version }}'
-  runs: ${{ inputs.run }}
+  entrypoint: '/bin/bash -c'
+  args: ${{ inputs.run }}
