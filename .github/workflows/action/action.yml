@@ -9,7 +9,5 @@ inputs:
   run:
     description: 'Arguments to pass to the rover'
 runs:
-  using: 'docker'
-  image: 'docker://aztfmod/roverdev:${{ inputs.rover-version }}'
-  entrypoint: '/bin/bash -c'
-  args: ${{ inputs.run }}
+  docker run --rm -i -v $(pwd):/tf/caf --entrypoint '/bin/bash -c' aztfmod/roverdev:${{ inputs.rover-version }} ${{ inputs.run }}
+
