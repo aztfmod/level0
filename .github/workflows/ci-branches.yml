@@ -19,12 +19,15 @@ env:
 
 jobs:
   get-rover-from-private-registry:
+    name: Pull rover dev
     runs-on: ubuntu-latest
-
+    - uses: azure/docker-login@v1
+      with:
+        username: '${{ secrets.DOCKER_USER }}'
+        password: '${{ secrets.DOCKER_PASSWORD }}'
     steps:
       - name: Pull image
         run: |
-          pwd=${{ secrets.DOCKER_PASSWORD }} printenv pwd | docker login ${{ secrets.DOCKER_USER }} --password-stdin
           docker pull aztfmod/roverdev:2004.030817
 
 
