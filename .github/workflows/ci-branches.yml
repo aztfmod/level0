@@ -41,8 +41,10 @@ jobs:
       - name: Pull rover  
         uses: ./.github/workflows/action
         with:
-          entrypoint: /tf/rover/rover.sh
-          args: "/tf/caf/launchpads/launchpad_opensource_light plan"
+          entrypoint: /bin/bash
+          args: "az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}" && \
+            az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }} && \ 
+            /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan"
 
       # - name: Execute deployment
       #   run: |
