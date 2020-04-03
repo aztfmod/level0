@@ -23,16 +23,14 @@ jobs:
 
     steps:
       - name: Pull image
-      run: |
-      pwd=${{ secrets.DOCKER_PASSWORD }} printenv pwd | docker login ${{ secrets.DOCKER_USER }} --password-stdin
-      docker pull aztfmod/roverdev:2004.030817
+        run: |
+          pwd=${{ secrets.DOCKER_PASSWORD }} printenv pwd | docker login ${{ secrets.DOCKER_USER }} --password-stdin
+          docker pull aztfmod/roverdev:2004.030817
 
 
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
-
-    -name
 
     container:
       image: 'aztfmod/roverdev:2004.030817'
