@@ -24,7 +24,7 @@ jobs:
 
     
     strategy:
-      fail-fast: false
+      fail-fast: true
       matrix:
         launchpad: ["launchpad_opensource_light"]
         region: ["southeastasia"]
@@ -32,12 +32,14 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: azure/docker-login@v1
+
+      - name: Pull rover
+        uses: azure/docker-login@v1
         with:
           username: '${{ secrets.DOCKER_USER }}'
           password: '${{ secrets.DOCKER_PASSWORD }}'
   
-      - run: |
+       run: |
           docker pull aztfmod/roverdev:2004.030817
 
       - uses: docker://aztfmod/roverdev:2004.030817
