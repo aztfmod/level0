@@ -18,11 +18,6 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
-  get-rover-from-private-registry:
-    name: Pull rover dev
-    runs-on: ubuntu-latest
-   
-
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
