@@ -39,7 +39,7 @@ jobs:
           password: '${{ secrets.DOCKER_PASSWORD }}'
 
       - name: Pull rover  
-        uses: .github/workflows/action
+        uses: /.github/workflows/action
         with:
           entrypoint: /tf/rover/rover.sh
           args: "/tf/caf/launchpads/launchpad_opensource_light plan"
