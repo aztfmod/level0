@@ -18,7 +18,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
-  integration-tests:
+  deploy-launchpad-light:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
     
@@ -43,7 +43,16 @@ jobs:
       
       - name: Plan launchpad for ${{ matrix.region }}
         run: |
-          /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+          /tf/rover/launchpads.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+
+      - name: Apply launchpad for ${{ matrix.region }}
+        run: |
+          /tf/rover/launchpads.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+    
+      - name: Plan launchpad for ${{ matrix.region }}
+        run: |
+          echo "ls /" && ls -lsa /
+          # /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
         
       # - name: Login registry
       #   uses: azure/docker-login@v1
