@@ -1,4 +1,5 @@
 name: Azure CAF Rover Action
+description: Azure CAF rover to execute the deployment of the landing zones
 branding:
     icon: 'cloud-lightning'  
     color: 'green'
