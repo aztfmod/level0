@@ -31,12 +31,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: ./action
+
+      - name: Login registry
+        uses: azure/docker-login@v1
+        with:
+          username: '${{ secrets.DOCKER_USER }}'
+          password: '${{ secrets.DOCKER_PASSWORD }}'
+
+      - name: Pull rover  
+          uses: ./action
 
       - name: Execute deployment
-        runs:
-          using: 'docker'
-          image: 'docker://aztfmod/roverdev:2004.030817'
           run: |
             az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
             az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
