@@ -40,19 +40,22 @@ jobs:
 
       - name: Pull rover  
         uses: ./.github/workflows/action
-
-      - name: Execute deployment
-        run: |
-          az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
-          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+        with:
+          rover-version: '2004.030817'
+          run: |
           echo $(pwd)
-          ls -lsa
 
-          echo "ls /" && ls -lsa /
-          echo "ls /tf" && ls -lsa /tf
-          echo "ls /tf/rover" && ls -lsa /tf/rover
-          
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
-  
+      # - name: Execute deployment
+      #   run: |
+      #     az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
+      #     az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+      #     echo $(pwd)
+      #     ls -lsa
+
+      #     echo "ls /" && ls -lsa /
+      #     echo "ls /tf" && ls -lsa /tf
+      #     echo "ls /tf/rover" && ls -lsa /tf/rover
+
+      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
+      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
+      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve

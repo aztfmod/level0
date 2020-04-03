@@ -1,5 +1,14 @@
-name: test action
+name: Azure CAF Rover Action
+branding:
+    icon: 'cloud-lightning'  
+    color: 'green'
+inputs:
+  rover-version: # Docker tag
+    description: 'Tag of the rover'
+    required: true
+  run:
+    description: 'Arguments to pass to the rover'
 runs:
   using: 'docker'
-  image: 'docker://aztfmod/roverdev:2004.030817'
-  
+  image: 'docker://aztfmod/roverdev:${{ inputs.rover-version }}'
+  runs: ${{ inputs.run }}
