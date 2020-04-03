@@ -21,8 +21,6 @@ jobs:
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
-
-    needs: pull-rover
     
     strategy:
       fail-fast: true
@@ -32,26 +30,19 @@ jobs:
         arguments: [""]
 
     steps:
-      - name: Login registry
-        uses: azure/docker-login@v1
-        with:
-          username: '${{ secrets.DOCKER_USER }}'
-          password: '${{ secrets.DOCKER_PASSWORD }}'
-      
-      - name: Pull rover
-        run: |
-            docker pull aztfmod/roverdev:2004.030817
-            
       - uses: actions/checkout@v2
+      - uses: ./action
 
       - name: Execute deployment
-        uses: ./action
-        run: |
-          az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
-          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-          echo $(pwd)
-          ls -lsa
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
-          /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
+        runs:
+          using: 'docker'
+          image: 'docker://aztfmod/roverdev:2004.030817'
+          run: |
+            az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
+            az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+            echo $(pwd)
+            ls -lsa
+            /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
+            /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
+            /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
   
