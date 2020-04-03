@@ -51,8 +51,9 @@ jobs:
     
       - name: Plan launchpad for ${{ matrix.region }}
         run: |
-          echo "ls /" && ls -lsa /
-          # /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+          ln -s /__w/level0/level0 /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
         
       # - name: Login registry
       #   uses: azure/docker-login@v1
