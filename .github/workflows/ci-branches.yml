@@ -18,13 +18,26 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
+  get-rover-from-private-registry:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull image
+      run: |
+      pwd=${{ secrets.DOCKER_PASSWORD }} printenv pwd | docker login ${{ secrets.DOCKER_USER }} --password-stdin
+      docker pull aztfmod/roverdev:2004.030817
+
+
   integration-tests:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
 
+    -name
+
     container:
-      image: 'aztfmod/rover:2004.0211'
+      image: 'aztfmod/roverdev:2004.030817'
       options: --user 0
+
     
     strategy:
       fail-fast: false
