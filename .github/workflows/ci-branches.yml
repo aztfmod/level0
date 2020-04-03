@@ -43,11 +43,11 @@ jobs:
       
       - name: Plan launchpad for ${{ matrix.region }}
         run: |
-          /tf/rover/launchpads.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
 
       - name: Apply launchpad for ${{ matrix.region }}
         run: |
-          /tf/rover/launchpads.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
     
       - name: Plan launchpad for ${{ matrix.region }}
         run: |
