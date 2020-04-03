@@ -36,6 +36,7 @@ jobs:
     name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
     runs-on: ubuntu-latest
 
+    needs: pull-rover
     
     strategy:
       fail-fast: true
@@ -47,7 +48,7 @@ jobs:
     steps:
       - uses: docker://aztfmod/roverdev:2004.030817
       - uses: actions/checkout@v2
-      
+
       - name: Execute deployment
         run: |
           az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
