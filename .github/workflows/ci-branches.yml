@@ -18,8 +18,8 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
 
 jobs:
-  deploy-launchpad-light:
-    name: Execute from launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
+  launchpad:
+    name: Launchpad tests
     runs-on: ubuntu-latest
     
     strategy:
@@ -41,20 +41,26 @@ jobs:
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
       
-      - name: Plan launchpad for ${{ matrix.region }}
+      - name: level0
         run: |
-          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+          id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+          if [ "${id}" == "null" ]; then
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+          fi
 
-      - name: Apply launchpad for ${{ matrix.region }}
-        run: |
-          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
-    
-      - name: Plan launchpad for ${{ matrix.region }}
-        run: |
           ln -s /__w/level0/level0 /tf/caf
           echo "ls /tf/caf" && ls -lsa /tf/caf
-          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
-        
+
+      - name:  plan launchpad for ${{ matrix.region }}
+        run: |
+          /tf/rover/rover.sh /tf/caf/launchpad_opensource_light plan -var location=${{ matrix.region }}
+      
+      - name:  plan launchpad for ${{ matrix.region }}
+        run: |
+          /tf/rover/rover.sh /tf/caf/launchpad_opensource_light apply -var location=${{ matrix.region }}
+          /tf/rover/rover.sh /tf/caf/launchpad_opensource_light destroy -var location=${{ matrix.region }}
+
       # - name: Login registry
       #   uses: azure/docker-login@v1
       #   with:
@@ -82,31 +88,31 @@ jobs:
       #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
       #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
 
-  destroy-launchpad-light:
-    name: Destroy launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
-    runs-on: ubuntu-latest
+  # destroy-launchpad-light:
+  #   name: Destroy launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
+  #   runs-on: ubuntu-latest
     
-    needs: deploy-launchpad-light
-    
-    strategy:
-      fail-fast: true
-      matrix:
-        launchpad: ["launchpad_opensource_light"]
-        region: ["southeastasia"]
-        arguments: [""]
-    
-    container:
-      image: 'aztfmod/roverdev:2004.030817'
-      options: --user 0
+  #   needs: deploy-launchpad-light
 
-    steps:
-      - uses: actions/checkout@v2
+  #   strategy:
+  #     fail-fast: true
+  #     matrix:
+  #       launchpad: ["launchpad_opensource_light"]
+  #       region: ["southeastasia"]
+  #       arguments: [""]
+    
+  #   container:
+  #     image: 'aztfmod/roverdev:2004.030817'
+  #     options: --user 0
 
-      - name: Login azure
-        run: |
-          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
-          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+
+  #     - name: Login azure
+  #       run: |
+  #         az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+  #         az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
       
-      - name: Plan launchpad for ${{ matrix.region }}
-        run: |
-          /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
+  #     - name: Plan launchpad for ${{ matrix.region }}
+  #       run: |
+  #         /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
