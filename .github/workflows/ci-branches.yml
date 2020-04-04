@@ -59,7 +59,7 @@ jobs:
       - name:  plan launchpad for ${{ matrix.region }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
-          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }}
+          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
 
       # - name: Login registry
       #   uses: azure/docker-login@v1
