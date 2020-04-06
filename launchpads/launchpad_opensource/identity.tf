@@ -18,7 +18,7 @@ resource "azuread_application" "launchpad" {
     # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Directory.Read.All']"
     # Directory.Read.All
     resource_access {
-      id   = local.active_directory_graph_resource_access_id_Directory_Read_All
+      id   = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
       type = "Role"
     }
   }
@@ -41,6 +41,7 @@ locals {
   active_directory_graph_object_id  = "d74f8620-1972-4a99-87f0-41ba5c6d149a"
   active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
   active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+  active_directory_graph_resource_access_id_Directory_ReadWrite_All       = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
 
   # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
@@ -72,7 +73,7 @@ locals {
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "${local.active_directory_graph_object_id}",
-          "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_Read_All}"
+          "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
         }'
 
         # grant consent (AppRoleAssignment.ReadWrite.All)
