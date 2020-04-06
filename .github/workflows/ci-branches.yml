@@ -56,9 +56,12 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
       
-      - name:  plan launchpad for ${{ matrix.region }}
+      - name:  Apply launchpad for ${{ matrix.region }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+      
+      - name:  Destroy launchpad for ${{ matrix.region }}
+        run: |
           /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
 
       # - name: Login registry
