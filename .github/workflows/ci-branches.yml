@@ -21,7 +21,6 @@ env:
   TF_CLI_ARGS_plan: "-input=false"
   TF_CLI_ARGS_apply: "-input=false"
   TF_CLI_ARGS_destroy: "-auto-approve"
-  TF_VAR_tags: "{ testing-job-id = '${{ github.run_id }}'}"
 
 jobs:
   launchpad:
@@ -60,15 +59,15 @@ jobs:
 
       - name: Terraform plan
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan -var location=${{ matrix.region }}
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}'
 
       - name: Terraform apply
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply -var location=${{ matrix.region }}
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}'
 
       - name: Terraform destroy
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }}
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}'
 
       # - name: Login registry
       #   uses: azure/docker-login@v1
