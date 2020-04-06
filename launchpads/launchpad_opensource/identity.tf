@@ -78,7 +78,7 @@ locals {
         # grant consent (AppRoleAssignment.ReadWrite.All)
         az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.microsoft_graph_object_id}/appRoleAssignments \
         --header Content-Type=application/json --body '{
-          "principalId": "${azuread_service_principal.server.id}",
+          "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "${local.microsoft_graph_object_id}",
           "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
     fi
