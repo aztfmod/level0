@@ -58,21 +58,19 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
-              -input=false
+              '-var tags={"testing-job-id"="${{ github.run_id }}"}'
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
-              -input=false
+              '-var tags={"testing-job-id"="${{ github.run_id }}"}'
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
+              '-var tags={"testing-job-id"="${{ github.run_id }}"}' \
               -auto-approve
 
       # - name: Login registry
