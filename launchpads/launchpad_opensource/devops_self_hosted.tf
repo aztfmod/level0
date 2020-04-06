@@ -43,30 +43,7 @@ module "vm_provisioner" {
   os_platform                   = var.blueprint_devops_self_hosted_agent.vm_object.caf-provisioner.os_platform
 }
 
-##### Login Azure Devops
 
-# resource "null_resource" "login" {
-
-
-#     provisioner "local-exec" {
-#         command = local.arg_devops_login
-#     }
-
-#     triggers = {
-#         pat_token   = var.azure_devops_pat_token
-#         arg         = local.arg_devops_login
-#         time        = timestamp()               # force the login to be re-executed at evey call
-#     }
-# }
-
-# locals {
-#     arg_devops_login = <<EOT
-#         az extension add --name azure-devops --yes
-
-#         export AZURE_DEVOPS_EXT_PAT="${var.azure_devops_pat_token}"
-#         az devops configure --defaults project="${var.azure_devops_project}" organization="${var.azure_devops_url_organization}"
-#     EOT
-# }
 
 
 
