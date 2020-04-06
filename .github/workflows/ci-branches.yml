@@ -56,15 +56,24 @@ jobs:
 
       - name: Terraform plan
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}' -input=false
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
+              '-var location=${{ matrix.region }}' \
+              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
+              -input=false
 
       - name: Terraform apply
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}' -input=false
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
+              '-var location=${{ matrix.region }}' \
+              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
+              -input=false
 
       - name: Terraform destroy
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }} -var 'tags={testing-job-id = "${{ github.run_id }}"}' -auto-approve
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
+              '-var location=${{ matrix.region }}' \
+              '-var tags={testing-job-id = "${{ github.run_id }}"}' \
+              -auto-approve
 
       # - name: Login registry
       #   uses: azure/docker-login@v1
