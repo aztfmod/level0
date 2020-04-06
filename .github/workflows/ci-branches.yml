@@ -25,12 +25,12 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        launchpad: ["launchpad_opensource_light"]
+        launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
         region: ["southeastasia"]
         arguments: [""]
     
     container:
-      image: 'aztfmod/roverdev:2004.030817'
+      image: 'aztfmod/roverdev:2004.060747'
       options: --user 0
 
     steps:
@@ -41,7 +41,7 @@ jobs:
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
       
-      - name: level0
+      - name: test deployment
         run: |
           id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
@@ -52,17 +52,11 @@ jobs:
           ln -s /__w/level0/level0 /tf/caf
           echo "ls /tf/caf" && ls -lsa /tf/caf
 
-      - name:  plan launchpad for ${{ matrix.region }}
-        run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
-      
-      - name:  Apply launchpad for ${{ matrix.region }}
-        run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
-      
-      - name:  Destroy launchpad for ${{ matrix.region }}
-        run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan -var location=${{ matrix.region }}
+
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply -var location=${{ matrix.region }}
+
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }} -auto-approve
 
       # - name: Login registry
       #   uses: azure/docker-login@v1
