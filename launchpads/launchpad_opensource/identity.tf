@@ -38,14 +38,12 @@ resource "azuread_application" "launchpad" {
 locals {
   # Azure Active Directory Graph
   active_directory_graph_id         = "00000002-0000-0000-c000-000000000000"
-  active_directory_graph_object_id  = "d74f8620-1972-4a99-87f0-41ba5c6d149a"
   active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
   active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
   active_directory_graph_resource_access_id_Directory_ReadWrite_All       = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
 
   # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
-  microsoft_graph_object_id         = "77f43b95-80d8-4760-9a75-0a6a9cfd939d"
   microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
 
   grant_admin_concent_command = <<EOT
@@ -60,27 +58,31 @@ locals {
     else
         echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
 
+        active_directory_graph_object_id=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId")
+
         # grant consent (Application.ReadWrite.OwnedBy)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.active_directory_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${active_directory_graph_object_id}/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${local.active_directory_graph_object_id}",
+          "resourceId": "${active_directory_graph_object_id}",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
         }'
 
         # grant consent (Directory.Read.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.active_directory_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${active_directory_graph_object_id}/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${local.active_directory_graph_object_id}",
+          "resourceId": "${active_directory_graph_object_id}",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
         }'
 
+        microsoft_graph_object_id=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId")    
+
         # grant consent (AppRoleAssignment.ReadWrite.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${local.microsoft_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${microsoft_graph_object_id}/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${local.microsoft_graph_object_id}",
+          "resourceId": "${microsoft_graph_object_id}",
           "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
         }'
     fi
