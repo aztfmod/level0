@@ -58,7 +58,7 @@ locals {
     else
         echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
 
-        ADGRAPHID=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId")
+        export ADGRAPHID=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId" -o tsv)
 
         # grant consent (Application.ReadWrite.OwnedBy)
         az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$ADGRAPHID/appRoleAssignments \
@@ -76,7 +76,7 @@ locals {
           "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
         }'
 
-        MSGRAPHID=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId")    
+        export MSGRAPHID=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId" -o tsv)
 
         # grant consent (AppRoleAssignment.ReadWrite.All)
         az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$MSGRAPHID/appRoleAssignments \
