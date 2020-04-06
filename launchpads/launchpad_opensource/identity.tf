@@ -61,28 +61,28 @@ locals {
         active_directory_graph_object_id=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId")
 
         # grant consent (Application.ReadWrite.OwnedBy)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${active_directory_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$active_directory_graph_object_id/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${active_directory_graph_object_id}",
+          "resourceId": "$active_directory_graph_object_id",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
         }'
 
         # grant consent (Directory.Read.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${active_directory_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$active_directory_graph_object_id/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${active_directory_graph_object_id}",
+          "resourceId": "$active_directory_graph_object_id",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
         }'
 
         microsoft_graph_object_id=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId")    
 
         # grant consent (AppRoleAssignment.ReadWrite.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/${microsoft_graph_object_id}/appRoleAssignments \
+        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$microsoft_graph_object_id/appRoleAssignments \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "${microsoft_graph_object_id}",
+          "resourceId": "$microsoft_graph_object_id",
           "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
         }'
     fi
