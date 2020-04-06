@@ -19,6 +19,7 @@ variable "tf_name" {
 
 variable "tags" {
     default = {}
+    type = map
 }
  
 variable "convention" {
