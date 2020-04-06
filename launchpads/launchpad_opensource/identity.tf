@@ -25,7 +25,7 @@ resource "azuread_application" "launchpad" {
 
   # Access to Microsoft Graph
   required_resource_access {
-    resource_app_id = local.microsoft_graph_object_id
+    resource_app_id = local.microsoft_graph_id
 
     resource_access {
 			id    = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
