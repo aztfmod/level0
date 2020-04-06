@@ -45,7 +45,7 @@ locals {
 
   # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
-  microsoft_graph_object_id         = "1d9d27c7-4e21-41bb-a855-9668d40cf59a"
+  microsoft_graph_object_id         = "77f43b95-80d8-4760-9a75-0a6a9cfd939d"
   microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
 
   grant_admin_concent_command = <<EOT
