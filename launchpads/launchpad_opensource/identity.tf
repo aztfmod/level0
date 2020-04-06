@@ -81,6 +81,7 @@ locals {
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "${local.microsoft_graph_object_id}",
           "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
+        }'
     fi
 EOT
 
