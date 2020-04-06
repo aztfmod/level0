@@ -16,6 +16,12 @@ env:
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+  TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
+  TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
+  TF_CLI_ARGS_plan: "-input=false"
+  TF_CLI_ARGS_apply: "-input=false"
+  TF_CLI_ARGS_destroy: "-auto-approve"
+  TF_VAR_tags: "{ testing-job-id = ${{ github.run_id }}}"
 
 jobs:
   launchpad:
@@ -41,7 +47,7 @@ jobs:
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
       
-      - name: test deployment
+      - name: Locate launchpad
         run: |
           id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
@@ -52,11 +58,17 @@ jobs:
           ln -s /__w/level0/level0 /tf/caf
           echo "ls /tf/caf" && ls -lsa /tf/caf
 
+      - name: Terraform plan
+        run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan -var location=${{ matrix.region }}
 
+      - name: Terraform apply
+        run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply -var location=${{ matrix.region }}
 
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }} -auto-approve
+      - name: Terraform destroy
+        run: |
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy -var location=${{ matrix.region }}
 
       # - name: Login registry
       #   uses: azure/docker-login@v1
