@@ -12,6 +12,7 @@ on:
 
 env:
   #Terraform Auth
+  ROVER: "aztfmod/roverdev:2004.060747"
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -36,9 +37,41 @@ jobs:
 
       - name: Login azure
         run: |
-          docker run --rm -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode aztfmod/roverdev:2004.060747  az account show
-          # az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+          docker run --rm -i -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode ${{ env.ROVER }}  /bin/bash -s <<EOF
+          echo "local user: $(whoami)"
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+          EOF
+      
+      # - name: Locate launchpad
+      #   run: |
+      #     id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+      #     if [ "${id}" == "null" ]; then
+      #       /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+      #       /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+      #     fi
 
-          # echo "local user: $(whoami)"
+      #     ln -s /__w/level0/level0 /tf/caf
+      #     echo "ls /tf/caf" && ls -lsa /tf/caf
 
-          
+      # - name: Terraform plan
+      #   run: |
+      #     /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
+      #         '-var location=${{ matrix.region }}' \
+      #         '-var tags={testing-job-id="${{ github.run_id }}"}' \
+      #         ${{ matrix.arguments }}
+
+      # - name: Terraform apply
+      #   run: |
+      #     /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
+      #         '-var location=${{ matrix.region }}' \
+      #         '-var tags={testing-job-id="${{ github.run_id }}"}' \
+      #         ${{ matrix.arguments }}
+
+      # - name: Terraform destroy
+      #   run: |
+      #     /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
+      #         '-var location=${{ matrix.region }}' \
+      #         '-var tags={testing-job-id="${{ github.run_id }}"}' \
+      #         ${{ matrix.arguments }} \
+      #         -auto-approve
