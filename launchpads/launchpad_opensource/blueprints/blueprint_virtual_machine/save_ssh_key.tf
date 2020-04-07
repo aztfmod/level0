@@ -17,6 +17,10 @@ resource "null_resource" "save_ssh_key" {
     count       = var.vm_object.save_ssh_private_key_pem == true ? 1 : 0
 
     provisioner "local-exec" {
+        command = "mkdir -p ~/.ssh"
+    }
+
+    provisioner "local-exec" {
         command = local.save_ssh_key_cmd
     }
 
