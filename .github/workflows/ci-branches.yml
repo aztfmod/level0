@@ -33,7 +33,7 @@ jobs:
     
     container:
       image: 'aztfmod/roverdev:2004.060747'
-      options: --user 1000
+      options: --user 1000 -e "HOME=/home/vscode"
 
     steps:
       - uses: actions/checkout@v2
