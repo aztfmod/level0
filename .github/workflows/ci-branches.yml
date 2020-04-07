@@ -35,33 +35,27 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Login azure
+      - name: Integration tests
         run: |
-          docker run --rm -i -u 1000 -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode ${{ env.ROVER }}  /bin/bash -s <<EOF
+          docker run --rm -i -u 1000 -v /home/runner/work/level0/level0:/tf/caf ${{ env.ROVER }}  /bin/bash -s <<EOF
           echo "local user: $(whoami)"
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-          EOF
-      
-      - name: Locate launchpad
-        run: |
-          docker run --rm -i -u 1000 -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode ${{ env.ROVER }}  /bin/bash -s <<EOF
+
+
           id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
           fi
 
-          ln -s /__w/level0/level0 /tf/caf
           echo "ls /tf/caf" && ls -lsa /tf/caf
+        
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
+              '-var location=${{ matrix.region }}' \
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              ${{ matrix.arguments }}
           EOF
-          
-      # - name: Terraform plan
-      #   run: |
-      #     /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
-      #         '-var location=${{ matrix.region }}' \
-      #         '-var tags={testing-job-id="${{ github.run_id }}"}' \
-      #         ${{ matrix.arguments }}
 
       # - name: Terraform apply
       #   run: |
