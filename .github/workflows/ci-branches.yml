@@ -34,4 +34,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      
+      - name: Login azure
+        run: |
+          docker run --rm -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode aztfmod/roverdev:2004.060747  az account show
+          # az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          # echo "local user: $(whoami)"
+
+          
