@@ -103,7 +103,7 @@ resource "null_resource" "build_docker_image" {
     }
 }
 
-##
+## 
 #   3 - Save the ssh key of the devops selfhosted server in the ~/.ssh/config
 ##
 resource "null_resource" "ssh_config_update" {
