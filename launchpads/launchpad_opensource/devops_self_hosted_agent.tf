@@ -2,7 +2,7 @@
 locals {
 
     run_devops_command = <<EOT
-        ssh -T -i ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
+        ssh -T -o StrictHostChecking=no -i ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
             docker run -d -e AZP_URL=${var.azure_devops_url_organization} -e AZP_TOKEN=${var.azure_devops_pat_token} -e AZP_POOL="${var.azure_devops.agent_pools.level0.name}" ${module.blueprint_container_registry.object.login_server}/devops
 EOF
 EOT

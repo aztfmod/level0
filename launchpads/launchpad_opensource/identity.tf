@@ -145,7 +145,8 @@ resource "null_resource" "grant_admin_concent" {
   }
   provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
-        on_failure = fail
+      interpreter = ["sudo /bin/bash", "--verbose"]
+      on_failure = fail
 
       environment = {
         APPLICATION_ID  = azuread_application.launchpad.application_id
