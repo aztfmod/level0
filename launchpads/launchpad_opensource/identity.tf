@@ -47,47 +47,50 @@ locals {
   microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
 
   grant_admin_concent_command = <<EOT
-    set -e
+  set -e
 
-    TYPE=$(az account show --query user.type -o tsv)
-    if [ $TYPE == "user" ]; then
-        echo "granting consent to logged in user"
-        az ad app permission admin-consent --id ${azuread_application.launchpad.application_id}
+  function grant_consent {
 
-        echo "Initializing state with user: $(az ad signed-in-user show --query userPrincipalName -o tsv)"
-    else
-        echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
+      resourceId=$1
+      principalId=$2
+      appRoleId=$3
 
-        ADGRAPHID=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId" -o tsv)
-        URI=$(echo  "https://graph.microsoft.com/beta/servicePrincipals/$ADGRAPHID/appRoleAssignments")
+      URI=$(echo  "https://graph.microsoft.com/beta/servicePrincipals/${resourceId}/appRoleAssignments") && echo " - uri: $URI"
 
-        # grant consent (Application.ReadWrite.OwnedBy)
-        az rest --method POST --uri $URI \
-        --header Content-Type=application/json --body '{
-          "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "$ADGRAPHID",
-          "appRoleId": "${local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
-        }'
+      # grant consent (Application.ReadWrite.OwnedBy)
+      JSON=$( jq -n \
+                  --arg principalId "${principalId}" \
+                  --arg resourceId "${resourceId}" \
+                  --arg appRoleId "${appRoleId}" \
+              '{principalId: $principalId, resourceId: $resourceId, appRoleId: $appRoleId}' ) && echo " - body: $JSON"
 
-        # grant consent (Directory.Read.All)
-        az rest --method POST --uri $URI \
-        --header Content-Type=application/json --body '{
-          "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "$ADGRAPHID",
-          "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
-        }'
+      az rest --method POST --uri $URI --header Content-Type=application/json --body "$JSON"
+  }
 
-        MSGRAPHID=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId" -o tsv)
-        URI=$(echo "https://graph.microsoft.com/beta/servicePrincipals/$MSGRAPHID/appRoleAssignments")
+  USER_TYPE=$(az account show --query user.type -o tsv)
+  if [ ${USER_TYPE} == "user" ]; then
+      echo "granting consent to logged in user"
+      az ad app permission admin-consent --id ${APPLICATION_ID}
 
-        # grant consent (AppRoleAssignment.ReadWrite.All)
-        az rest --method POST --uri $URI \
-        --header Content-Type=application/json --body '{
-          "principalId": "${azuread_service_principal.launchpad.id}",
-          "resourceId": "$MSGRAPHID",
-          "appRoleId": "${local.microsoft_graph_AppRoleAssignment_ReadWrite_All}"
-        }'
-    fi
+      echo "Initializing state with user: $(az ad signed-in-user show --query userPrincipalName -o tsv)"
+  else
+      echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
+
+      ADGRAPHID=$(az ad sp show --id "${active_directory_graph_id}" --query "objectId" -o tsv)
+
+      echo "grant consent (Application.ReadWrite.OwnedBy):"
+      grant_consent "${ADGRAPHID}" "${SP_ID}" "${active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
+    
+      echo "\ngrant consent (Directory.Read.All):"
+      grant_consent "${ADGRAPHID}" "${SP_ID}" "${active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
+
+
+      MSGRAPHID=$(az ad sp show --id "${microsoft_graph_id}" --query "objectId" -o tsv)   
+
+      echo "\ngrant consent (AppRoleAssignment.ReadWrite.All):"
+      grant_consent "${MSGRAPHID}" "${SP_ID}" "${microsoft_graph_AppRoleAssignment_ReadWrite_All}"
+
+  fi
 EOT
 
 }
@@ -144,8 +147,7 @@ resource "null_resource" "grant_admin_concent" {
       command = "sleep 60"
   }
   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["sudo /bin/bash", "--verbose"]
+      command = local.grant_admin_concent_command
       on_failure = fail
 
       environment = {
@@ -160,7 +162,7 @@ resource "null_resource" "grant_admin_concent" {
   }
 
   triggers = {
-      grant_admin_concent_command    = sha256(file("./scripts/grant_consent.sh"))
+      grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
   }
 }
 

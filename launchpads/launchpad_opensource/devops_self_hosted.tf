@@ -137,7 +137,6 @@ resource "null_resource" "pull_docker_image" {
 
     provisioner "local-exec" {
         command = local.docker_ssh_command
-        interpreter = ["sudo /bin/bash", "--verbose"]
         on_failure = fail
     }
 
