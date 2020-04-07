@@ -37,7 +37,7 @@ jobs:
 
       - name: Login azure
         run: |
-          docker run --rm -i -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode ${{ env.ROVER }}  /bin/bash -s <<EOF
+          docker run --rm -i -u vscode -v /home/runner/work/level0/level0:/tf/caf -v volume-caf-vscode:/home/vscode ${{ env.ROVER }}  /bin/bash -s <<EOF
           echo "local user: $(whoami)"
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
