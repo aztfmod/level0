@@ -93,7 +93,7 @@ locals {
 # fi
 # EOT
 
-# }
+}
 
 
 resource "azuread_service_principal" "launchpad" {
