@@ -56,6 +56,7 @@ EOT
 
     ## This command saves on the local rover volume the private ssh key required to allow the rover to login the docker host in the self hosted agent
     ssh_config_update = <<EOT
+mkdir -p ~/.ssh
 chmod 600 ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private
 echo "" >> ~/.ssh/config
 echo "Host ${module.blueprint_devops_self_hosted_agent.object.public_ip_address}" >> ~/.ssh/config
