@@ -145,7 +145,6 @@ resource "null_resource" "grant_admin_concent" {
   }
   provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh", "-c"]
 
       environment = {
         APPLICATION_ID  = azuread_application.launchpad.application_id
