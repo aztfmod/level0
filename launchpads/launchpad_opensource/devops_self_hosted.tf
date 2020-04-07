@@ -62,7 +62,7 @@ echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 EOT
 
     docker_ssh_command = <<EOT
-ssh -T -o StrictHostChecking=no -i ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
+ssh -T -i ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
     az login --identity
     az acr login --name ${module.blueprint_container_registry.object.admin_username}
     docker pull ${module.blueprint_container_registry.object.login_server}/devops
