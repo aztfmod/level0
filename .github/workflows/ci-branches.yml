@@ -33,7 +33,7 @@ jobs:
     
     container:
       image: 'aztfmod/roverdev:2004.071508'
-      options: --user 1000
+      options: --user 0
 
     steps:
       - uses: actions/checkout@v2
@@ -69,7 +69,7 @@ jobs:
 
       - name: Terraform apply
         run: |
-          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
+          sudo -u vscode /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }}
