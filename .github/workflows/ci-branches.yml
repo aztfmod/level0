@@ -44,17 +44,17 @@ jobs:
 
       - name: Login azure
         run: |
-          sudo -u vscode az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
-          sudo -u vscode az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
           echo "local user: $(whoami)"
       
       - name: Locate launchpad
         run: |
-         id=$(sudo -u vscode az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+         id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
-            sudo -u vscode /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
-            sudo -u vscode /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
           fi
 
           ln -s /__w/level0/level0 /tf/caf
@@ -62,21 +62,21 @@ jobs:
 
       - name: Terraform plan
         run: |
-          sudo -u vscode /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }}
 
       - name: Terraform apply
         run: |
-          sudo -u vscode /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }}
 
       - name: Terraform destroy
         run: |
-          sudo -u vscode /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
+          /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }} \
