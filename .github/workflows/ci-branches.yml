@@ -51,7 +51,7 @@ jobs:
       
       - name: Locate launchpad
         run: |
-         sudo -u vscode id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+         id=$(sudo -u vscode az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
             sudo -u vscode /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
             sudo -u vscode /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
