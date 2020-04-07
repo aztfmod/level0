@@ -8,6 +8,6 @@ output "object" {
     }
 }
 
-output "ssh_private_key_pem_secret_id" {
-    value =  module.vm.ssh_private_key_pem_secret_id
-}
+# output "ssh_private_key_pem_secret_id" {
+#     value =  module.vm.ssh_private_key_pem_secret_id
+# }

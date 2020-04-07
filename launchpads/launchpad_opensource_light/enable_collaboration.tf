@@ -48,6 +48,7 @@ resource "null_resource" "grant_admin_concent" {
 
     provisioner "local-exec" {
         command = local.grant_admin_concent_command
+        on_failure = fail
     }
 
     triggers = {
