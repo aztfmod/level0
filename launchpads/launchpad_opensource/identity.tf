@@ -58,10 +58,11 @@ locals {
     else
         echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
 
-        export ADGRAPHID=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId" -o tsv)
+        ADGRAPHID=$(az ad sp show --id "${local.active_directory_graph_id}" --query "objectId" -o tsv)
+        URI=$(echo  "https://graph.microsoft.com/beta/servicePrincipals/$ADGRAPHID/appRoleAssignments")
 
         # grant consent (Application.ReadWrite.OwnedBy)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$ADGRAPHID/appRoleAssignments \
+        az rest --method POST --uri $URI \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "$ADGRAPHID",
@@ -69,17 +70,18 @@ locals {
         }'
 
         # grant consent (Directory.Read.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$ADGRAPHID/appRoleAssignments \
+        az rest --method POST --uri $URI \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "$ADGRAPHID",
           "appRoleId": "${local.active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
         }'
 
-        export MSGRAPHID=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId" -o tsv)
+        MSGRAPHID=$(az ad sp show --id "${local.microsoft_graph_id}" --query "objectId" -o tsv)
+        URI=$(echo "https://graph.microsoft.com/beta/servicePrincipals/$MSGRAPHID/appRoleAssignments")
 
         # grant consent (AppRoleAssignment.ReadWrite.All)
-        az rest --method POST --uri https://graph.microsoft.com/beta/servicePrincipals/$MSGRAPHID/appRoleAssignments \
+        az rest --method POST --uri $URI \
         --header Content-Type=application/json --body '{
           "principalId": "${azuread_service_principal.launchpad.id}",
           "resourceId": "$MSGRAPHID",
@@ -142,12 +144,22 @@ resource "null_resource" "grant_admin_concent" {
       command = "sleep 60"
   }
   provisioner "local-exec" {
-      command = local.grant_admin_concent_command
+      command = "./scripts/grant_consent.sh"
       interpreter = ["/bin/bash", "-c"]
+
+      environment = {
+        APPLICATION_ID  = azuread_application.launchpad.application_id
+        SP_ID           = azuread_service_principal.launchpad.id
+        active_directory_graph_id                                                 = local.active_directory_graph_id
+        microsoft_graph_id                                                        = local.microsoft_graph_id
+        active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy   = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+        active_directory_graph_resource_access_id_Directory_ReadWrite_All         = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
+        microsoft_graph_AppRoleAssignment_ReadWrite_All                           = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
+      }
   }
 
   triggers = {
-      grant_admin_concent_command    = sha256(local.grant_admin_concent_command)
+      grant_admin_concent_command    = sha256(file("./scripts/grant_consent.sh"))
   }
 }
 

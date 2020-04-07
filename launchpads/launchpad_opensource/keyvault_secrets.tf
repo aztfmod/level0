@@ -4,7 +4,7 @@
 resource "azurerm_key_vault_secret" "launchpad_resource_group" {
     depends_on    = [azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover,  azuread_application.launchpad]
     name          = "launchpad-resource-group"
-    value         = azurerm_resource_group.rg.name
+    value         = azurerm_resource_group.rg_security.name
     key_vault_id  = azurerm_key_vault.launchpad.id
 }
 

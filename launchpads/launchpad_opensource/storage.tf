@@ -1,11 +1,8 @@
-module "caf_name_stg" {
-  source  = "aztfmod/caf-naming/azurerm"
-  version = "~> 0.1.0"
-  
-  name        = local.stg_name
-  type        = "st"
-  convention  = var.convention
-
+resource "azurecaf_naming_convention" "stg" {
+  name          = var.workspace
+  prefix        = local.prefix
+  resource_type = "st"
+  convention    = "cafrandom"
 }
 
 locals {
@@ -15,9 +12,9 @@ locals {
 
 
 resource "azurerm_storage_account" "stg" {
-  name                     = module.caf_name_stg.st
-  resource_group_name      = azurerm_resource_group.rg.name
-  location                 = azurerm_resource_group.rg.location
+  name                     = azurecaf_naming_convention.stg.result
+  resource_group_name      = azurerm_resource_group.rg_tfstate.name
+  location                 = azurerm_resource_group.rg_tfstate.location
   account_tier             = "Standard"
   account_replication_type = "RAGRS"
 

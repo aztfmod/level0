@@ -6,7 +6,7 @@ provider "azurecaf" {}
 
 terraform {
   required_providers {
-    azurerm = "~> 2.2.0"
+    azurerm = "~> 2.4.0"
     azuread = "~> 0.7.0"
     random  = "~> 2.2.1"
     null    = "~> 2.1.0"
@@ -40,6 +40,6 @@ locals {
   }
   tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
-  prefix            = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
+  prefix            = var.use_prefix == true ? random_string.prefix.result : ""
   launchpad           = basename(abspath(path.root))
 }

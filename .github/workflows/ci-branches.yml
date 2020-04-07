@@ -29,7 +29,7 @@ jobs:
       matrix:
         launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
         region: ["southeastasia"]
-        arguments: [""]
+        arguments: ["'-var convention=cafclassic'"]
     
     container:
       image: 'aztfmod/roverdev:2004.060747'
@@ -58,19 +58,22 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}'
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              ${{ matrix.arguments }}
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}'
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              ${{ matrix.arguments }}
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              ${{ matrix.arguments }} \
               -auto-approve
 
       # - name: Login registry

@@ -11,15 +11,15 @@
 data "azurerm_key_vault" "launchpad" {
   depends_on            = [azurerm_key_vault.launchpad, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
   name                  = azurerm_key_vault.launchpad.name
-  resource_group_name   = azurerm_resource_group.rg.name
+  resource_group_name   = azurerm_resource_group.rg_security.name
 }
 
 module "blueprint_devops_self_hosted_agent" {
   source = "./blueprints/blueprint_virtual_machine"
   
   convention              = var.convention
-  resource_group_name     = azurerm_resource_group.rg.name
-  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg_devops.name
+  location                = azurerm_resource_group.rg_devops.location
   prefix                  = local.prefix
   tags                    = local.tags
   log_analytics_workspace = module.log_analytics.object

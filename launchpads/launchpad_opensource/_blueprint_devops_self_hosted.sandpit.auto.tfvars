@@ -8,7 +8,7 @@ blueprint_devops_self_hosted_agent = {
         }
 
 
-        name = "devops-"
+        name = "devops"
         os_profile = {
             computer_name = "devopsagent1"
             admin_username = "devopsadmin"
