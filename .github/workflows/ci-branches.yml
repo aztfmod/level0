@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/roverdev:2004.071508
+      image: aztfmod/rover:2004.0813
       options: --user 0
 
     steps:
@@ -57,7 +57,7 @@ jobs:
         arguments: ["'-var convention=cafclassic'"]
     
     container:
-      image: aztfmod/roverdev:2004.071508
+      image: aztfmod/rover:2004.0813
       options: --user 0
 
     steps:
