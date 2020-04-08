@@ -11,7 +11,6 @@ on:
         - master
 
 env:
-  ROVER: aztfmod/roverdev:2004.071508
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -25,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: ${{ env.ROVER }}
+      image:aztfmod/roverdev:2004.071508
       options: --user 0
 
     steps:
@@ -61,7 +60,7 @@ jobs:
         arguments: ["'-var convention=cafclassic'"]
     
     container:
-      image: ${{ env.ROVER }}
+      image: aztfmod/roverdev:2004.071508
       options: --user 0
 
     steps:
@@ -105,11 +104,10 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: ${{ env.ROVER }}
+      image: aztfmod/roverdev:2004.071508
       options: --user 0
 
     steps:
-
       - name: Login azure
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
