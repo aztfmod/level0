@@ -11,7 +11,7 @@ on:
         - master
 
 env:
-  ROVER: 'aztfmod/roverdev:2004.071508'
+  ROVER: aztfmod/roverdev:2004.071508
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
