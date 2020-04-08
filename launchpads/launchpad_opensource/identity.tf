@@ -89,8 +89,8 @@ locals {
 
   # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
-  microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
-
+  microsoft_graph_AppRoleAssignment_ReadWrite_All                         = "06b708a9-e830-4db3-a914-8e69da51d44f"
+  microsoft_graph_GroupReadWriteAll                                       = "62a82d76-70ea-41e2-9197-370581804d09"
 }
 
 
