@@ -35,67 +35,6 @@ resource "azuread_application" "launchpad" {
   }
 }
 
-locals {
-  # Azure Active Directory Graph
-  active_directory_graph_id         = "00000002-0000-0000-c000-000000000000"
-  active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
-  active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
-  active_directory_graph_resource_access_id_Directory_ReadWrite_All       = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
-
-  # Microsoft graph
-  microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
-  microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
-
-#   grant_admin_concent_command = <<EOT
-#   set -e
-
-# function grant_consent {
-
-#     resourceId=$1
-#     principalId=$2
-#     appRoleId=$3
-
-#     URI=$(echo  "https://graph.microsoft.com/beta/servicePrincipals/${resourceId}/appRoleAssignments") && echo " - uri: $URI"
-
-#     # grant consent (Application.ReadWrite.OwnedBy)
-#     JSON=$( jq -n \
-#                 --arg principalId "${principalId}" \
-#                 --arg resourceId "${resourceId}" \
-#                 --arg appRoleId "${appRoleId}" \
-#             '{principalId: $principalId, resourceId: $resourceId, appRoleId: $appRoleId}' ) && echo " - body: $JSON"
-
-#     az rest --method POST --uri $URI --header Content-Type=application/json --body "$JSON"
-# }
-
-# USER_TYPE=$(az account show --query user.type -o tsv)
-# if [ ${USER_TYPE} == "user" ]; then
-#     echo "granting consent to logged in user"
-#     az ad app permission admin-consent --id ${APPLICATION_ID}
-
-#     echo "Initializing state with user: $(az ad signed-in-user show --query userPrincipalName -o tsv)"
-# else
-#     echo "granting consent to logged in service principal" - Need to use the beta rest API for service principals. not supported by az cli yet
-
-#     ADGRAPHID=$(az ad sp show --id "${active_directory_graph_id}" --query "objectId" -o tsv)
-
-#     echo "grant consent (Application.ReadWrite.OwnedBy):"
-#     grant_consent "${ADGRAPHID}" "${SP_ID}" "${active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy}"
-   
-#     echo "\ngrant consent (Directory.Read.All):"
-#     grant_consent "${ADGRAPHID}" "${SP_ID}" "${active_directory_graph_resource_access_id_Directory_ReadWrite_All}"
-
-
-#     MSGRAPHID=$(az ad sp show --id "${microsoft_graph_id}" --query "objectId" -o tsv)   
-
-#     echo "\ngrant consent (AppRoleAssignment.ReadWrite.All):"
-#     grant_consent "${MSGRAPHID}" "${SP_ID}" "${microsoft_graph_AppRoleAssignment_ReadWrite_All}"
-
-# fi
-# EOT
-
-}
-
-
 resource "azuread_service_principal" "launchpad" {
   application_id = azuread_application.launchpad.application_id
 }
@@ -140,30 +79,63 @@ resource "azurerm_role_assignment" "launchpad_role1" {
 #    Grant conscent to the azure ad application
 ###
 
+
+locals {
+  # Azure Active Directory Graph
+  active_directory_graph_id         = "00000002-0000-0000-c000-000000000000"
+  active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
+  active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
+  active_directory_graph_resource_access_id_Directory_ReadWrite_All       = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
+
+  # Microsoft graph
+  microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
+  microsoft_graph_AppRoleAssignment_ReadWrite_All = "06b708a9-e830-4db3-a914-8e69da51d44f"
+
+}
+
+
 resource "null_resource" "grant_admin_concent" {
   depends_on = [azurerm_role_assignment.launchpad_role1]
 
   provisioner "local-exec" {
       command = "sleep 60"
   }
+
   provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
       interpreter = ["/bin/sh"]
       on_failure = fail
 
       environment = {
-        APPLICATION_ID  = azuread_application.launchpad.application_id
-        SP_ID           = azuread_service_principal.launchpad.id
-        active_directory_graph_id                                                 = local.active_directory_graph_id
-        microsoft_graph_id                                                        = local.microsoft_graph_id
-        active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy   = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
-        active_directory_graph_resource_access_id_Directory_ReadWrite_All         = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
-        microsoft_graph_AppRoleAssignment_ReadWrite_All                           = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
+        graphId       = local.active_directory_graph_id
+        principalId   = azuread_service_principal.launchpad.id
+        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
       }
   }
 
-  triggers = {
-      grant_admin_concent_command    = sha256(file("./scripts/grant_consent.sh"))
+  provisioner "local-exec" {
+      command = "./scripts/grant_consent.sh"
+      interpreter = ["/bin/sh"]
+      on_failure = fail
+
+      environment = {
+        graphId       = local.active_directory_graph_id
+        principalId   = azuread_service_principal.launchpad.id
+        appRoleId     = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
+      }
   }
+
+  provisioner "local-exec" {
+      command = "./scripts/grant_consent.sh"
+      interpreter = ["/bin/sh"]
+      on_failure = fail
+
+      environment = {
+        graphId       = local.microsoft_graph_id
+        principalId   = azuread_service_principal.launchpad.id
+        appRoleId     = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
+      }
+  }
+
 }
 
