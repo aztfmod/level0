@@ -65,7 +65,7 @@ resource "azurerm_key_vault_secret" "launchpad_client_id" {
 resource "azurerm_key_vault_secret" "launchpad_client_secret" {
     depends_on    = [azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.launchpad, azurerm_key_vault_access_policy.rover,  azuread_application.launchpad]
     name         = "launchpad-service-principal-client-secret"
-    value        = random_string.launchpad_password.result
+    value        = random_password.launchpad.result
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
