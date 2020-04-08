@@ -43,9 +43,6 @@ jobs:
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
           fi
 
-          ln -s /__w/level0/level0 /tf/caf
-          echo "ls /tf/caf" && ls -lsa /tf/caf
-
   launchpad:
     name: Launchpad tests
     runs-on: ubuntu-latest
@@ -66,8 +63,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name:  Debug context
+      - name:  setup context
         run: |
+          ln -s /__w/level0/level0 /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
           ls -lsa /tmp
 
       - name: Login azure
