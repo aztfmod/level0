@@ -11,7 +11,7 @@ on:
         - master
 
 env:
-  #Terraform Auth
+  ROVER: 'aztfmod/roverdev:2004.071508'
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -20,10 +20,39 @@ env:
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
 
 jobs:
+  level0:
+    name: level0
+    runs-on: ubuntu-latest
+    
+    container:
+      image: ${{ env.ROVER }}
+      options: --user 0
+
+    steps:
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+      
+      - name: Locate launchpad
+        run: |
+         id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+          if [ "${id}" == "null" ]; then
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource plan -var location=${{ matrix.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
+          fi
+
+          ln -s /__w/level0/level0 /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+
   launchpad:
     name: Launchpad tests
     runs-on: ubuntu-latest
     
+    needs: level0
+
     strategy:
       fail-fast: true
       matrix:
@@ -32,7 +61,7 @@ jobs:
         arguments: ["'-var convention=cafclassic'"]
     
     container:
-      image: 'aztfmod/roverdev:2004.071508'
+      image: ${{ env.ROVER }}
       options: --user 0
 
     steps:
@@ -49,91 +78,46 @@ jobs:
 
           echo "local user: $(whoami)"
       
-      - name: Locate launchpad
-        run: |
-         id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
-          if [ "${id}" == "null" ]; then
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light plan -var location=${{ matrix.region }}
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light apply -var location=${{ matrix.region }}
-          fi
-
-          ln -s /__w/level0/level0 /tf/caf
-          echo "ls /tf/caf" && ls -lsa /tf/caf
-
       - name: Terraform plan
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ job.services.launchpad.id }}"}' \
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }}
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ job.services.launchpad.id }}"}' \
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }}
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ job.services.launchpad.id }}"}' \
+              '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }} \
               -auto-approve
 
-      # - name: Login registry
-      #   uses: azure/docker-login@v1
-      #   with:
-      #     username: '${{ secrets.DOCKER_USER }}'
-      #     password: '${{ secrets.DOCKER_PASSWORD }}'
-
-      # - name: Pull rover  
-      #   uses: ./.github/workflows/action
-      #   with:
-      #     entrypoint: /bin/bash
-      #     args: "sudo az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}' && sudo az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }} && /tf/rover/rover.sh /tf/caf/launchpads/launchpad_opensource_light plan"
-
-      # - name: Execute deployment
-      #   run: |
-      #     az login --service-principal -u "${{ env.ARM_CLIENT_ID }}" -p "${{ env.ARM_CLIENT_SECRET }}" --tenant "${{ env.ARM_TENANT_ID }}"
-      #     az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-      #     echo $(pwd)
-      #     ls -lsa
-
-      #     echo "ls /" && ls -lsa /
-      #     echo "ls /tf" && ls -lsa /tf
-      #     echo "ls /tf/rover" && ls -lsa /tf/rover
-
-      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} plan -var location=${{ matrix.region}} ${{ matrix.arguments }}
-      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} apply -var location=${{ matrix.region}} ${{ matrix.arguments }}
-      #     /tf/rover/launchpad.sh /tf/launchpads/${{ matrix.launchpad}} destroy -var location=${{ matrix.region}} ${{ matrix.arguments }} -auto-approve
-
-  # destroy-launchpad-light:
-  #   name: Destroy launchpad ${{ matrix.launchpad }} in region ${{ matrix.region }} with arguments ${{ matrix.arguments }}
-  #   runs-on: ubuntu-latest
+  clean-up:
+    name: delete deployed resources
+    runs-on: ubuntu-latest
     
-  #   needs: deploy-launchpad-light
+    container:
+      image: ${{ env.ROVER }}
+      options: --user 0
 
-  #   strategy:
-  #     fail-fast: true
-  #     matrix:
-  #       launchpad: ["launchpad_opensource_light"]
-  #       region: ["southeastasia"]
-  #       arguments: [""]
-    
-  #   container:
-  #     image: 'aztfmod/roverdev:2004.030817'
-  #     options: --user 0
+    steps:
 
-  #   steps:
-  #     - uses: actions/checkout@v2
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
-  #     - name: Login azure
-  #       run: |
-  #         az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
-  #         az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+          echo "local user: $(whoami)"
       
-  #     - name: Plan launchpad for ${{ matrix.region }}
-  #       run: |
-  #         /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource_light destroy -var location=${{ matrix.region }} -auto-approve
+      - name: delete resources with tag 
+        run: |
+          az group delete --tag testing-job-id="${{ github.run_id }}" --yes
+            
