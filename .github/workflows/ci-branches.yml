@@ -98,24 +98,3 @@ jobs:
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               ${{ matrix.arguments }} \
               -auto-approve
-
-  clean-up:
-    name: delete deployed resources
-    runs-on: ubuntu-latest
-    
-    container:
-      image: aztfmod/roverdev:2004.071508
-      options: --user 0
-
-    steps:
-      - name: Login azure
-        run: |
-          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
-          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-
-          echo "local user: $(whoami)"
-      
-      - name: delete resources with tag 
-        run: |
-          az group delete --tag testing-job-id="${{ github.run_id }}" --yes
-            
