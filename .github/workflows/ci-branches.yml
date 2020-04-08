@@ -28,7 +28,7 @@ jobs:
       fail-fast: true
       matrix:
         launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
-        region: ["southeastasia"]
+        region: ["westus2"]
         arguments: ["'-var convention=cafclassic'"]
     
     container:
