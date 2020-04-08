@@ -41,11 +41,11 @@ resource "azuread_service_principal" "launchpad" {
 
 resource "azuread_service_principal_password" "launchpad" {
   service_principal_id = azuread_service_principal.launchpad.id
-  value                = random_string.launchpad_password.result
+  value                = random_password.launchpad.result
   end_date_relative     = "43200m"
 }
 
-resource "random_string" "launchpad_password" {
+resource "random_password" "launchpad" {
     length  = 250
     special = false
     upper   = true

@@ -14,7 +14,8 @@ blueprint_devops_self_hosted_agent = {
             admin_username = "devopsadmin"
         }
 
-        vm_size = "Standard_B1s"
+        # vm_size = "Standard_B1s"
+        vm_size = "Standard_F4s_v2"
 
         os = "Linux"
 

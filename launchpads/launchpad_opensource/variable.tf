@@ -48,6 +48,7 @@ variable "azure_devops_pat_token" {
     description = "Azure DevOps Personal Access Token to register the self hosted agent"
 }
 
+
 # variable "azure_devops_project" {
 #     description = "Azure DevOps project name"
 # }
