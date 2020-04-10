@@ -6,7 +6,7 @@ The open source launchpad provides the base GitOps capabilities required to enab
 
 The following components are deployed by the open source launchpad:
 
-![launchpad_opensource](./documentation/readme.md/launchpad_opensource.png)
+![launchpad_opensource](./documentation/images/readme.md/launchpad_opensource.png)
 
 The main objectives of the launchpad are:
 
@@ -21,13 +21,14 @@ To support the features set of the open source light launchpad you need to get:
 | ------------------------ | -----------------------------------------------------------------------------|
 | Azure Active Directory   | Need global admin role to give application permissions consent (see below)   |
 | Subscription             | Owner Role                                                                   |
+| Azure DevOps             | Administrator (organization)                                                 |
 
 The initial user require the following Azure Active Directory roles:
 - <b> Application Administrator </b> - Create Azure AD application and service principals, grant admin consent.
 - <b> User Administrator </b> - Create Azure AD group, add users to group
 - <b> Guest Inviter </b> - Create user guest
 
-In order to setup the environment, the initial user context must be created following the procedure detailed [here](./documentation/Create%20Level%200%20Azure&20AD%20Application.docx)
+Please follow this procedure before running launchpad_opensource  [here](./documentation/setup_prereqs.md)
 
 ## Supported type of subscriptions
 
