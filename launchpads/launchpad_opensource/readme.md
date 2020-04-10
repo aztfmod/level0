@@ -11,7 +11,7 @@ The main objectives of the launchpad are:
 
 The following components are deployed by the opensource launchpad:
 
-![launchpad_opensource](./launchpads/launchpad_opensource_light/documentation/readme.md/launchpad_opensource.png)
+![launchpad_opensource](./documentation/readme.md/launchpad_opensource.png)
 
 ## Remote state management
 

@@ -11,7 +11,7 @@ The main objectives of the launchpad open source light are:
 
 The following components are deployed by the opensource_light launchpad:
 
-![launchpad_opensource_light](./launchpads/launchpad_opensource_light/documentation/readme.md/launchpad_opensource_light.png)
+![launchpad_opensource_light](./documentation/readme.md/launchpad_opensource_light.png)
 
 ## Remote state management
 
