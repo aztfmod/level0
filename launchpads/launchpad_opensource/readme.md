@@ -2,16 +2,41 @@
 
 The open source launchpad provides the base GitOps capabilities required to enable your infrastructure as code environment on Azure to deploy the Cloud Adoption Framework Terraform Landing Zones. It is a foundation set of service from a security, governance and provisioning perspective that will take ownership of the lifecycle management of your landing zones. Apart from the Azure running costs the open source launchpad does not require a specific license to run. The project is supported by the open source community and you can fill issues to request new features or report a defect.
 
+## Architecture diagram
+
+The following components are deployed by the open source launchpad:
+
+![launchpad_opensource](./documentation/readme.md/launchpad_opensource.png)
+
 The main objectives of the launchpad are:
 
 * Remote state management
 * GitOps services to control everything through git
 
-## Architecture diagram
+## Requirements
 
-The following components are deployed by the opensource launchpad:
+To support the features set of the open source light launchpad you need to get:
 
-![launchpad_opensource](./documentation/readme.md/launchpad_opensource.png)
+| Access context           | Required privileges                                                          |
+| ------------------------ | -----------------------------------------------------------------------------|
+| Azure Active Directory   | Need global admin role to give application permissions consent (see below)   |
+| Subscription             | Owner Role                                                                   |
+
+The initial user require the following Azure Active Directory roles:
+- <b> Application Administrator </b> - Create Azure AD application and service principals, grant admin consent.
+- <b> User Administrator </b> - Create Azure AD group, add users to group
+- <b> Guest Inviter </b> - Create user guest
+
+In order to setup the environment, the initial user context must be created following the procedure detailed [here](./documentation/Create%20Level%200%20Azure&20AD%20Application.docx)
+
+## Supported type of subscriptions
+
+The open source launchpad has been tested on:
+
+- MSDN Subscriptions
+- Enterprise Agreement
+
+Note if you deploy in an Azure subscription created outside an Enterprise Agreement you will not be able to leverage the subscription lifecycle management (create subscriptions as code).
 
 ## Remote state management
 
@@ -52,17 +77,6 @@ The CAF open source landing zones deliver those services to enable multiple DevO
 * <b>CAF blueprints</b> - the blueprints or terraform services consumes multiples CAF curated modules to build an infrastructure solution. There are some examples in the CAF Terraform edition of public blueprints shared mainly to show our customers how to build a blueprint. Blueprints can be private. Some partner are already building industry specific blueprints. In the CAF Terraform framework we have different categories of blueprints like governance, security, operations, networking or infrastructure platforms like Azure Kubernetes Services, SAP HANA or Azure Web App to name few of them.
 * <b>CAF landing zone</b> - a landing zone orchestrates the deployment of multiple blueprints. It targets an Azure subscription to deploy the landing zones.
 
-## Requirements
-
-To support the feature set of the open source launchpad you need to get access to an Azure subscription created from an Azure Enterprise Agreement portal.
-
-Note if you deploy in an Azure subscription created outside an Enterprise Agreement you will not be able to leverage the subscription lifecycle management (create subscriptions as code).
-
-The initial user require the following Azure Active Directory roles:
-
-- <b> Application Administrator </b> - Create Azure AD application and service principals, grant admin consent.
-- <b> User Administrator </b> - Create Azure AD group, add users to group
-- <b> Guest Inviter </b> - Create user guest
 
 ## Proposed coming features
 
