@@ -44,12 +44,6 @@ jobs:
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource plan -var location=${{ matrix.region }}
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
           fi
-
-      - name: workspace
-        run: |
-          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.arguments }}"
-          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
-
             
   launchpad:
     name: Launchpad tests
@@ -70,6 +64,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+
+      - name: workspace
+        run: |
+          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.arguments }}"
+          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
 
       - name:  setup context
         run: |
