@@ -19,7 +19,6 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
-  TF_VAR_workspace: ${{ github.run_id }}
   
 jobs:
   level0:
@@ -48,7 +47,8 @@ jobs:
 
       - name: workspace
         run: |
-          /tf/rover/launchpad.sh workspace create ${{ github.run_id }}
+          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.arguments }}"
+          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
 
             
   launchpad:
