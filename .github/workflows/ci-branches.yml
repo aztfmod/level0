@@ -67,7 +67,7 @@ jobs:
 
       - name: workspace
         run: |
-          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.convention }}"
+          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ github.run_number }}"
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
 
       - name:  setup context
