@@ -64,16 +64,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      
-      - name: debug context
-        run: |
-          echo "github context: ${{ toJson(github) }}"
-          echo "job context: ${{ toJson(job) }}"
-          echo "runner context: ${{ toJson(runner) }}"
 
       - name: workspace
         run: |
-          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ github.run_number }}"
+          export TF_VAR_workspace="${{ job.container.id }}"
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
 
       - name:  setup context
