@@ -64,6 +64,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      
+      - name: debug context
+        run: |
+        echo "github context: ${{ toJson(github) }}"
+        echo "job context: ${{ toJson(job) }}"
+        echo "runner context: ${{ toJson(runner) }}"
 
       - name: workspace
         run: |
