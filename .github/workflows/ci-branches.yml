@@ -56,7 +56,7 @@ jobs:
       matrix:
         launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
         region: ["westus2"]
-        arguments: ["'-var convention=cafclassic'", "'-var convention=cafrandom'"]
+        convention: ["cafclassic", "cafrandom"]
     
     container:
       image: aztfmod/roverdev:2004.141038
@@ -67,7 +67,7 @@ jobs:
 
       - name: workspace
         run: |
-          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.arguments }}"
+          export TF_VAR_workspace="${{ github.run_id }}_${{ matrix.launchpad }}_${{ matrix.convention }}"
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
 
       - name:  setup context
@@ -88,18 +88,18 @@ jobs:
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }} 
+              '-var convention=${{ matrix.convention }}'
