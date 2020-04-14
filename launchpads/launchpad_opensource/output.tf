@@ -63,6 +63,7 @@ output "log_analytics" {
 
 output "diagnostics" {
   value = module.diagnostics
+  sensitive = true
 }
 
 output "vnet" {
