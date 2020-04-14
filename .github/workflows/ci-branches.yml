@@ -65,11 +65,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: workspace
-        run: |
-          export TF_VAR_workspace="${{ job.container.id }}"
-          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
-
       - name:  setup context
         run: |
           ln -s /__w/level0/level0 /tf/caf
@@ -82,7 +77,13 @@ jobs:
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
           echo "local user: $(whoami)"
-      
+            
+      - name: workspace
+        run: |
+          job_id="${{ job.container.id }}"
+          export TF_VAR_workspace=${job_id:0:63}
+          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
+  
       - name: Terraform plan
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
