@@ -19,7 +19,6 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
-  TF_VAR_workspace: ${{ job.container.id:0:63 }}
 
 jobs:
   level0:
@@ -59,6 +58,9 @@ jobs:
         region: ["westus2"]
         convention: ["cafclassic", "cafrandom"]
     
+    env:
+      TF_VAR_workspace: ${{ job.container.id:0:63 }}
+      
     container:
       image: aztfmod/roverdev:2004.141038
       options: --user 0
