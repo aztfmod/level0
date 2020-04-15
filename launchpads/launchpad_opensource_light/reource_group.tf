@@ -1,5 +1,5 @@
 resource "azurecaf_naming_convention" "rg" {
-  name          = "${var.workspace}-terraform-state"
+  name          = "terraform-state"
   prefix        = local.prefix
   resource_type = "rg"
   convention    = var.convention

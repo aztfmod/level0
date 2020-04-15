@@ -75,7 +75,7 @@ jobs:
 
           job_id=${{ job.container.id }}
           workspace=${job_id:0:63}
-          echo ::set-output name=workspace::${workspace}
+          echo ::set-env name=TF_VAR_workspace::${workspace}
 
       - name: Login azure
         run: |
@@ -85,14 +85,10 @@ jobs:
           echo "local user: $(whoami)"
             
       - name: workspace      
-        env:
-          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
   
       - name: Terraform plan
-        env:
-          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
@@ -100,8 +96,6 @@ jobs:
               '-var convention=${{ matrix.convention }}'
 
       - name: Terraform apply
-        env:
-          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
@@ -109,8 +103,6 @@ jobs:
               '-var convention=${{ matrix.convention }}'
 
       - name: Terraform destroy
-        env:
-          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
@@ -118,9 +110,8 @@ jobs:
               '-var convention=${{ matrix.convention }}'
 
       - name: cleanup
-        env:
-          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
-          az storage container delete --account-name ${stg_name} --name ${workspace} --auth-mode login
+          echo "stg_name: ${stg_name}"
+          az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
     
