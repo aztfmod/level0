@@ -19,7 +19,8 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
-  
+  TF_VAR_workspace: ${{ job.container.id:0:63 }}
+
 jobs:
   level0:
     name: level0
@@ -80,8 +81,6 @@ jobs:
             
       - name: workspace
         run: |
-          job_id="${{ job.container.id }}"
-          export TF_VAR_workspace=${job_id:0:63}
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
   
       - name: Terraform plan
