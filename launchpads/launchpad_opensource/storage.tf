@@ -1,5 +1,5 @@
 resource "azurecaf_naming_convention" "stg" {
-  name          = var.workspace
+  name          = local.stg_name
   prefix        = local.prefix
   resource_type = "st"
   convention    = "cafrandom"
