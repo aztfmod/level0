@@ -62,12 +62,10 @@ jobs:
     container:
       image: aztfmod/roverdev:2004.141038
       options: --user 0
-
-    steps:
-
       env:
         TF_VAR_workspace: ${{ job.container.id }}
-        
+
+    steps:
       - uses: actions/checkout@v2
 
       - name:  setup context
