@@ -102,6 +102,7 @@ jobs:
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               '-var convention=${{ matrix.convention }}'
 
+
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
@@ -112,6 +113,5 @@ jobs:
       - name: cleanup
         run: |
           stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
-          echo "stg_name: ${stg_name}"
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
     
