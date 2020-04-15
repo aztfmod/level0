@@ -59,7 +59,7 @@ jobs:
         convention: ["cafclassic", "cafrandom"]
     
     env:
-      TF_VAR_workspace: ${{ job.container.id:0:63 }}
+      TF_VAR_workspace: ${{ job.container.id }}
       
     container:
       image: aztfmod/roverdev:2004.141038
