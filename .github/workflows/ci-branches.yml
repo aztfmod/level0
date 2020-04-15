@@ -11,6 +11,8 @@ on:
         - master
 
 env:
+  TF_CLI_ARGS: '-no-color'
+  TF_CLI_ARGS_destroy: '-auto-approve -refresh=false'
   ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
   ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
   ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
@@ -24,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/rover:2004.0813
+      image: aztfmod/roverdev:2004.141038
       options: --user 0
 
     steps:
@@ -37,12 +39,12 @@ jobs:
       
       - name: Locate launchpad
         run: |
-         id=$(az storage account list --query "[?tags.tfstate=='level0']" | jq -r .[0].id)
+         id=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource plan -var location=${{ matrix.region }}
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
           fi
-
+            
   launchpad:
     name: Launchpad tests
     runs-on: ubuntu-latest
@@ -50,14 +52,17 @@ jobs:
     needs: level0
 
     strategy:
-      fail-fast: true
+      fail-fast: false
       matrix:
         launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
         region: ["westus2"]
-        arguments: ["'-var convention=cafclassic'"]
+        convention: ["cafclassic", "cafrandom"]
     
+    env:
+      TF_VAR_workspace: ${{ job.container.id }}
+      
     container:
-      image: aztfmod/rover:2004.0813
+      image: aztfmod/roverdev:2004.141038
       options: --user 0
 
     steps:
@@ -75,25 +80,28 @@ jobs:
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
           echo "local user: $(whoami)"
-      
+            
+      - name: workspace
+        run: |
+          /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
+  
       - name: Terraform plan
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              ${{ matrix.arguments }} \
-              -auto-approve
+              '-var convention=${{ matrix.convention }}'

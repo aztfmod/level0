@@ -52,9 +52,11 @@ output "tfstate-blob-name" {
 }
 
 output "log_analytics" {
+  sensitive = true
   value = module.log_analytics
 }
 
 output "diagnostics" {
+  sensitive = true
   value = module.diagnostics
 }
