@@ -1,6 +1,6 @@
 # Landing zone - launchpad opensource
 
-The open source launchpad provides the base GitOps capabilities required to enable your infrastructure as code environment on Azure to deploy the Cloud Adoption Framework Terraform Landing Zones. It is a foundation set of service from a security, governance and provisioning perspective that will take ownership of the lifecycle management of your landing zones. Apart from the Azure running costs the open source launchpad does not require a specific license to run. The project is supported by the open source community and you can fill issues to request new features or report a defect.
+The open source launchpad provides the base GitOps capabilities required to enable your infrastructure as code environment on Azure to deploy the Cloud Adoption Framework Terraform landing zones. It is a foundation set of service from a security, governance and provisioning perspective that will take ownership of the lifecycle management of your landing zones. Apart from the Azure running costs the open source launchpad does not require a specific license to run. The project is supported by the open source community and you can fill issues to request new features or report a defect.
 
 ## Architecture diagram
 
@@ -15,6 +15,8 @@ The main objectives of the launchpad are:
 
 ## Requirements
 
+Please follow this manual procedure before running launchpad_opensource  [here](./documentation/setup_prereqs.md)
+
 To support the features set of the open source light launchpad you need to get:
 
 | Access context           | Required privileges                                                          |
@@ -24,11 +26,28 @@ To support the features set of the open source light launchpad you need to get:
 | Azure DevOps             | Administrator (organization)                                                 |
 
 The initial user require the following Azure Active Directory roles:
-- <b> Application Administrator </b> - Create Azure AD application and service principals, grant admin consent.
-- <b> User Administrator </b> - Create Azure AD group, add users to group
-- <b> Guest Inviter </b> - Create user guest
 
-Please follow this procedure before running launchpad_opensource  [here](./documentation/setup_prereqs.md)
+- **Application Administrator** - Create Azure AD application and service principals, grant admin consent.
+- **User Administrator** - Create Azure AD group, add users to group.
+- **Guest Inviter** - Create user guest.
+
+### Azure DevOps
+
+The CAF landing zone framework follow a hierarchy of agent pools designed to apply a reduction of privileges. 
+
+#### Agent pool
+
+Create an agent pool to host the Azure self-hosted agent created by the landing zone. This self-hosted agent is responsible of deploying the landing zones and connecting to the private interface of the Azure services to deploy and configure the application using an Azure DevOps pipeline.
+
+#### Personal Access Token
+
+To access the Azure DevOps service, the Azure DevOps container running on the self-hosted agent virtual machine need to authenticate the Azure DevOps service using a Personal Access Token or PAT.
+
+The PAT token requires the scope "Read & Manage" on the Agent Pools.
+
+## Security model
+
+Permissions requirement and details on security credentials used are detailed in the following [document](./documentation/permissions.md). 
 
 ## Supported type of subscriptions
 
@@ -62,7 +81,6 @@ The current version only support Azure DevOps organizations. To deploy the launc
 - <b>Self hosted release agents </b> - release agent to deploy the landing zones
 - <b>Identity</b> - Create a set of Azure AD applications, security groups and managed service identities to enable a least privilege GitOps environment. For example when a DevOps engineer deploys a landing zones the CAF rover uses the logged-in Azure session to check if the user has access to the Key Vault access policy. If the DevOps engineer is member of the Azure AD security group the rover will pull some secrets and impersonate the Terraform deployments under that Azure AD application's privileges. We use that pattern to simplify the transition to a pipeline execution that only support Azure AD applications or MSIs.
 
-
 ## Proposed coming features
 
 - Subscription management (create, delete) [github link #6](https://github.com/aztfmod/level0/issues/6)
@@ -81,4 +99,4 @@ Not finding your feature, fill an issue to document it and start contributing by
 
 Ready to give it a go in your environment? Read the on-boarding guide
 
-Interested in improving the open source launchpad? Read the following developer guide
+Interested in improving the open source launchpad? Read the following developer guide.
