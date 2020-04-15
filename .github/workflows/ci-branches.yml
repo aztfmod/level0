@@ -67,15 +67,15 @@ jobs:
       - uses: actions/checkout@v2
 
       - name:  setup context
+        id: context
         run: |
-          echo "GITHUB_WORKSPACE=${GITHUB_WORKSPACE}"
-          echo "GITHUB_ACTION=${GITHUB_ACTION}"
-          prefix=GITHUB_
-          eval 'vars=(${!'"$prefix"'@})'
-
-          ln -s /__w/level0/level0 /tf/caf
+          ln -s ${GITHUB_WORKSPACE} /tf/caf
           echo "ls /tf/caf" && ls -lsa /tf/caf
           ls -lsa /tmp
+
+          job_id=${{ job.container.id }}
+          workspace=${job_id:0:63}
+          ::set-output name=workspace::${workspace}
 
       - name: Login azure
         run: |
@@ -86,13 +86,13 @@ jobs:
             
       - name: workspace      
         env:
-          TF_VAR_workspace: ${{ job.container.id }}
+          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/launchpad.sh workspace create ${TF_VAR_workspace}
   
       - name: Terraform plan
         env:
-          TF_VAR_workspace: ${{ job.container.id }}
+          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
@@ -101,7 +101,7 @@ jobs:
 
       - name: Terraform apply
         env:
-          TF_VAR_workspace: ${{ job.container.id }}
+          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
@@ -110,9 +110,17 @@ jobs:
 
       - name: Terraform destroy
         env:
-          TF_VAR_workspace: ${{ job.container.id }}
+          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing-job-id="${{ github.run_id }}"}' \
               '-var convention=${{ matrix.convention }}'
+
+      - name: cleanup
+        env:
+          TF_VAR_workspace: ${{ steps.context.outputs.workspace }}
+        run: |
+          stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
+          az storage container delete --account-name ${stg_name} --name ${workspace} --auth-mode login
+    
