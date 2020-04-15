@@ -75,7 +75,7 @@ jobs:
 
           job_id=${{ job.container.id }}
           workspace=${job_id:0:63}
-          ::set-output name=workspace::${workspace}
+          echo ::set-output name=workspace::${workspace}
 
       - name: Login azure
         run: |
