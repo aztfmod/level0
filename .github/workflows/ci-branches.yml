@@ -58,14 +58,16 @@ jobs:
         region: ["westus2"]
         convention: ["cafclassic", "cafrandom"]
     
-    env:
-      TF_VAR_workspace: ${{ job.container.id }}
       
     container:
       image: aztfmod/roverdev:2004.141038
       options: --user 0
 
     steps:
+
+      env:
+        TF_VAR_workspace: ${{ job.container.id }}
+        
       - uses: actions/checkout@v2
 
       - name:  setup context
