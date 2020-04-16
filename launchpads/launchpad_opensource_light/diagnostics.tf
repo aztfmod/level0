@@ -4,10 +4,10 @@ locals {
 
 module "diagnostics" {
   source  = "aztfmod/caf-diagnostics-logging/azurerm"
-  version = "~>1.0.0"
+  version = "2.0.1"
 
   name                  = "diag"
-  convention            = var.convention
+  convention            = "cafrandom"
   resource_group_name   = azurerm_resource_group.rg.name
   prefix                = local.prefix
   location              = var.location

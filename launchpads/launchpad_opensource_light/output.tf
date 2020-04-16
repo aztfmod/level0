@@ -43,7 +43,7 @@ output "launchpad_application_id" {
 }
 
 output "devops_client_secret" {
-  value = random_string.launchpad_password.result
+  value = random_password.launchpad.result
   sensitive = true
 }
 
@@ -52,9 +52,11 @@ output "tfstate-blob-name" {
 }
 
 output "log_analytics" {
+  sensitive = true
   value = module.log_analytics
 }
 
 output "diagnostics" {
+  sensitive = true
   value = module.diagnostics
 }

@@ -1,4 +1,14 @@
-## 2001.dev (Unrelease)
+## 2004
+
+ENHANCEMENTS:
+* Implement integration testing with GitHub actions [20](https://github.com/aztfmod/level0/issues/20) 
+* Adding documentation
+
+BUG FIXES:
+* launchpad_opensource fails on destroy due to AKV access policies [23](https://github.com/aztfmod/level0/issues/23)
+* Cannot delete launchpad on another rover than the one who created it [17](https://github.com/aztfmod/level0/issues/17)
+
+## 2003.dev (Unrelease)
 
 NOTES:
 

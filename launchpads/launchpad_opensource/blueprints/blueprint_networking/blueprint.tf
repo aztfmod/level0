@@ -1,12 +1,12 @@
 
 module "virtual_network" {
   source  = "aztfmod/caf-virtual-network/azurerm"
-  version = "~> 1.1.0"
+  version = "~> 2.0.0"
 
   prefix                    = var.prefix
   convention                = var.convention
   location                  = var.location
-  virtual_network_rg        = var.resource_group_name
+  resource_group_name       = var.resource_group_name
   networking_object         = var.networking_object
   tags                      = local.tags
   diagnostics_map           = var.diagnostics_map

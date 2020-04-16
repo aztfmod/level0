@@ -1,7 +1,7 @@
 resource "azuread_group" "developers_rover" {
   count = var.enable_collaboration == true ? 1 : 0
 
-  name = "${local.prefix}caf-level0-rover-developers"
+  name = "${local.prefix}caf-${var.workspace}-rover-developers"
 }
 
 
@@ -48,6 +48,7 @@ resource "null_resource" "grant_admin_concent" {
 
     provisioner "local-exec" {
         command = local.grant_admin_concent_command
+        on_failure = fail
     }
 
     triggers = {

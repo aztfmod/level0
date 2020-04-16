@@ -2,10 +2,8 @@
 locals {
 
     run_devops_command = <<EOT
-        ssh -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} << EOF
-            docker run -d -e AZP_URL=${var.azure_devops_url_organization} -e AZP_TOKEN=${var.azure_devops_pat_token} -e AZP_POOL="${var.azure_devops.agent_pools.level0.name}" ${module.blueprint_container_registry.object.login_server}/devops
-        
-    EOT
+        docker run -d -e AZP_URL=${var.azure_devops_url_organization} -e AZP_TOKEN=${var.azure_devops_pat_token} -e AZP_POOL="${var.azure_devops.agent_pools.level0.name}" ${module.blueprint_container_registry.object.login_server}/devops
+EOT
 }
 
 ##
@@ -16,8 +14,19 @@ resource "null_resource" "run_devops_container" {
         null_resource.pull_docker_image
     ]
 
-    provisioner "local-exec" {
-        command = local.run_devops_command
+    connection {
+        type        = "ssh"
+        user        = module.blueprint_devops_self_hosted_agent.object.admin_username
+        host        = module.blueprint_devops_self_hosted_agent.object.public_ip_address
+        private_key = file("~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private")
+        agent       = false 
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            local.run_devops_command
+        ]
+        on_failure = fail
     }
 
     triggers = {
@@ -31,4 +40,5 @@ resource "null_resource" "run_devops_container" {
         azure_devops_agent_pool = var.azure_devops.agent_pools.level0.name
     }
 }
+
 

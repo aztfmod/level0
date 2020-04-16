@@ -8,7 +8,7 @@ variable "logged_user_objectId" {
 
 variable "rover_pilot_client_id" {
     description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
-    default = ""
+    default = null
 }
 
 
@@ -23,6 +23,7 @@ variable "tf_name" {
 
 variable "tags" {
     default = {}
+    type = map
 }
  
 variable "convention" {
@@ -47,6 +48,7 @@ variable "azure_devops_pat_token" {
     description = "Azure DevOps Personal Access Token to register the self hosted agent"
 }
 
+
 # variable "azure_devops_project" {
 #     description = "Azure DevOps project name"
 # }
@@ -63,7 +65,7 @@ variable "azure_devops" {}
 
 ## Feature flags
 variable "enable_collaboration" {
-      type        = bool
+    type        = bool
     description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
     default = false
 }

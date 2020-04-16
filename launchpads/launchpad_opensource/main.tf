@@ -1,13 +1,17 @@
 provider "azurerm" {
-  version = "~> 2.1.0"
   features {}
 }
 
-terraform {
-}
+provider "azurecaf" {}
 
-provider "azuread" {
-  version = "~> 0.7.0"
+terraform {
+  required_providers {
+    azurerm = "~> 2.4.0"
+    azuread = "~> 0.7.0"
+    random  = "~> 2.2.1"
+    null    = "~> 2.1.0"
+    tls     = "~> 2.1.1"
+  }
 }
 
 provider "azuredevops" {
@@ -17,18 +21,6 @@ provider "azuredevops" {
   personal_access_token = var.azure_devops_pat_token
 }
 
-
-provider "random" {
-  version = "~> 2.2.1"
-}
-
-provider "null" {
-  version = "~> 2.1.0"
-}
-
-provider "tls" {
-  version = "~> 2.1.0"
-}
 
 data "azurerm_subscription" "primary" {}
 
@@ -44,9 +36,10 @@ resource "random_string" "prefix" {
 
 locals {
   landingzone_tag          = {
-    "landingzone" = basename(abspath(path.root))
+    "landingzone" = local.launchpad
   }
   tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace})
   launchpad-blob-name = var.tf_name
-  prefix            = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
+  prefix            = var.use_prefix == true ? random_string.prefix.result : ""
+  launchpad           = basename(abspath(path.root))
 }

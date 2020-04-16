@@ -4,7 +4,7 @@ variable "logged_user_objectId" {
 
 variable "rover_pilot_client_id" {
     description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
-    default = ""
+    default = null
 }
 
 
@@ -19,6 +19,7 @@ variable "tf_name" {
 
 variable "tags" {
     default = {}
+    type = map
 }
  
 variable "convention" {
@@ -34,6 +35,7 @@ variable "workspace" {
 
 variable "use_prefix" {
     description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
+    type    = bool
     default = true
 }
 

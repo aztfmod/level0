@@ -5,8 +5,8 @@ module "blueprint_container_registry" {
   prefix                    = local.prefix
   convention                = var.convention
   tags                      = local.tags
-  resource_group_name       = azurerm_resource_group.rg.name
-  location                  = azurerm_resource_group.rg.location
+  resource_group_name       = azurerm_resource_group.rg_devops.name
+  location                  = azurerm_resource_group.rg_devops.location
   workspace                 = var. workspace
   log_analytics_workspace   = module.log_analytics.object
   diagnostics_map           = module.diagnostics.diagnostics_map

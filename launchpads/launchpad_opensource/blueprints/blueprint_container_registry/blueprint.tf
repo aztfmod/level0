@@ -1,11 +1,12 @@
 
 module "container_registry" {
   source  = "aztfmod/caf-container-registry/azurerm"
-  version = "~> 1.0.0"
+  version = "~> 2.0.0"
 
   name                        = var.acr_object.name
   convention                  = var.convention
-  rg                          = var.resource_group_name
+  max_length                  = 45
+  resource_group_name         = var.resource_group_name
   location                    = var.location
   prefix                      = var.prefix
   tags                        = local.tags

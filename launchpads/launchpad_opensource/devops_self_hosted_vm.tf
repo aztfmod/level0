@@ -11,15 +11,15 @@
 data "azurerm_key_vault" "launchpad" {
   depends_on            = [azurerm_key_vault.launchpad, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad]
   name                  = azurerm_key_vault.launchpad.name
-  resource_group_name   = azurerm_resource_group.rg.name
+  resource_group_name   = azurerm_resource_group.rg_security.name
 }
 
 module "blueprint_devops_self_hosted_agent" {
   source = "./blueprints/blueprint_virtual_machine"
   
   convention              = var.convention
-  resource_group_name     = azurerm_resource_group.rg.name
-  location                = azurerm_resource_group.rg.location
+  resource_group_name     = azurerm_resource_group.rg_devops.name
+  location                = azurerm_resource_group.rg_devops.location
   prefix                  = local.prefix
   tags                    = local.tags
   log_analytics_workspace = module.log_analytics.object
@@ -30,44 +30,18 @@ module "blueprint_devops_self_hosted_agent" {
   key_vault_id            = data.azurerm_key_vault.launchpad.id
 }
 
-module "vm_provisioner" {  
-  source = "git://github.com/aztfmod/terraform-azurerm-caf-provisioner.git?ref=1912"
+# module "vm_provisioner" {  
+#   source = "git://github.com/aztfmod/terraform-azurerm-caf-provisioner.git?ref=1912"
 
-  host_connection               = module.blueprint_devops_self_hosted_agent.object.public_ip_address
-  scripts                       = var.blueprint_devops_self_hosted_agent.vm_object.caf-provisioner.scripts
-  scripts_param                 = [
-                                  module.blueprint_devops_self_hosted_agent.object.admin_username
-                                ]
-  admin_username                = module.blueprint_devops_self_hosted_agent.object.admin_username
-  ssh_private_key_pem_secret_id = module.blueprint_devops_self_hosted_agent.ssh_private_key_pem_secret_id
-  os_platform                   = var.blueprint_devops_self_hosted_agent.vm_object.caf-provisioner.os_platform
-}
-
-##### Login Azure Devops
-
-# resource "null_resource" "login" {
-
-
-#     provisioner "local-exec" {
-#         command = local.arg_devops_login
-#     }
-
-#     triggers = {
-#         pat_token   = var.azure_devops_pat_token
-#         arg         = local.arg_devops_login
-#         time        = timestamp()               # force the login to be re-executed at evey call
-#     }
+#   host_connection               = module.blueprint_devops_self_hosted_agent.object.public_ip_address
+#   scripts                       = var.blueprint_devops_self_hosted_agent.vm_object.caf-provisioner.scripts
+#   scripts_param                 = [
+#                                   module.blueprint_devops_self_hosted_agent.object.admin_username
+#                                 ]
+#   admin_username                = module.blueprint_devops_self_hosted_agent.object.admin_username
+#   ssh_private_key_pem_secret_id = module.blueprint_devops_self_hosted_agent.ssh_private_key_pem_secret_id
+#   os_platform                   = var.blueprint_devops_self_hosted_agent.vm_object.caf-provisioner.os_platform
 # }
-
-# locals {
-#     arg_devops_login = <<EOT
-#         az extension add --name azure-devops --yes
-
-#         export AZURE_DEVOPS_EXT_PAT="${var.azure_devops_pat_token}"
-#         az devops configure --defaults project="${var.azure_devops_project}" organization="${var.azure_devops_url_organization}"
-#     EOT
-# }
-
 
 
 locals {
@@ -79,6 +53,7 @@ EOT
 
     ## This command saves on the local rover volume the private ssh key required to allow the rover to login the docker host in the self hosted agent
     ssh_config_update = <<EOT
+mkdir -p ~/.ssh
 chmod 600 ~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private
 echo "" >> ~/.ssh/config
 echo "Host ${module.blueprint_devops_self_hosted_agent.object.public_ip_address}" >> ~/.ssh/config
@@ -87,11 +62,9 @@ echo "    StrictHostKeyChecking no" >> ~/.ssh/config
 EOT
 
     docker_ssh_command = <<EOT
-ssh -l ${module.blueprint_devops_self_hosted_agent.object.admin_username} ${module.blueprint_devops_self_hosted_agent.object.public_ip_address} <<EOF
     az login --identity
     az acr login --name ${module.blueprint_container_registry.object.admin_username}
     docker pull ${module.blueprint_container_registry.object.login_server}/devops
-EOF
 EOT
 }
 
@@ -102,6 +75,7 @@ EOT
 resource "null_resource" "login_azure_container_registry" {
   provisioner "local-exec" {
       command = "pwd=${module.blueprint_container_registry.object.admin_password} printenv pwd | sudo docker login -u ${module.blueprint_container_registry.object.admin_username} --password-stdin ${module.blueprint_container_registry.object.login_server}"
+        on_failure = fail
   }
 }
 
@@ -114,6 +88,7 @@ resource "null_resource" "build_docker_image" {
 
     provisioner "local-exec" {
         command = local.docker_build_command
+        on_failure = fail
     }
 
     triggers = {
@@ -125,16 +100,17 @@ resource "null_resource" "build_docker_image" {
     }
 }
 
-##
+## 
 #   3 - Save the ssh key of the devops selfhosted server in the ~/.ssh/config
 ##
 resource "null_resource" "ssh_config_update" {
-    depends_on = [module.vm_provisioner]
+    depends_on = [module.blueprint_devops_self_hosted_agent]
 
     count = var.save_devops_agent_ssh_key_to_disk ? 1 : 0
 
     provisioner "local-exec" {
         command = local.ssh_config_update
+        on_failure = fail
     }
 
     triggers = {
@@ -154,12 +130,24 @@ resource "null_resource" "pull_docker_image" {
         null_resource.ssh_config_update,
         azurerm_role_assignment.acr_pull,
         azurerm_role_assignment.acr_reader,
-        module.vm_provisioner
+        null_resource.install_docker_and_tools
     ]
 
-    provisioner "local-exec" {
-        command = local.docker_ssh_command
+    connection {
+        type        = "ssh"
+        user        = module.blueprint_devops_self_hosted_agent.object.admin_username
+        host        = module.blueprint_devops_self_hosted_agent.object.public_ip_address
+        private_key = file("~/.ssh/${module.blueprint_devops_self_hosted_agent.object.public_ip_address}.private")
+        agent       = false 
     }
+
+    provisioner "remote-exec" {
+        inline = [
+            local.docker_ssh_command
+        ]
+        on_failure = fail
+    }
+
 
     triggers = {
         docker_build_command    = sha256(local.docker_ssh_command)
@@ -168,4 +156,6 @@ resource "null_resource" "pull_docker_image" {
         admin_password          = module.blueprint_container_registry.object.admin_password
     }
 }
+
+
 
