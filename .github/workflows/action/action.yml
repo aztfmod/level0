@@ -1,8 +1,0 @@
-name: Azure CAF Rover Action
-description: Azure CAF rover to execute the deployment of the landing zones
-branding:
-    icon: 'cloud-lightning'  
-    color: 'green'
-runs:
-  using: 'docker'
-  image: 'docker://aztfmod/roverdev:2004.030817'
