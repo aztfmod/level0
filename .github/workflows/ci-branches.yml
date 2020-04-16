@@ -26,7 +26,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/roverdev:2004.141038
+      image: aztfmod/roverdev:2004.1606
       options: --user 0
 
     steps:
@@ -60,7 +60,7 @@ jobs:
     
       
     container:
-      image: aztfmod/roverdev:2004.141038
+      image: aztfmod/roverdev:2004.1606
       options: --user 0
 
     steps:
@@ -112,6 +112,5 @@ jobs:
       - name: cleanup
         run: |
           stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
-          echo "stg_name: ${stg_name}"
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
     
