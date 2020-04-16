@@ -56,7 +56,7 @@ jobs:
       matrix:
         launchpad: ["launchpad_opensource_light", "launchpad_opensource"]
         region: ["westus2"]
-        convention: ["cafclassic", "cafrandom"]
+        convention: ["cafclassic", "cafrandom", "random"]
     
       
     container:
