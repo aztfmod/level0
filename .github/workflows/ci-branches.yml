@@ -19,6 +19,7 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
+  region: "westus2"
 
 jobs:
   level0:
@@ -26,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/roverdev:2004.210427
+      image: aztfmod/roverdev:2004.210909
       options: --user 0
 
     steps:
@@ -39,10 +40,9 @@ jobs:
       
       - name: Locate launchpad
         run: |
-         id=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].id)
+          id=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0'] -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource plan -var location=${{ matrix.region }}
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ env.region }}
           fi
             
   launchpad:
@@ -60,7 +60,7 @@ jobs:
     
       
     container:
-      image: aztfmod/roverdev:2004.210427
+      image: aztfmod/roverdev:2004.210909
       options: --user 0
 
     steps:
@@ -111,6 +111,6 @@ jobs:
 
       - name: cleanup
         run: |
-          stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
+          stg_name=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].name)
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
     
