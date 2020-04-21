@@ -35,7 +35,7 @@ resource "azurecaf_naming_convention" "computer_name" {
 }
 
 resource "azurerm_linux_virtual_machine" "vm" {
-  depends_on = [azurerm_network_interface.nic]
+  depends_on = [azurerm_network_interface.nic, azurerm_availability_set.avs]
 
   name                  = azurecaf_naming_convention.vm.result
   location            = local.location
