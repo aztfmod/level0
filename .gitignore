@@ -8,3 +8,4 @@
 **/~*.*
 **/*.log
 launchpads/launchpad_opensource/backend.azurerm.tf
+**/stderr.txt
