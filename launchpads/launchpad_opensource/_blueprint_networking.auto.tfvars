@@ -35,8 +35,8 @@ blueprint_networking = {
                 ]
                 nsg_outbound        = []
             }
-            subnet3        = {
-                name                = "DevopsBuildSandpit"
+            level0        = {
+                name                = "level0"
                 cidr                = "192.168.200.16/29"
                 service_endpoints   = []
                 nsg_inbound         = [
@@ -46,9 +46,53 @@ blueprint_networking = {
                 ]
                 nsg_outbound        = []
             }
-            subnet4        = {
-                name                = "DevopsReleaseSandpit"
+            level1        = {
+                name                = "level1"
                 cidr                = "192.168.200.24/29"
+                service_endpoints   = []
+                nsg_inbound         = [
+                    # {"Name", "Priority", "Direction", "Action", "Protocol", "source_port_range", "destination_port_range", "source_address_prefix", "destination_address_prefix" }, 
+                    ["ssh_internet", "150", "Inbound", "Allow", "*", "*", "22", "*", "*"],       # Temp until bastion + vwan in place.
+                    ["ssh", "200", "Inbound", "Allow", "*", "*", "22", "192.168.200.8/29", "*"],
+                ]
+                nsg_outbound        = []
+            }
+            level2        = {
+                name                = "level2"
+                cidr                = "192.168.200.32/29"
+                service_endpoints   = []
+                nsg_inbound         = [
+                    # {"Name", "Priority", "Direction", "Action", "Protocol", "source_port_range", "destination_port_range", "source_address_prefix", "destination_address_prefix" }, 
+                    ["ssh_internet", "150", "Inbound", "Allow", "*", "*", "22", "*", "*"],       # Temp until bastion + vwan in place.
+                    ["ssh", "200", "Inbound", "Allow", "*", "*", "22", "192.168.200.8/29", "*"],
+                ]
+                nsg_outbound        = []
+            }
+            level3        = {
+                name                = "level3"
+                cidr                = "192.168.200.40/29"
+                service_endpoints   = []
+                nsg_inbound         = [
+                    # {"Name", "Priority", "Direction", "Action", "Protocol", "source_port_range", "destination_port_range", "source_address_prefix", "destination_address_prefix" }, 
+                    ["ssh_internet", "150", "Inbound", "Allow", "*", "*", "22", "*", "*"],       # Temp until bastion + vwan in place.
+                    ["ssh", "200", "Inbound", "Allow", "*", "*", "22", "192.168.200.8/29", "*"],
+                ]
+                nsg_outbound        = []
+            }
+            level4release        = {
+                name                = "level4-release"
+                cidr                = "192.168.200.48/29"
+                service_endpoints   = []
+                nsg_inbound         = [
+                    # {"Name", "Priority", "Direction", "Action", "Protocol", "source_port_range", "destination_port_range", "source_address_prefix", "destination_address_prefix" }, 
+                    ["ssh_internet", "150", "Inbound", "Allow", "*", "*", "22", "*", "*"],       # Temp until bastion + vwan in place.
+                    ["ssh", "200", "Inbound", "Allow", "*", "*", "22", "192.168.200.8/29", "*"],
+                ]
+                nsg_outbound        = []
+            }
+            level4build        = {
+                name                = "level4-build"
+                cidr                = "192.168.200.56/29"
                 service_endpoints   = []
                 nsg_inbound         = [
                     # {"Name", "Priority", "Direction", "Action", "Protocol", "source_port_range", "destination_port_range", "source_address_prefix", "destination_address_prefix" }, 

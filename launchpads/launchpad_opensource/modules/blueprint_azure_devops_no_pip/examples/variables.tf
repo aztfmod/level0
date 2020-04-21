@@ -1,5 +1,5 @@
-variable "blueprint_azure_devops_no_pip" {
-}
+variable "vm_object" {}
+variable "azure_devops" {}
 
 variable "use_prefix" {
     default = true
@@ -16,3 +16,7 @@ variable "location" {
   default = "westus2"
 }
 
+
+variable "azure_devops_pat_token" {}
+
+variable "acr_object" {}

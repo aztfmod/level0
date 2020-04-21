@@ -1,6 +1,3 @@
-locals {
-    azure_diagnostics_logs_event_hub = false
-}
 
 module "diagnostics" {
   source  = "aztfmod/caf-diagnostics-logging/azurerm"
@@ -13,5 +10,5 @@ module "diagnostics" {
   location              = azurerm_resource_group.rg_devops.location
   tags                  = local.tags
 
-  enable_event_hub      = local.azure_diagnostics_logs_event_hub
+  enable_event_hub      = var.azure_diagnostics_logs_event_hub
 }

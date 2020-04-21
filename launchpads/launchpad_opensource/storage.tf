@@ -1,25 +1,24 @@
 resource "azurecaf_naming_convention" "stg" {
-  name          = local.stg_name
-  prefix        = local.prefix
-  resource_type = "st"
-  convention    = "cafrandom"
-}
+  count = 5
 
-locals {
-  # storage account prefix
-  stg_name = "tfstate"
+  name          = "${var.resource_storage_tfstate_name_prefix}l${count.index}"
+  prefix        = local.prefix
+  resource_type = "azurerm_storage_account"
+  convention    = "cafrandom"
 }
 
 
 resource "azurerm_storage_account" "stg" {
-  name                     = azurecaf_naming_convention.stg.result
+  count = 5
+
+  name                     = azurecaf_naming_convention.stg[count.index].result
   resource_group_name      = azurerm_resource_group.rg_tfstate.name
   location                 = azurerm_resource_group.rg_tfstate.location
   account_tier             = "Standard"
   account_replication_type = "RAGRS"
 
   tags = {
-    tfstate     = var.workspace
+    tfstate     = "level${count.index}"
     workspace   = var.workspace
     prefix      = random_string.prefix.result
     launchpad   = local.launchpad
@@ -27,7 +26,8 @@ resource "azurerm_storage_account" "stg" {
 }
 
 resource "azurerm_storage_container" "launchpad" {
+  count = 5
   name                  = var.workspace
-  storage_account_name  = azurerm_storage_account.stg.name
+  storage_account_name  = azurerm_storage_account.stg[count.index].name
   container_access_type = "private"
 }

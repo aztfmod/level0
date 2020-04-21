@@ -1,6 +1,5 @@
-variable "blueprint_devops_self_hosted_agent" {}
 variable "blueprint_networking" {}
-variable "blueprint_container_registry" {}
+variable "acr_object" {}
 
 variable "logged_user_objectId" {
     description = "objectId of the logged user initializing the launchpad"
@@ -42,27 +41,6 @@ variable "use_prefix" {
     default = true
 }
 
-
-### Azure Devops variables
-variable "azure_devops_pat_token" {
-    description = "Azure DevOps Personal Access Token to register the self hosted agent"
-}
-
-
-# variable "azure_devops_project" {
-#     description = "Azure DevOps project name"
-# }
-
-variable "azure_devops_url_organization" {
-    description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
-}
-
-# variable "azure_devops_agent_pool" {
-#     description = "Azure DevOps agent pool name to host the self hosted agent"
-# }
-
-variable "azure_devops" {}
-
 ## Feature flags
 variable "enable_collaboration" {
     type        = bool
@@ -70,13 +48,55 @@ variable "enable_collaboration" {
     default = false
 }
 
-variable "enable_azure_devops" {
-    description = "Feature flag to install Azure devops self hosted agent and setup the Azure devops project"
-    default = true
+
+# Resource group names
+variable "resource_group_tfstate" {
+    description = "Name of the resource group hosting the terraform state storage accounts"
+    default = "tfstate"
 }
 
-variable "save_devops_agent_ssh_key_to_disk" {
-  type        = bool
-  default     = true
-  description = "Dump the ssh private key in the ~/.ssh folder with the name [public ip address].private"
+variable "resource_group_security" {
+    description = "Name of the resource group hosting the security services"
+    default = "tfstate-security"
+}
+
+variable "resource_group_devops" {
+    description = "Name of the resource group hosting the Azure container registry and devops agents"
+    default = "tfstate-gitops"
+}
+
+variable "resource_group_networking" {
+    description = "Name of the resource group hosting the network services"
+    default = "tfstate-network"
+}
+
+# Resource names
+variable "resource_storage_tfstate_name_prefix" {
+    description = "Name of the storage account hosting the tfstate (note l0, l1, l2, l4 added automatically). Note the keyvault name applies a cafrandom policy."
+    default = "tfstate"
+}
+
+variable "resource_log_analytics_name" {
+    description = "Name of the log analytics used for the gitops environment"
+    default = "gitops"
+}
+
+variable "resource_diagnostics_name" {
+    description = "Name of the diagnotic storage account used for the gitops environment"
+    default = "diag"
+}
+
+variable "azure_diagnostics_logs_event_hub" {
+    default = false
+    type = bool
+}
+
+variable "container_registry_name" {
+    description = "Name of the Azure container registry"
+    default = "gitops"
+}
+
+variable "resource_keyvault_name" {
+    description = "Name of the Azure Keyvault storing secrets required for rover and pipelines. Note the keyvault name applies a cafrandom policy."
+    default = "gitops"
 }

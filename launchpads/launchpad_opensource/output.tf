@@ -1,9 +1,14 @@
-output "storage_account_name" {
-  value = azurerm_storage_account.stg.name
+
+output "subnet_id_by_name" {
+  value = module.blueprint_networking.subnet_id_by_name
 }
 
-output "container" {
-  value = azurerm_storage_container.launchpad.name
+output "subnet_id_by_key" {
+  value = module.blueprint_networking.subnet_id_by_key
+}
+
+output "vnet" {
+  value = module.blueprint_networking.vnet
 }
 
 output "resource_groups" {
@@ -11,7 +16,7 @@ output "resource_groups" {
     "tfstate"   = azurerm_resource_group.rg_tfstate.name
     "security"  = azurerm_resource_group.rg_security.name
     "network"   = azurerm_resource_group.rg_network.name
-    "devops"       = azurerm_resource_group.rg_devops.name
+    "devops"    = azurerm_resource_group.rg_devops.name
   }
 }
 
@@ -21,14 +26,14 @@ output "prefix" {
 }
 
 
-output "tfstate_map" {
-  value = map(
-    "storage_account_name", azurerm_storage_account.stg.name,
-    "container", azurerm_storage_container.launchpad.name,
-    "resource_group", azurerm_resource_group.rg_tfstate.name,
-    "prefix", random_string.prefix.result
-  )
-}
+# output "tfstate_map" {
+#   value = map(
+#     "storage_account_name", azurerm_storage_account.stg.name,
+#     "container", azurerm_storage_container.launchpad.name,
+#     "resource_group", azurerm_resource_group.rg_tfstate.name,
+#     "prefix", random_string.prefix.result
+#   )
+# }
 
 # output "deployment_msi" {
 #   value = map(
@@ -47,11 +52,6 @@ output "launchpad_application_id" {
   sensitive = true
 }
 
-output "devops_client_secret" {
-  value = random_password.launchpad.result
-  sensitive = true
-}
-
 output "tfstate-blob-name" {
   value = local.launchpad-blob-name
 }
@@ -66,6 +66,6 @@ output "diagnostics" {
   sensitive = true
 }
 
-output "vnet" {
-  value = module.blueprint_networking.vnet
+output "registry" {
+  value = module.container_registry
 }

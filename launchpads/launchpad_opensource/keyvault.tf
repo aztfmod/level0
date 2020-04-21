@@ -1,7 +1,7 @@
 data "azurerm_client_config" "current" {}
 
 resource "azurecaf_naming_convention" "keyvault" {
-  name          = var.workspace
+  name          = var.resource_keyvault_name
   prefix        = local.prefix
   resource_type = "kv"
   convention    = "cafrandom"
@@ -21,8 +21,8 @@ resource "azurerm_key_vault" "launchpad" {
       workspace = var.workspace
     }
 
-
 }
+
 
 resource "azurerm_key_vault_access_policy" "launchpad" {
   key_vault_id = azurerm_key_vault.launchpad.id
