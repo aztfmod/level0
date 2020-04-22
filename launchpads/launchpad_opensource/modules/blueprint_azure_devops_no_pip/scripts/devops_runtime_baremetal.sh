@@ -1,5 +1,13 @@
 #!/bin/sh
 
+url=${1}
+pat_token=${2}
+agent_pool=${3}
+agent_prefix=${4}
+num_agent=${5}
+admin_user=${6}
+
+
 #strict mode, fail on error
 set -euo pipefail
 
@@ -21,8 +29,11 @@ apt-get install -y --no-install-recommends \
 
 echo "Allowing agent to run docker"
 
-# usermod -aG docker azuredevopsuser
-# useradd --uid 1000
+usermod -aG docker ${admin_user}
+systemctl daemon-reload
+systemctl enable docker
+service docker start
+docker --version
 
 echo "Installing Azure CLI"
 
@@ -30,7 +41,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 echo "install VSTS Agent"
 
-cd /home/${8}
+cd /home/${admin_user}
 mkdir -p agent
 cd agent
 
@@ -42,18 +53,18 @@ wget -O agent_package.tar.gz ${AGENTURL}
 
 az login --identity
 
-for agent_num in $(seq 1 ${6}); do
+for agent_num in $(seq 1 ${num_agent}); do
   agent_dir="agent-$agent_num"
   mkdir -p "$agent_dir"
   cd "$agent_dir"
-    name="${4}-${agent_num}" 
+    name="${agent_prefix}-${agent_num}" 
     echo "installing agent $name"
     tar zxvf ../agent_package.tar.gz
     chmod -R 777 .
     echo "extracted"
     ./bin/installdependencies.sh
     echo "dependencies installed"
-    sudo -u ${8} ./config.sh --unattended --url "${1}" --auth pat --token "${2}" --pool "${3}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
+    sudo -u ${admin_user} ./config.sh --unattended --url "${url}" --auth pat --token "${pat_token}" --pool "${agent_pool}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
     echo "configuration done"
     ./svc.sh install
     echo "service installed"
