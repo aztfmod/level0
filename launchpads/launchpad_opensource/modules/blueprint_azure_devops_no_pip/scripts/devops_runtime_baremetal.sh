@@ -30,7 +30,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 echo "install VSTS Agent"
 
-cd ~
+cd /home/${8}
 mkdir -p agent
 cd agent
 
@@ -53,7 +53,7 @@ for agent_num in $(seq 1 ${6}); do
     echo "extracted"
     ./bin/installdependencies.sh
     echo "dependencies installed"
-    ./config.sh --unattended --url "${1}" --auth pat --token "${2}" --pool "${3}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
+    sudo -u ${8} ./config.sh --unattended --url "${1}" --auth pat --token "${2}" --pool "${3}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
     echo "configuration done"
     ./svc.sh install
     echo "service installed"
