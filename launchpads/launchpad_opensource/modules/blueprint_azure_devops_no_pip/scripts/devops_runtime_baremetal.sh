@@ -47,7 +47,7 @@ for agent_num in $(seq 1 ${6}); do
   mkdir -p "$agent_dir"
   pushd "$agent_dir"
     name="${4}-${agent_num}"\
-    echo "installing agent $agent_id"
+    echo "installing agent $name"
     tar zxvf ../agent_package.tar.gz
     chmod -R 777 .
     echo "extracted"
