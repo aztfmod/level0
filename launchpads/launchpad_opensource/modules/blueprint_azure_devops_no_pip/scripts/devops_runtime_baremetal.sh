@@ -30,7 +30,7 @@ curl -sL https://aka.ms/InstallAzureCLIDeb | bash
 
 echo "install VSTS Agent"
 
-cd /home/azuredevopsuser
+cd ~
 mkdir -p agent
 cd agent
 
@@ -39,12 +39,6 @@ AGENTURL="https://vstsagentpackage.azureedge.net/agent/${AGENTRELEASE}/vsts-agen
 echo "Release "${AGENTRELEASE}" appears to be latest" 
 echo "Downloading..."
 wget -O agent_package.tar.gz ${AGENTURL} 
-
-# Generate random prefix for agent names
-if ! test -e "host_uuid.txt"; then
-  uuidgen > host_uuid.txt.tmp
-  mv host_uuid.txt.tmp host_uuid.txt
-fi
 
 az login --identity
 
