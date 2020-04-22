@@ -85,27 +85,27 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   count = var.enable_collaboration == true ? 1 : 0
   scope                = azurerm_storage_account.stg.1.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azuread_group.devops_rover.1.id
+  principal_id         = data.azuread_group.devops_rover.0.id
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level2" {
   count = var.enable_collaboration == true ? 1 : 0
   scope                = azurerm_storage_account.stg.2.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azuread_group.devops_rover.2.id
+  principal_id         = data.azuread_group.devops_rover.0.id
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level3" {
   count = var.enable_collaboration == true ? 1 : 0
   scope                = azurerm_storage_account.stg.3.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azuread_group.devops_rover.3.id
+  principal_id         = data.azuread_group.devops_rover.0.id
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level4" {
   count = var.enable_collaboration == true ? 1 : 0
   scope                = azurerm_storage_account.stg.4.id
   role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = data.azuread_group.devops_rover.4.id
+  principal_id         = data.azuread_group.devops_rover.0.id
 }
 
