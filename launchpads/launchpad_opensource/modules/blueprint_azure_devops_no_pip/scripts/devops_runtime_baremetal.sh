@@ -21,7 +21,8 @@ apt-get install -y --no-install-recommends \
 
 echo "Allowing agent to run docker"
 
-usermod -aG docker azuredevopsuser
+# usermod -aG docker azuredevopsuser
+# useradd --uid 1000
 
 echo "Installing Azure CLI"
 
@@ -45,7 +46,7 @@ if ! test -e "host_uuid.txt"; then
   mv host_uuid.txt.tmp host_uuid.txt
 fi
 
-sudo az login --identity
+az login --identity
 
 for agent_num in $(seq 1 ${6}); do
   agent_dir="agent-$agent_num"
@@ -58,7 +59,7 @@ for agent_num in $(seq 1 ${6}); do
     echo "extracted"
     ./bin/installdependencies.sh
     echo "dependencies installed"
-    sudo -u azuredevopsuser ./config.sh --unattended --url "${1}" --auth pat --token "${2}" --pool "${3}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
+    ./config.sh --unattended --url "${1}" --auth pat --token "${2}" --pool "${3}" --agent "${name}" --acceptTeeEula   --replace --work ./_work --runAsService
     echo "configuration done"
     ./svc.sh install
     echo "service installed"
