@@ -44,8 +44,8 @@ variable "use_prefix" {
 ## Feature flags
 variable "enable_collaboration" {
     type        = bool
-    description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
-    default = false
+    description = "(Optional) (Default=true) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
+    default = true
 }
 
 

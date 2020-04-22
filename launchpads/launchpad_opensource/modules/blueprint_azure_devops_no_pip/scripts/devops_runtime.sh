@@ -25,5 +25,5 @@ sudo docker pull "${7}/${5}"
 
 for agent_num in $(seq 1 ${6}); do
     name="${4}-${agent_num}"
-    sudo docker run -d --name ${name} -e AZP_URL=${1} -e AZP_TOKEN=${2} -e AZP_POOL="${3}" -e AZP_AGENT_NAME="${name}" "${7}/${5}"
+    sudo docker run -d -v /var/run/docker.sock:/var/run/docker.sock --name ${name} -e AZP_URL=${1} -e AZP_TOKEN=${2} -e AZP_POOL="${3}" -e AZP_AGENT_NAME="${name}" "${7}/${5}"
 done
