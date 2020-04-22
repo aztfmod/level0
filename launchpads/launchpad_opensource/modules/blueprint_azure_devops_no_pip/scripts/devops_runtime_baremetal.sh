@@ -45,8 +45,8 @@ az login --identity
 for agent_num in $(seq 1 ${6}); do
   agent_dir="agent-$agent_num"
   mkdir -p "$agent_dir"
-  pushd "$agent_dir"
-    name="${4}-${agent_num}"\
+  cd "$agent_dir"
+    name="${4}-${agent_num}" 
     echo "installing agent $name"
     tar zxvf ../agent_package.tar.gz
     chmod -R 777 .
@@ -60,6 +60,6 @@ for agent_num in $(seq 1 ${6}); do
     ./svc.sh start
     echo "service started"
     echo "config done"
-  popd
+  cd ..
 done
 
