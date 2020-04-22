@@ -1,19 +1,19 @@
 
 
-# resource "azurecaf_naming_convention" "stg" {
-#   name          = var.storage_account_name
-#   prefix        = var.prefix
-#   resource_type = "azurerm_storage_account"
-#   convention    = var.convention
-# }
+resource "azurecaf_naming_convention" "stg" {
+  name          = var.storage_account_name
+  prefix        = var.prefix
+  resource_type = "azurerm_storage_account"
+  convention    = var.convention
+}
 
-# resource "azurerm_storage_account" "devops" {
-#   name                     = azurecaf_naming_convention.stg.result
-#   location                 = local.location
-#   resource_group_name      = local.resource_group_name
-#   account_tier             = "Standard"
-#   account_replication_type = "LRS"
-# }
+resource "azurerm_storage_account" "devops" {
+  name                     = azurecaf_naming_convention.stg.result
+  location                 = local.location
+  resource_group_name      = local.resource_group_name
+  account_tier             = "Standard"
+  account_replication_type = "LRS"
+}
 
 # resource "azurerm_storage_container" "devops" {
 #   name                  = "content"
@@ -64,7 +64,7 @@ resource "azurerm_virtual_machine_extension" "devops" {
   })
   protected_settings = jsonencode({
     "fileUris": ["${var.vm_object.agent_init_script}"],
-    "commandToExecute": "bash devops_agent_init.sh '${var.azure_devops.url}' '${var.azure_devops_pat_token}' '${var.azure_devops.agent_pool.name}' '${var.azure_devops.agent_pool.agent_name_prefix}' 'devops/agent:latest' '${var.azure_devops.agent_pool.num_agents}' '${local.registry.login_server}' '${var.vm_object.admin_username}'"
+    "commandToExecute": "bash devops_runtime_baremetal.sh '${var.azure_devops.url}' '${var.azure_devops_pat_token}' '${var.azure_devops.agent_pool.name}' '${var.azure_devops.agent_pool.agent_name_prefix}' 'devops/agent:latest' '${var.azure_devops.agent_pool.num_agents}' '${local.registry.login_server}' '${var.vm_object.admin_username}'"
   })
 
 }
