@@ -87,6 +87,10 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
   identity {
       type = "SystemAssigned"
+
+      identity_ids = [
+        azurerm_user_assigned_identity.user_msi.id
+      ]
   }
 
 }
@@ -101,4 +105,18 @@ resource "tls_private_key" "ssh" {
 
 locals {
   public_key = tls_private_key.ssh.0.public_key_openssh
+}
+
+
+resource "azurerm_user_assigned_identity" "user_msi" {
+  location            = local.location
+  resource_group_name = local.resource_group_name
+
+  name = "langingzone-x"
+}
+
+resource "azurerm_role_assignment" "contributor" {
+  scope                = data.azurerm_subscription.current.id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_user_assigned_identity.user_msi.principal_id
 }
