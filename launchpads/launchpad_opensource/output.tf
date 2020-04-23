@@ -65,7 +65,3 @@ output "diagnostics" {
   value = module.diagnostics
   sensitive = true
 }
-
-output "registry" {
-  value = module.container_registry
-}

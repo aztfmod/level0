@@ -48,11 +48,11 @@ resource "azuread_group_member" "launchpad_app" {
   count = var.enable_collaboration == true ? 1 : 0
   
   group_object_id   = data.azuread_group.devops_rover.0.id
-  member_object_id  = azuread_service_principal.launchpad.object_id
+  member_object_id  = azuread_service_principal.launchpad.application_id
 
   lifecycle {
     ignore_changes = [
-      member_object_id,
+      group_object_id,
     ]
   }
 }
@@ -91,6 +91,12 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   scope                = azurerm_storage_account.stg.0.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azuread_group.devops_rover.0.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level1" {
@@ -98,6 +104,12 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   scope                = azurerm_storage_account.stg.1.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azuread_group.devops_rover.0.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level2" {
@@ -105,6 +117,12 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   scope                = azurerm_storage_account.stg.2.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azuread_group.devops_rover.0.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level3" {
@@ -112,6 +130,12 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   scope                = azurerm_storage_account.stg.3.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azuread_group.devops_rover.0.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level4" {
@@ -119,5 +143,11 @@ resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_le
   scope                = azurerm_storage_account.stg.4.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = data.azuread_group.devops_rover.0.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
 }
 
