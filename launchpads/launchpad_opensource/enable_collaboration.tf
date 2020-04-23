@@ -44,6 +44,18 @@ resource "azuread_group_member" "bootstrap_user" {
   }
 }
 
+resource "azuread_group_member" "launchpad_app" {
+  count = var.enable_collaboration == true ? 1 : 0
+  
+  group_object_id   = data.azuread_group.devops_rover.0.id
+  member_object_id  = azuread_service_principal.launchpad.object_id
+
+  lifecycle {
+    ignore_changes = [
+      member_object_id,
+    ]
+  }
+}
 
 
 ###

@@ -13,6 +13,7 @@ terraform {
 }
 
 data "azurerm_subscription" "current" {}
+data "azurerm_client_config" "current" {}
 
 data "terraform_remote_state" "launchpad_opensource" {
   backend = "azurerm"
@@ -39,6 +40,8 @@ locals {
   diagnostics_map             = data.terraform_remote_state.launchpad_opensource.outputs.diagnostics.diagnostics_map
 
   subnet_id_by_name           = data.terraform_remote_state.launchpad_opensource.outputs.subnet_id_by_name
+
+  keyvault_id                 = data.terraform_remote_state.launchpad_opensource.outputs.keyvault_id
 
 }
 
