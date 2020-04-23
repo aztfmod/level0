@@ -7,5 +7,5 @@
 **/.terraform.tfstate.lock.info
 **/~*.*
 **/*.log
-launchpads/launchpad_opensource/backend.azurerm.tf
-**/stderr.txt
+**/*backend.azurerm.tf
+**/*stderr.txt

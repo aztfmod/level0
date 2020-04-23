@@ -12,6 +12,7 @@ terraform {
   }
 }
 
+data "azurerm_subscription" "current" {}
 
 data "terraform_remote_state" "launchpad_opensource" {
   backend = "azurerm"
