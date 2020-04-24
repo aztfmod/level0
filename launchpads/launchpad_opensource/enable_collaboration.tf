@@ -35,7 +35,7 @@ resource "azuread_group_member" "bootstrap_user" {
 
   lifecycle {
     ignore_changes = [
-      member_object_id,
+      member_object_id, group_object_id
     ]
   }
 }
@@ -47,7 +47,7 @@ resource "azuread_group_member" "launchpad_app" {
 
   lifecycle {
     ignore_changes = [
-      member_object_id,
+      member_object_id, group_object_id
     ]
   }
 }
