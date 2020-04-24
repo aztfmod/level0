@@ -30,7 +30,6 @@ locals {
     "module" = basename(abspath(path.module))
   }
   tags                        = merge(var.tags, local.blueprint_tag)
-  registry                    = data.terraform_remote_state.launchpad_opensource.outputs.registry
   resource_groups             = data.terraform_remote_state.launchpad_opensource.outputs.resource_groups
 
   location                    = data.azurerm_resource_group.rg.location

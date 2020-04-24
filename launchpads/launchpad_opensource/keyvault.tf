@@ -62,6 +62,12 @@ resource "azurerm_key_vault_access_policy" "developer" {
       "Set",
       "Delete"
   ]
+
+  lifecycle {
+    ignore_changes = [
+      object_id
+    ]
+  }
 }
 
 # Required to test deployment of new versions of the launchpad with the rover.
