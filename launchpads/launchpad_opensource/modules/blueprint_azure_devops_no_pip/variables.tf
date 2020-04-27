@@ -40,3 +40,7 @@ variable "vm_object" {}
 variable "azure_devops_pat_token" {}
 
 variable "azure_devops" {}
+
+variable "pipeline_level" {
+    description = "Value could be 'level0', 'level1', 'level2', 'level3' or 'level4'"
+}

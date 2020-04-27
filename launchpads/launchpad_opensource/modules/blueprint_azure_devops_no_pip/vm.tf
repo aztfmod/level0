@@ -112,7 +112,7 @@ resource "azurerm_user_assigned_identity" "user_msi" {
   location            = local.location
   resource_group_name = local.resource_group_name
 
-  name = "langingzone-x"
+  name = "release-agent-${var.pipeline_level}"
 }
 
 resource "azurerm_role_assignment" "contributor" {
