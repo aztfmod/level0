@@ -19,7 +19,7 @@ data "terraform_remote_state" "launchpad_opensource" {
   backend = "azurerm"
   config = {
     storage_account_name  = var.lowerlevel_storage_account_name
-    container_name        = var.workspace 
+    container_name        = var.lowerlevel_container_name 
     resource_group_name   = var.lowerlevel_resource_group_name
     key                   = "launchpad_opensource.tfstate"
   }
