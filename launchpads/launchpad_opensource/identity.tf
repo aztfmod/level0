@@ -32,6 +32,15 @@ resource "azuread_application" "launchpad" {
 			type  = "Role"
     }
 
+    resource_access {
+			id    = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
+			type  = "Role"
+    }
+
+      resource_access {
+			id    = local.microsoft_graph_GroupReadWriteAll
+			type  = "Role"
+    }
   }
 }
 
@@ -90,6 +99,7 @@ locals {
   # Microsoft graph
   microsoft_graph_id                = "00000003-0000-0000-c000-000000000000"
   microsoft_graph_AppRoleAssignment_ReadWrite_All                         = "06b708a9-e830-4db3-a914-8e69da51d44f"
+  microsoft_graph_DelegatedPermissionGrant_ReadWrite_All                  = "8e8e4742-1d95-4f68-9d56-6ee75648c72a"
   microsoft_graph_GroupReadWriteAll                                       = "62a82d76-70ea-41e2-9197-370581804d09"
 }
 
@@ -134,6 +144,30 @@ resource "null_resource" "grant_admin_concent" {
         graphId       = local.microsoft_graph_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
+      }
+  }
+
+   provisioner "local-exec" {
+      command = "./scripts/grant_consent.sh"
+      interpreter = ["/bin/sh"]
+      on_failure = fail
+
+      environment = {
+        graphId       = local.microsoft_graph_id
+        principalId   = azuread_service_principal.launchpad.id
+        appRoleId     = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
+      }
+  }
+
+   provisioner "local-exec" {
+      command = "./scripts/grant_consent.sh"
+      interpreter = ["/bin/sh"]
+      on_failure = fail
+
+      environment = {
+        graphId       = local.microsoft_graph_id
+        principalId   = azuread_service_principal.launchpad.id
+        appRoleId     = local.microsoft_graph_GroupReadWriteAll
       }
   }
 
