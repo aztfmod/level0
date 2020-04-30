@@ -11,7 +11,7 @@ resource "azuread_application" "launchpad" {
     # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
     # Application.ReadWrite.OwnedBy
     resource_access {
-			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_All
 			type  = "Role"
     }
 
@@ -92,6 +92,7 @@ resource "azurerm_role_assignment" "launchpad_role1" {
 locals {
   # Azure Active Directory Graph
   active_directory_graph_id         = "00000002-0000-0000-c000-000000000000"
+  active_directory_graph_resource_access_id_Application_ReadWrite_All     = "1cda74f2-2616-4834-b122-5cb1b07f8a59"
   active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy = "824c81eb-e3f8-4ee6-8f6d-de7f50d565b7"
   active_directory_graph_resource_access_id_Directory_Read_All            = "5778995a-e1bf-45b8-affa-663a9f3f4d04"
   active_directory_graph_resource_access_id_Directory_ReadWrite_All       = "78c8a3c8-a07e-4b9e-af1b-b5ccab50a175"
@@ -119,7 +120,7 @@ resource "null_resource" "grant_admin_concent" {
       environment = {
         graphId       = local.active_directory_graph_id
         principalId   = azuread_service_principal.launchpad.id
-        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_All
       }
   }
 
