@@ -3,7 +3,7 @@
 
 
 locals {
-  adgroup = "caf${local.prefix}-${var.workspace}-level0-rover-developers"
+  adgroup = "caf-${local.prefix}-${var.environment}-level0-rover-developers"
 }
 
 

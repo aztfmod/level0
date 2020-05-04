@@ -2,7 +2,7 @@
 #   Azure AD Application
 ###
 resource "azuread_application" "launchpad" {
-  name                       = "${random_string.prefix.result}launchpad"
+  name                       = "${random_string.prefix.result}-${var.environment}-launchpad"
   
   # Access to Azure Active Directory Graph
   required_resource_access {

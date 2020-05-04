@@ -99,3 +99,7 @@ variable "resource_keyvault_name" {
     description = "Name of the Azure Keyvault storing secrets required for rover and pipelines. Note the keyvault name applies a cafrandom policy."
     default = "gitops"
 }
+
+variable "environment" {
+    
+}
