@@ -11,7 +11,7 @@ resource "azuread_application" "launchpad" {
     # az ad sp show --id 00000002-0000-0000-c000-000000000000 --query "appRoles[?value=='Application.ReadWrite.OwnedBy']"
     # Application.ReadWrite.OwnedBy
     resource_access {
-			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_All
+			id    = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
 			type  = "Role"
     }
 
@@ -120,7 +120,7 @@ resource "null_resource" "grant_admin_concent" {
       environment = {
         graphId       = local.active_directory_graph_id
         principalId   = azuread_service_principal.launchpad.id
-        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_All
+        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
       }
   }
 
