@@ -64,7 +64,7 @@ resource "azurerm_virtual_machine_extension" "devops" {
   })
   protected_settings = jsonencode({
     "fileUris": ["${var.vm_object.agent_init_script}"],
-    "commandToExecute": "bash devops_runtime_baremetal.sh '${var.azure_devops.url}' '${var.azure_devops_pat_token}' '${var.azure_devops.agent_pool.name}' '${var.azure_devops.agent_pool.agent_name_prefix}' '${var.azure_devops.agent_pool.num_agents}' '${var.vm_object.admin_username}'"
+    "commandToExecute": "bash devops_runtime_baremetal.sh '${var.azure_devops.url}' '${var.azure_devops_pat_token}' '${var.azure_devops.agent_pool.name}' '${var.azure_devops.agent_pool.agent_name_prefix}' '${var.azure_devops.agent_pool.num_agents}' '${var.vm_object.admin_username}' '${var.rover_version}'"
   })
 
 }

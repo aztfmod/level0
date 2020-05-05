@@ -44,3 +44,7 @@ variable "azure_devops" {}
 variable "pipeline_level" {
     description = "Value could be 'level0', 'level1', 'level2', 'level3' or 'level4'"
 }
+
+variable "rover_version" {
+    description = "Version of the rover used to deploy the landing zone"
+}

@@ -6,6 +6,7 @@ agent_pool=${3}
 agent_prefix=${4}
 num_agent=${5}
 admin_user=${6}
+rover_version=${7}
 
 
 #strict mode, fail on error
@@ -34,6 +35,9 @@ systemctl daemon-reload
 systemctl enable docker
 service docker start
 docker --version
+
+# Pull rover base image
+docker pull ${rover_version}
 
 echo "Installing Azure CLI"
 
