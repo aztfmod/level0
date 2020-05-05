@@ -6,7 +6,7 @@
   version: '3.7'
   services:
     rover:
-      image:  aztfmod/roverdev:2004.240823
+      image:  aztfmod/roverdev:2005.041533
     
       labels:
         - "caf=Azure CAF"
