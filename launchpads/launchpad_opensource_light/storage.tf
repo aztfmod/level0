@@ -9,7 +9,7 @@ resource "azurerm_storage_account" "stg" {
   name                     = azurecaf_naming_convention.stg.result
   resource_group_name      = azurerm_resource_group.rg.name
   location                 = azurerm_resource_group.rg.location
-  account_type             = "BlobStorage"
+  account_kind             = "BlobStorage"
   account_tier             = "Standard"
   account_replication_type = "RAGRS"
 
