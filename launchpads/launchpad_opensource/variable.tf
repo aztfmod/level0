@@ -103,3 +103,7 @@ variable "resource_keyvault_name" {
 variable "environment" {
     
 }
+
+variable "rover_version" {
+    description = "Version of the rover used to deploy the landing zone"
+}

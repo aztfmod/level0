@@ -43,3 +43,7 @@ variable "enable_collaboration" {
     description = "(Optional) (Default = 0) When set to 1 create an Azure AD group to allow multiple developers to access the launchpad"
     default = false
 }
+
+variable "rover_version" {
+    description = "Version of the rover used to deploy the landing zone"
+}
