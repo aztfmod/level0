@@ -32,7 +32,7 @@ resource "azurerm_role_assignment" "storage_blob_contributor" {
   principal_id         = var.logged_user_objectId
 }
 
-resource "azurerm_role_assignment" "storage_blob_contributor" {
+resource "azurerm_role_assignment" "storage_blob_contributor_launchpad" {
   scope                = azurerm_storage_account.stg.id
   role_definition_name = "Storage Blob Data Contributor"
   principal_id         = azuread_service_principal.launchpad.object_id
