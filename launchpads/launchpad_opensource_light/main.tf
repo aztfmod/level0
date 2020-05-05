@@ -6,7 +6,7 @@ provider "azurecaf" {}
 
 terraform {
   required_providers {
-    azurerm = "~> 2.2.0"
+    azurerm = "~> 2.8.0"
     azuread = "~> 0.7.0"
     random  = "~> 2.2.1"
     null    = "~> 2.1.0"
