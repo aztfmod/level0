@@ -193,11 +193,7 @@ resource "null_resource" "grant_admin_concent" {
 
 
 resource "null_resource" "set_azure_ad_roles" {
-  depends_on = [azurerm_role_assignment.bootstrap]
-
-  provisioner "local-exec" {
-      command = "sleep 50"
-  }
+  depends_on = [null_resource.grant_admin_concent]
 
   provisioner "local-exec" {
       command = "./scripts/set_ad_role.sh"

@@ -7,7 +7,7 @@ resource "azuredevops_variable_group" "release-level0-boostrap" {
   project_id   = data.azuredevops_projects.project.projects.*.project_id[0]
   name         = "release-level0-bootstrap"
   description  = "Managed by Terraform release-level0-boostrap"
-  allow_access = false
+  allow_access = true
 
   variable {
     name  = "ARM_CLIENT_ID"
