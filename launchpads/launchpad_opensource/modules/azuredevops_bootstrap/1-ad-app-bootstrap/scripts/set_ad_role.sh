@@ -4,7 +4,7 @@ set -e
 
 ROLE_AAD=$(az rest --method Get --uri https://graph.microsoft.com/v1.0/directoryRoles | jq -r '.value[] | select(.displayName == "'"$(echo ${AD_ROLE_NAME})"'") | .id')
  
-URI=$(echo  "https://graph.microsoft.com/v1.0/directoryRoles/${ROLE_AAD}/members/\$ref") && echo " - uri: $URI"
+URI=$(echo  "https://graph.microsoft.com/beta/directoryRoles/${ROLE_AAD}/members/\$ref") && echo " - uri: $URI"
 
 # grant AAD role to the AAD APP
 JSON=$( jq -n \
