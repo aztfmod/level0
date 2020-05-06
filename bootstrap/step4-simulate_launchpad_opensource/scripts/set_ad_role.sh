@@ -1,8 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-ROLE_AAD=$(az rest --method Get --uri https://graph.microsoft.com/beta/directoryRoles | jq -r '.value[] | select(.displayName == "'"$(echo ${AD_ROLE_NAME})"'") | .id')
+echo "Assigning directory role '${AD_ROLE_NAME}'"
+
+ROLE_AAD=$(az rest --method Get --uri https://graph.microsoft.com/beta/directoryRoles -o json | jq -r '.value[] | select(.displayName == "'"$(echo ${AD_ROLE_NAME})"'") | .id')
  
 URI=$(echo  "https://graph.microsoft.com/beta/directoryRoles/${ROLE_AAD}/members/\$ref") && echo " - uri: $URI"
 
@@ -13,3 +15,4 @@ JSON=$( jq -n \
 
 az rest --method POST --uri $URI --header Content-Type=application/json --body "$JSON"
 
+echo "Role '${AD_ROLE_NAME}' assigned to azure ad application"
