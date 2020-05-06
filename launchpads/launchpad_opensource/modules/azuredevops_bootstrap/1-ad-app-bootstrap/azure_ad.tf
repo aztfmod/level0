@@ -174,7 +174,7 @@ resource "null_resource" "set_azure_ad_roles" {
       on_failure = fail
 
       environment = {
-        AD_ROLE_NAME  = "Application Developer"
+        AD_ROLE_NAME  = "Application Administrator"
         SERVICE_PRINCIPAL_OBJECT_ID = azuread_service_principal.bootstrap.object_id
       }
   }
