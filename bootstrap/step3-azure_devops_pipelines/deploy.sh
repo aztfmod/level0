@@ -4,7 +4,7 @@ set -e
 
 pwd
 source ./check_session.sh
-cd ./step2-create_subscription_custom_role/
+cd ./step3-azure_devops_pipelines/
 
 check_session
 

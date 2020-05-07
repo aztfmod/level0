@@ -1,10 +1,16 @@
+#!/bin/bash
+
 set -e
 
 from_step=$1
 
+pwd
+echo "calling session"
+sh ./check_session.sh
+
+
 export tf_command=destroy
 
-echo "Starting ${tf_command}"
 
 function step5 {
     echo " - step5 - ${tf_command}"

@@ -1,28 +1,20 @@
+#!/bin/bash
+
 pwd
+source ./check_session.sh
 cd ./step1-create_bootstrap_account/
-
-unset ARM_CLIENT_ID
-unset ARM_CLIENT_SECRET
-unset ARM_SUBSCRIPTION_ID
-unset ARM_TENANT_ID
-
-az logout 2>/dev/null
 
 echo ""
 echo "Login with a Global Account user:"
 echo ""
 
-if [ "${tenant}" != '' ]; then
-    echo " - login to tenant ${tenant}"
-    az login --tenant ${tenant}
-else
-    az login
-fi
+check_session
 
-if [ "${subscriptionId}" != '' ]; then
-    az account set -s ${subscriptionId}
-fi
 
+echo "Starting ${tf_command} in"
+echo " - tenant:          ${tenant}"
+echo " - subscription ID: ${subscriptionId}"
+echo ""
 
 terraform init
 terraform $@

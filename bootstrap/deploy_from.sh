@@ -1,10 +1,12 @@
+#!/bin/bash
+
 set -e
 
 from_step=$1
 
+
 export tf_command=apply
 
-echo "Starting ${tf_command}"
 
 function step5 {
     echo " - step5 - ${tf_command}"
@@ -59,3 +61,9 @@ case "${from_step}" in
                 step5
                 ;;
 esac
+
+echo "Bootstrap account created successfully in directory ${tenant}"
+echo "CAF-Random role created. Boostrap added to that role in subscription ${subscriptionID}"
+echo "Bootstrap and launchpad registered as pipeline variables in Azure Devops to deploy landingzones through pipelines"
+echo "Launchpad created in the dirctory ${tenant} and added as a contributor in ${subscriptionID}"
+echo "AKS service principals (server and client) created by launchpad service principal"

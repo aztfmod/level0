@@ -1,3 +1,4 @@
+#!/bin/bash
 
 pwd
 cd ./step4-simulate_launchpad_opensource/

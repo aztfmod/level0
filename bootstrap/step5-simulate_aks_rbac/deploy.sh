@@ -1,3 +1,5 @@
+#!/bin/bash
+
 set -e
 
 pwd
@@ -19,5 +21,5 @@ if [ "${ARM_CLIENT_ID}" != "null" ]; then
 
     terraform $@
 else
-    echo "No state file in step4"
+    echo "No state file in step5 - already deleted"
 fi

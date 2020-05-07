@@ -2,7 +2,7 @@
 #   Azure AD Application
 ###
 resource "azuread_application" "launchpad" {
-  name                       = "${random_string.prefix.result}-${var.environment}-launchpad"
+  name                       = "launchpad"
   
   # Access to Azure Active Directory Graph
   required_resource_access {
@@ -110,12 +110,9 @@ locals {
 }
 
 
-resource "null_resource" "grant_admin_concent" {
+resource "null_resource" "grant_admin_consent" {
   depends_on = [azurerm_role_assignment.launchpad_role1]
 
-  provisioner "local-exec" {
-      command = "sleep 60"
-  }
 
   provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
@@ -193,7 +190,7 @@ resource "null_resource" "grant_admin_concent" {
 
 
 resource "null_resource" "set_azure_ad_roles" {
-  depends_on = [null_resource.grant_admin_concent]
+  depends_on = [null_resource.grant_admin_consent]
 
   provisioner "local-exec" {
       command = "./scripts/set_ad_role.sh"
