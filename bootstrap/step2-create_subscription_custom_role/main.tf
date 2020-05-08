@@ -15,7 +15,7 @@ data "terraform_remote_state" "step1" {
   backend = "local" 
 
   config = {
-    path = abspath("${path.module}/${var.step1_tfstate_path}/terraform.tfstate")
+    path = "${var.step1_tfstate_path}/terraform.tfstate"
   }
 
 }
