@@ -56,3 +56,38 @@ resource "azurerm_role_assignment" "developers_rover" {
     ]
   }
 }
+
+resource "azurerm_key_vault_access_policy" "developers_rover" {
+  key_vault_id = azurerm_key_vault.launchpad.id
+
+  tenant_id = data.azurerm_client_config.current.tenant_id
+  object_id = data.azuread_group.devops_rover.id
+
+  key_permissions = []
+
+  secret_permissions = [
+      "Get",
+      "List",
+      "Set",
+      "Delete"
+  ]
+
+  lifecycle {
+    ignore_changes = [
+      object_id,
+    ]
+  }
+
+}
+
+resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level0" {
+  scope                = azurerm_storage_account.stg.0.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azuread_group.devops_rover.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
+}
