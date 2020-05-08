@@ -21,6 +21,12 @@ function step4 {
     echo " - step4 - ${tf_command}"
     ./step4-simulate_launchpad_opensource/deploy.sh ${tf_command} -auto-approve
 }
+
+function step3 {
+    echo " - step3 - ${tf_command}"
+    ./step3-azure_devops_pipelines/deploy.sh ${tf_command} -auto-approve
+}
+
 function step2 {
     echo " - step2 - ${tf_command}"
     ./step2-create_subscription_custom_role/deploy.sh ${tf_command} -auto-approve
@@ -39,28 +45,28 @@ case "${from_step}" in
                 step2
                 step1
                 ;;
-        # "step3")
-        #         step3
-        #         step2
-        #         step1
-        #         ;;
+        "step3")
+                step3
+                step2
+                step1
+                ;;
         "step4")
                 step4
-                # step3
+                step3
                 step2
                 step1
                 ;;
         "step5")
                 step5
                 step4
-                # step3
+                step3
                 step2
                 step1
                 ;;
         *)
                 step5
                 step4
-                # step3
+                step3
                 step2
                 step1
                 ;;
