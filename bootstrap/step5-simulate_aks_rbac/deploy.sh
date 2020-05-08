@@ -5,6 +5,8 @@ set -e
 pwd
 cd ./step5-simulate_aks_rbac/
 
+mkdir -p ${TF_DATA_DIR}/tfstates/step5
+
 terraform init
 
 export ARM_CLIENT_ID=$(terraform show -json ../step4-simulate_launchpad_opensource/terraform.tfstate | jq -r .values.outputs.launchpad_ARM_CLIENT_ID.value)
@@ -19,7 +21,7 @@ if [ "${ARM_CLIENT_ID}" != "null" ]; then
     TF_VAR_logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
     echo " - logged in Azure AD application:  ${TF_VAR_logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
 
-    terraform $@
+    terraform $@ -state=${TF_DATA_DIR}/step5/terraform.tfstate
 else
     echo "No state file in step5 - already deleted"
 fi

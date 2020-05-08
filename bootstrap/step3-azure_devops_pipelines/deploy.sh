@@ -22,6 +22,7 @@ export TF_VAR_bootstrap_ARM_TENANT_ID=$(terraform show -json ../step1-create_boo
 
 cd ../step3-azure_devops_pipelines/
 
-terraform init
-terraform $@
+mkdir -p ${TF_DATA_DIR}/tfstates/step3
 
+terraform init
+terraform $@ -state=${TF_DATA_DIR}/step3/terraform.tfstate

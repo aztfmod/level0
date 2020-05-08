@@ -5,7 +5,7 @@ source ./check_session.sh
 cd ./step1-create_bootstrap_account/
 
 echo ""
-echo "Login with a Global Account user:"
+echo "Login with a Global Administrator account user:"
 echo ""
 
 check_session
@@ -16,6 +16,7 @@ echo " - tenant:          ${tenant}"
 echo " - subscription ID: ${subscriptionId}"
 echo ""
 
-terraform init
-terraform $@
+mkdir -p ${TF_DATA_DIR}/tfstates/step1
 
+terraform init
+terraform $@ -state=${TF_DATA_DIR}/step1/terraform.tfstate
