@@ -7,10 +7,10 @@ pwd
 mkdir -p ${TF_DATA_DIR}/tfstates/step4
 terraform init
 
-export ARM_CLIENT_ID=$(terraform show -json ../step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_CLIENT_ID.value)
-export ARM_CLIENT_SECRET=$(terraform show -json ../step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_CLIENT_SECRET.value)
-export ARM_SUBSCRIPTION_ID=$(terraform show -json ../step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_SUBSCRIPTION_ID.value)
-export ARM_TENANT_ID=$(terraform show -json ../step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_TENANT_ID.value)
+export ARM_CLIENT_ID=$(terraform show -json ${TF_DATA_DIR}/tfstates/step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_CLIENT_ID.value)
+export ARM_CLIENT_SECRET=$(terraform show -json ${TF_DATA_DIR}/tfstates/step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_CLIENT_SECRET.value)
+export ARM_SUBSCRIPTION_ID=$(terraform show -json ${TF_DATA_DIR}/tfstates/step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_SUBSCRIPTION_ID.value)
+export ARM_TENANT_ID=$(terraform show -json ${TF_DATA_DIR}/tfstates/step1-create_bootstrap_account/terraform.tfstate | jq -r .values.outputs.bootstrap_ARM_TENANT_ID.value)
 
 
 if [ "${ARM_CLIENT_ID}" != "null" ]; then
@@ -21,7 +21,7 @@ if [ "${ARM_CLIENT_ID}" != "null" ]; then
     echo " - logged in Azure AD application:  ${TF_VAR_logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
 
     
-    terraform $@ -state=${TF_DATA_DIR}/step4/terraform.tfstate
+    terraform $@ -state=${TF_DATA_DIR}/tfstates/step4/terraform.tfstate
 else
     echo "No step1 tfstate file"
 fi

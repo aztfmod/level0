@@ -19,4 +19,4 @@ echo ""
 mkdir -p ${TF_DATA_DIR}/tfstates/step1
 
 terraform init
-terraform $@ -state=${TF_DATA_DIR}/step1/terraform.tfstate
+terraform $@ -state=${TF_DATA_DIR}/tfstates/step1/terraform.tfstate
