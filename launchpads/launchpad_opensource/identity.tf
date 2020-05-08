@@ -2,7 +2,7 @@
 #   Azure AD Application
 ###
 resource "azuread_application" "launchpad" {
-  name                       = "launchpad"
+  name                       = "caf-${local.prefix}-launchpad"
   
   # Access to Azure Active Directory Graph
   required_resource_access {

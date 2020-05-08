@@ -3,7 +3,7 @@
 
 
 locals {
-  adgroup = "test-level0-rover-developers"
+  adgroup = "caf${local.prefix}-level0-rover-developers"
 }
 
 
