@@ -1,4 +1,4 @@
-resource "azurecaf_naming_convention" "vm" {
+resource "azurecaf_naming_convention" "rg" {
   name          = var.vm_object.resource_group
   prefix        = local.prefix
   resource_type = "azurerm_resource_group"
@@ -7,9 +7,9 @@ resource "azurecaf_naming_convention" "vm" {
 
 resource "azurerm_resource_group" "rg" {
   name      = local.resource_group_name
-  location  = locl.location
+  location  = local.location
 
-  tags = local.tags
+  tags      = local.tags
 }
 
 

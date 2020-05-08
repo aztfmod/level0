@@ -33,7 +33,7 @@ locals {
   resource_groups             = data.terraform_remote_state.launchpad_opensource.outputs.resource_groups
 
   location                    = data.azurerm_resource_group.rg.location
-  resource_group_name         = azurecaf_naming_convention.vm.result
+  resource_group_name         = azurecaf_naming_convention.rg.result
 
   log_analytics_workspace_id  = data.terraform_remote_state.launchpad_opensource.outputs.log_analytics.id
   diagnostics_map             = data.terraform_remote_state.launchpad_opensource.outputs.diagnostics.diagnostics_map
