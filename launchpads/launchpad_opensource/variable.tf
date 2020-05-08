@@ -4,12 +4,6 @@ variable "logged_user_objectId" {
     description = "objectId of the logged user initializing the launchpad"
 }
 
-variable "rover_pilot_client_id" {
-    description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
-    default = null
-}
-
-
 variable "location" {
     description = "Azure region to deploy the launchpad in the form or 'southeastasia' or 'westeurope'"
 }
@@ -51,22 +45,22 @@ variable "enable_collaboration" {
 # Resource group names
 variable "resource_group_tfstate" {
     description = "Name of the resource group hosting the terraform state storage accounts"
-    default = "tfstate"
+    default = "launchpad-tfstate"
 }
 
 variable "resource_group_security" {
     description = "Name of the resource group hosting the security services"
-    default = "tfstate-security"
+    default = "launchpad-security"
 }
 
 variable "resource_group_devops" {
     description = "Name of the resource group hosting the ops services"
-    default = "tfstate-ops"
+    default = "launchpad-ops"
 }
 
 variable "resource_group_networking" {
     description = "Name of the resource group hosting the network services"
-    default = "tfstate-network"
+    default = "launchpad-network"
 }
 
 # Resource names
@@ -88,11 +82,6 @@ variable "resource_diagnostics_name" {
 variable "azure_diagnostics_logs_event_hub" {
     default = false
     type = bool
-}
-
-variable "container_registry_name" {
-    description = "Name of the Azure container registry"
-    default = "gitops"
 }
 
 variable "resource_keyvault_name" {
