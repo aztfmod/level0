@@ -6,8 +6,8 @@ resource "azurecaf_naming_convention" "rg" {
 }
 
 resource "azurerm_resource_group" "rg" {
-  name      = local.resource_group_name
-  location  = local.location
+  name      = azurecaf_naming_convention.rg.result
+  location  = var.vm_object.location
 
   tags      = local.tags
 }
@@ -23,7 +23,7 @@ resource "azurecaf_naming_convention" "nic" {
 
 resource "azurerm_network_interface" "nic" {
   name                = azurecaf_naming_convention.nic.result
-  location            = local.location
+  location            = var.vm_object.location
   resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
@@ -53,7 +53,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
   depends_on = [azurerm_network_interface.nic, azurerm_availability_set.avs]
 
   name                  = azurecaf_naming_convention.vm.result
-  location              = local.location
+  location              = var.vm_object.location
   resource_group_name   = azurerm_resource_group.rg.name
   size                  = var.vm_object.vm_size
   admin_username        = var.vm_object.admin_username
@@ -124,8 +124,8 @@ locals {
 
 
 resource "azurerm_user_assigned_identity" "user_msi" {
-  location            = local.location
-  resource_group_name = local.resource_group_name
+  location            = var.vm_object.location
+  resource_group_name = azurerm_resource_group.rg.name
 
   name = "release-agent-${var.pipeline_level}"
 }

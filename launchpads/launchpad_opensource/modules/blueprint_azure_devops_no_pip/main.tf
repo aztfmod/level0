@@ -30,10 +30,6 @@ locals {
     "module" = basename(abspath(path.module))
   }
   tags                        = merge(var.tags, local.blueprint_tag)
-  resource_groups             = data.terraform_remote_state.launchpad_opensource.outputs.resource_groups
-
-  location                    = data.azurerm_resource_group.rg.location
-  resource_group_name         = azurecaf_naming_convention.rg.result
 
   log_analytics_workspace_id  = data.terraform_remote_state.launchpad_opensource.outputs.log_analytics.id
   diagnostics_map             = data.terraform_remote_state.launchpad_opensource.outputs.diagnostics.diagnostics_map
@@ -43,8 +39,4 @@ locals {
   prefix                      = data.terraform_remote_state.launchpad_opensource.outputs.prefix
   keyvault_id                 = data.terraform_remote_state.launchpad_opensource.outputs.keyvault_id
 
-}
-
-data "azurerm_resource_group" "rg" {
-  name = local.resource_group_name
 }

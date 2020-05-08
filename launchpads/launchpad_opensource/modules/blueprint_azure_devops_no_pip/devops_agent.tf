@@ -9,7 +9,7 @@ resource "azurecaf_naming_convention" "stg" {
 
 resource "azurerm_storage_account" "devops" {
   name                     = azurecaf_naming_convention.stg.result
-  location                 = local.location
+  location                 = var.vm_object.location
   resource_group_name      = azurerm_resource_group.rg.name
 
   account_tier             = "Standard"
