@@ -5,6 +5,14 @@ resource "azurecaf_naming_convention" "vm" {
   convention    = var.convention
 }
 
+resource "azurerm_resource_group" "rg" {
+  name      = local.resource_group_name
+  location  = locl.location
+
+  tags = local.tags
+}
+
+
 resource "azurecaf_naming_convention" "nic" {
   name          = "${var.vm_object.name}-nic"
   prefix        = var.prefix
@@ -16,7 +24,7 @@ resource "azurecaf_naming_convention" "nic" {
 resource "azurerm_network_interface" "nic" {
   name                = azurecaf_naming_convention.nic.result
   location            = local.location
-  resource_group_name = local.resource_group_name
+  resource_group_name = azurerm_resource_group.rg.name
 
   ip_configuration {
     name                          = var.vm_object.subnet_name
@@ -45,8 +53,8 @@ resource "azurerm_linux_virtual_machine" "vm" {
   depends_on = [azurerm_network_interface.nic, azurerm_availability_set.avs]
 
   name                  = azurecaf_naming_convention.vm.result
-  location            = local.location
-  resource_group_name = local.resource_group_name
+  location              = local.location
+  resource_group_name   = azurerm_resource_group.rg.name
   size                  = var.vm_object.vm_size
   admin_username        = var.vm_object.admin_username
   computer_name         = azurecaf_naming_convention.computer_name.result

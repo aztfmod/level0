@@ -10,43 +10,11 @@ resource "azurecaf_naming_convention" "stg" {
 resource "azurerm_storage_account" "devops" {
   name                     = azurecaf_naming_convention.stg.result
   location                 = local.location
-  resource_group_name      = local.resource_group_name
+  resource_group_name      = azurerm_resource_group.rg.name
+
   account_tier             = "Standard"
   account_replication_type = "LRS"
 }
-
-# resource "azurerm_storage_container" "devops" {
-#   name                  = "content"
-#   storage_account_name  = azurerm_storage_account.devops.name
-#   container_access_type = "private"
-# }
-
-
-# data "azurerm_storage_account_blob_container_sas" "devops_agent_init" {
-#   connection_string = azurerm_storage_account.devops.primary_connection_string
-#   container_name    = azurerm_storage_container.devops.name
-#   https_only        = true
-
-#   start  = timestamp()
-#   expiry = formatdate("YYYY-MM-DD'T'hh:mm:ssZ", timeadd(timestamp(), "1h"))
-
-#   permissions {
-#     read   = true
-#     add    = false
-#     create = false
-#     write  = false
-#     delete = false
-#     list   = false
-#   }
-# }
-
-# resource "azurerm_storage_blob" "devops" {
-#   name                   = "devops_agent_init.sh"
-#   storage_account_name   = azurerm_storage_account.devops.name
-#   storage_container_name = azurerm_storage_container.devops.name
-#   type                   = "Block"
-#   source                 = var.vm_object.agent_init_script
-# }
 
 
 resource "azurerm_virtual_machine_extension" "devops" {
