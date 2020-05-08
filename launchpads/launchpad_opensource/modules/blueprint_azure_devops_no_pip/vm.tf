@@ -1,3 +1,10 @@
+resource "azurecaf_naming_convention" "vm" {
+  name          = var.vm_object.resource_group
+  prefix        = local.prefix
+  resource_type = "azurerm_resource_group"
+  convention    = var.convention
+}
+
 resource "azurecaf_naming_convention" "nic" {
   name          = "${var.vm_object.name}-nic"
   prefix        = var.prefix

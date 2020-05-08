@@ -60,8 +60,8 @@ variable "resource_group_security" {
 }
 
 variable "resource_group_devops" {
-    description = "Name of the resource group hosting the Azure container registry and devops agents"
-    default = "tfstate-gitops"
+    description = "Name of the resource group hosting the ops services"
+    default = "tfstate-ops"
 }
 
 variable "resource_group_networking" {
