@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "rg" {
 
 resource "azurecaf_naming_convention" "nic" {
   name          = "${var.vm_object.name}-nic"
-  prefix        = var.prefix
+  prefix        = local.prefix
   resource_type = "azurerm_network_interface"
   convention    = var.convention
 }
@@ -36,7 +36,7 @@ resource "azurerm_network_interface" "nic" {
 # Name of the VM in the Azure Control Plane
 resource "azurecaf_naming_convention" "vm" {
   name          = var.vm_object.name
-  prefix        = var.prefix
+  prefix        = local.prefix
   resource_type = "vml"
   convention    = var.convention
 }
@@ -44,7 +44,7 @@ resource "azurecaf_naming_convention" "vm" {
 # Name of the Linux computer name
 resource "azurecaf_naming_convention" "computer_name" {
   name          = var.vm_object.computer_name
-  prefix        = var.prefix
+  prefix        = local.prefix
   resource_type = "vml"
   convention    = var.convention
 }

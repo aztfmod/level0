@@ -40,6 +40,7 @@ locals {
 
   subnet_id_by_name           = data.terraform_remote_state.launchpad_opensource.outputs.subnet_id_by_name
 
+  prefix                      = data.terraform_remote_state.launchpad_opensource.outputs.prefix
   keyvault_id                 = data.terraform_remote_state.launchpad_opensource.outputs.keyvault_id
 
 }

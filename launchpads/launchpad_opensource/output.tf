@@ -26,23 +26,6 @@ output "prefix" {
 }
 
 
-# output "tfstate_map" {
-#   value = map(
-#     "storage_account_name", azurerm_storage_account.stg.name,
-#     "container", azurerm_storage_container.launchpad.name,
-#     "resource_group", azurerm_resource_group.rg_tfstate.name,
-#     "prefix", random_string.prefix.result
-#   )
-# }
-
-# output "deployment_msi" {
-#   value = map(
-#     "id", azurerm_user_assigned_identity.tfstate.id,
-#     "principal_id", azurerm_user_assigned_identity.tfstate.principal_id,
-#     "client_id", azurerm_user_assigned_identity.tfstate.client_id
-#   )
-# }
-
 output "keyvault_id" {
   value = azurerm_key_vault.launchpad.id
 }
