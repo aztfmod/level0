@@ -43,7 +43,6 @@ resource "azurerm_role_definition" "bootstrap_owner" {
       "Microsoft.Storage/storageAccounts/blobServices/containers/lease/action",
       "Microsoft.Storage/storageAccounts/blobServices/read",
       "Microsoft.Storage/storageAccounts/listKeys/action",
-      "Microsoft.Resources/subscriptions/write",
       "Microsoft.Resources/subscriptions/providers/read",
       "Microsoft.Resources/subscriptions/read",
       "Microsoft.Resources/subscriptions/resourcegroups/delete",
