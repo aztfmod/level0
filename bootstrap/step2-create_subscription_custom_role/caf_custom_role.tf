@@ -1,9 +1,9 @@
 
 
 resource "azurerm_role_definition" "bootstrap_owner" {
-  name        = "caf-boostrap_owner"
+  name        = "caf-launchpad_opensource_owner"
   scope       = data.azurerm_subscription.primary.id
-  description = "Provide a least privilege role to the caf boostrap Azure AD application"
+  description = "Provide a least privilege role to the caf launchpad opensource"
 
   permissions {
     actions     = [
