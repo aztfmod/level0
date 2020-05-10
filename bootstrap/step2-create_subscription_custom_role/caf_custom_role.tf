@@ -54,7 +54,7 @@ resource "azurerm_role_definition" "bootstrap_owner" {
       "Microsoft.Network/virtualNetworks/write",
     ]
     not_actions = []
-    dataActions = [
+    data_actions = [
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete",
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
