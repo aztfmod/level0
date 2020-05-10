@@ -65,6 +65,6 @@ resource "azurerm_role_definition" "bootstrap_owner" {
 
 resource "azurerm_role_assignment" "bootstrap_owner" {
   scope                = data.azurerm_subscription.primary.id
-  role_definition_id   = azurerm_role_definition.bootstrap.id
+  role_definition_id   = azurerm_role_definition.bootstrap_owner.id
   principal_id         = data.terraform_remote_state.step1.outputs.bootstrap_service_principal_object_id
 }
