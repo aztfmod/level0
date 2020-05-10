@@ -5,7 +5,7 @@ source ./check_session.sh
 cd ./step1-create_bootstrap_account/
 
 echo ""
-echo "Login with a Global Administrator account user:"
+echo "Login with a Global Administrator user account:"
 echo ""
 
 check_session

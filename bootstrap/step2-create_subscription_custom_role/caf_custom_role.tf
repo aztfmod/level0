@@ -10,6 +10,9 @@ resource "azurerm_role_definition" "bootstrap_owner" {
       "Microsoft.Authorization/roleAssignments/delete",
       "Microsoft.Authorization/roleAssignments/read",
       "Microsoft.Authorization/roleAssignments/write",
+      "Microsoft.Authorization/roleDefinitions/delete",
+      "Microsoft.Authorization/roleDefinitions/read",
+      "Microsoft.Authorization/roleDefinitions/write",
       "microsoft.insights/diagnosticSettings/delete",
       "microsoft.insights/diagnosticSettings/read",
       "microsoft.insights/diagnosticSettings/write",
@@ -37,7 +40,7 @@ resource "azurerm_role_definition" "bootstrap_owner" {
       "Microsoft.Storage/storageAccounts/blobServices/containers/delete",
       "Microsoft.Storage/storageAccounts/blobServices/containers/read",
       "Microsoft.Storage/storageAccounts/blobServices/containers/write",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/lease/action"
+      "Microsoft.Storage/storageAccounts/blobServices/containers/lease/action",
       "Microsoft.Storage/storageAccounts/blobServices/read",
       "Microsoft.Storage/storageAccounts/listKeys/action",
       "Microsoft.Resources/subscriptions/write",
@@ -54,7 +57,7 @@ resource "azurerm_role_definition" "bootstrap_owner" {
     dataActions = [
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/delete",
       "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/write",
-      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read"
+      "Microsoft.Storage/storageAccounts/blobServices/containers/blobs/read",
     ]
   }
 
