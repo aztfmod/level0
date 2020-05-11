@@ -38,8 +38,9 @@ locals {
   landingzone_tag          = {
     "landingzone" = local.launchpad
   }
-  tags              = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace}, {"rover_version" = var.rover_version})
+  tags                = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace}, {"rover_version" = var.rover_version})
   launchpad-blob-name = var.tf_name
-  prefix            = var.use_prefix == true ? random_string.prefix.result : ""
+  prefix              = var.use_prefix == true ? random_string.prefix.result : ""
+  prefix_with_hyphen  = local.preix != "" ? "${local.prefix}-" : ""
   launchpad           = basename(abspath(path.root))
 }
