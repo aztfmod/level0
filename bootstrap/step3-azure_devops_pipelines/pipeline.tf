@@ -16,13 +16,13 @@ locals {
 resource "azuredevops_variable_group" "vargroups" {
 
   for_each = var.variable_groups
-    project_id   = data.azuredevops_projects.project.projects.*.project_id[0]
+    project_id   = local.projects[var.azure_devops_project].project_id
     name         = each.value.name
     description  = "Managed by Terraform - ${each.value.name}"
     allow_access = true
 
     dynamic "variable" {
-      for_each = each.value.variables//lookup(each.value, variables, [])
+      for_each = each.value.variables
       content {
         name  = variable.key 
         value = variable.value 
@@ -43,16 +43,15 @@ resource "azuredevops_agent_pool" "pool" {
 resource "azuredevops_build_definition" "build_definition" {
 
   for_each = var.release_agents
-    project_id      = data.azuredevops_projects.project.projects.*.project_id[0]
+    project_id      = local.projects[var.azure_devops_project].project_id
     name            = each.value.name
     path            = each.value.folder
 
     repository {
       repo_id       = local.repositories[each.value.git_repo_name].id
-      repo_type     = "TfsGit"
+      repo_type     = each.value.repo_type
       repo_name     = each.value.git_repo_name
       yml_path      = each.value.yaml
     }
 
 }
-
