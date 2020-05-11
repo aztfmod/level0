@@ -2,6 +2,16 @@ data "azuredevops_projects" "project" {
     project_name = var.azure_devops_project
 }
 
+data "azuredevops_git_repositories" "repos" {
+  project_id      = local.projects[var.azure_devops_project].project_id
+}
+
+
+locals {
+    projects      = zipmap(tolist(data.azuredevops_projects.project.projects.*.name),  tolist(data.azuredevops_projects.project.projects) )
+    repositories  = zipmap(tolist(data.azuredevops_git_repositories.repos.repositories.*.name),  tolist(data.azuredevops_git_repositories.repos.repositories) )
+}
+
 ## Variable groups
 resource "azuredevops_variable_group" "vargroups" {
 
@@ -28,6 +38,7 @@ resource "azuredevops_agent_pool" "pool" {
     auto_provision = false
 }
 
+
 ## Pipelines for agent pools
 resource "azuredevops_build_definition" "build_definition" {
 
@@ -37,8 +48,9 @@ resource "azuredevops_build_definition" "build_definition" {
     path            = each.value.folder
 
     repository {
+      repo_id       = local.repositories[each.value.git_repo_name].id
       repo_type     = "TfsGit"
-      repo_name     = var.variable_groups.global.variables.CAF_CONFIG_REPO
+      repo_name     = each.value.git_repo_name
       yml_path      = each.value.yaml
     }
 
