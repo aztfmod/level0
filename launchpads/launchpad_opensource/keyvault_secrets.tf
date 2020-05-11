@@ -61,45 +61,45 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
     key_vault_id = azurerm_key_vault.launchpad.id
 }
 
-resource "azurerm_key_vault_secret" "level1_storage_account_name" {
-    depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
-         azuread_application.launchpad
-    ]
-    name         = "level1-storage-account-name"
-    value        = azurerm_storage_account.stg.1.name
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
+# resource "azurerm_key_vault_secret" "level1_storage_account_name" {
+#     depends_on    = [
+#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#          azuread_application.launchpad
+#     ]
+#     name         = "level1-storage-account-name"
+#     value        = azurerm_storage_account.stg.1.name
+#     key_vault_id = azurerm_key_vault.launchpad.id
+# }
 
-resource "azurerm_key_vault_secret" "level2_storage_account_name" {
-    depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
-         azuread_application.launchpad
-    ]
-    name         = "level2-storage-account-name"
-    value        = azurerm_storage_account.stg.2.name
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
+# resource "azurerm_key_vault_secret" "level2_storage_account_name" {
+#     depends_on    = [
+#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#          azuread_application.launchpad
+#     ]
+#     name         = "level2-storage-account-name"
+#     value        = azurerm_storage_account.stg.2.name
+#     key_vault_id = azurerm_key_vault.launchpad.id
+# }
 
-resource "azurerm_key_vault_secret" "level3_storage_account_name" {
-    depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
-         azuread_application.launchpad
-    ]
-    name         = "level3-storage-account-name"
-    value        = azurerm_storage_account.stg.3.name
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
+# resource "azurerm_key_vault_secret" "level3_storage_account_name" {
+#     depends_on    = [
+#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#          azuread_application.launchpad
+#     ]
+#     name         = "level3-storage-account-name"
+#     value        = azurerm_storage_account.stg.3.name
+#     key_vault_id = azurerm_key_vault.launchpad.id
+# }
 
-resource "azurerm_key_vault_secret" "level4_storage_account_name" {
-    depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
-         azuread_application.launchpad
-    ]
-    name         = "level4-storage-account-name"
-    value        = azurerm_storage_account.stg.4.name
-    key_vault_id = azurerm_key_vault.launchpad.id
-}
+# resource "azurerm_key_vault_secret" "level4_storage_account_name" {
+#     depends_on    = [
+#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#          azuread_application.launchpad
+#     ]
+#     name         = "level4-storage-account-name"
+#     value        = azurerm_storage_account.stg.4.name
+#     key_vault_id = azurerm_key_vault.launchpad.id
+# }
 
 # resource "azurerm_key_vault_secret" "tfstate_msi_client_id" {
 #     name         = "tfstate-msi-client-id"

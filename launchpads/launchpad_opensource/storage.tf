@@ -1,5 +1,5 @@
 resource "azurecaf_naming_convention" "stg" {
-  count = 5
+  count = 1
 
   name          = "${var.resource_storage_tfstate_name_prefix}l${count.index}"
   prefix        = local.prefix
@@ -9,7 +9,7 @@ resource "azurecaf_naming_convention" "stg" {
 
 
 resource "azurerm_storage_account" "stg" {
-  count = 5
+  count = 1
 
   name                     = azurecaf_naming_convention.stg[count.index].result
   resource_group_name      = azurerm_resource_group.rg_tfstate.name
@@ -27,7 +27,7 @@ resource "azurerm_storage_account" "stg" {
 }
 
 resource "azurerm_storage_container" "launchpad" {
-  count = 5
+  count = 1
   name                  = var.workspace
   storage_account_name  = azurerm_storage_account.stg[count.index].name
   container_access_type = "private"
