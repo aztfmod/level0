@@ -1,7 +1,7 @@
 
 
-resource "azurerm_role_definition" "bootstrap_owner" {
-  name        = "caf-launchpad_opensource_owner"
+resource "azurerm_role_definition" "launchpad_opensource_owner" {
+  name        = "caf-${var.prefix}launchpad_opensource_owner"
   scope       = data.azurerm_subscription.primary.id
   description = "Provide a least privilege role to the caf launchpad opensource"
 
@@ -65,8 +65,8 @@ resource "azurerm_role_definition" "bootstrap_owner" {
   ]
 }
 
-resource "azurerm_role_assignment" "bootstrap_owner" {
+resource "azurerm_role_assignment" "launchpad_opensource_owner" {
   scope                = data.azurerm_subscription.primary.id
-  role_definition_id   = azurerm_role_definition.bootstrap_owner.id
+  role_definition_id   = azurerm_role_definition.launchpad_opensource_owner.id
   principal_id         = data.terraform_remote_state.step1.outputs.bootstrap_service_principal_object_id
 }

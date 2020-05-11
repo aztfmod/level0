@@ -12,3 +12,14 @@ terraform {
 }
 
 data "azurerm_client_config" "current" {}
+
+resource "random_string" "prefix" {
+    length  = 4
+    special = false
+    upper   = false
+    number  = false
+}
+
+locals{
+  prefix  = var.use_prefix == true ? "${random_string.prefix.result}-" : ""
+}

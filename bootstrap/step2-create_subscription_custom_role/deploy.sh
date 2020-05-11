@@ -2,6 +2,12 @@
 
 set -e
 
+cd ./step1-create_bootstrap_account/
+terraform init
+export TF_VAR_prefix=$(terraform show -json ${TF_DATA_DIR}/tfstates/step1/terraform.tfstate | jq -r .values.outputs.prefix.value)
+
+cd ..
+
 pwd
 source ./check_session.sh
 cd ./step2-create_subscription_custom_role/

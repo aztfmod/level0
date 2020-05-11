@@ -19,3 +19,7 @@ output "bootstrap_ARM_SUBSCRIPTION_ID" {
 output "bootstrap_ARM_TENANT_ID" {
   value = data.azurerm_client_config.current.tenant_id
 }
+
+output "prefix" {
+  value = local.prefix
+}

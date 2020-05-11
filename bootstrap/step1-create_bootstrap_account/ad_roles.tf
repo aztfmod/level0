@@ -19,7 +19,7 @@ locals {
 #   Azure AD Application
 ###
 resource "azuread_application" "bootstrap" {
-  name    = var.ad_application_name
+  name    = "${local.prefix}${var.ad_application_name}"
   
   # Access to Azure Active Directory Graph
   required_resource_access {
@@ -53,11 +53,6 @@ resource "azuread_application" "bootstrap" {
 			id    = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
 			type  = "Role"
     }
-
-    # resource_access {
-		# 	id    = local.microsoft_graph_GroupReadWriteAll
-		# 	type  = "Role"
-    # }
 
     resource_access {
 			id    = local.microsoft_graph_RoleManagement_ReadWrite_Directory
@@ -162,19 +157,6 @@ resource "null_resource" "grant_admin_consent" {
         appRoleId     = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
       }
   }
-
-  #  provisioner "local-exec" {
-  #     command = "./scripts/grant_consent.sh"
-  #     interpreter = ["/bin/sh"]
-  #     on_failure = fail
-
-  #     environment = {
-  #       graphId       = local.microsoft_graph_id
-  #       principalId   = azuread_service_principal.bootstrap.id
-  #       applicationId = azuread_application.bootstrap.application_id
-  #       appRoleId     = local.microsoft_graph_GroupReadWriteAll
-  #     }
-  # }
 
    provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
