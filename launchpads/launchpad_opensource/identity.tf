@@ -42,10 +42,11 @@ resource "azuread_application" "launchpad" {
 			type  = "Role"
     }
 
-      resource_access {
-			id    = local.microsoft_graph_GroupReadWriteAll
+    resource_access {
+			id    = local.microsoft_graph_RoleManagement_ReadWrite_Directory
 			type  = "Role"
     }
+
   }
 }
 
@@ -75,20 +76,6 @@ resource "azurerm_role_assignment" "launchpad_role1" {
   principal_id         = azuread_service_principal.launchpad.object_id
 }
 
-# resource "azurerm_user_assigned_identity" "tfstate" {
-#   resource_group_name = azurerm_resource_group.rg.name
-#   location            = azurerm_resource_group.rg.location
-
-#   name = "${random_string.prefix.result}tfstate_msi"
-# }
-
-# resource "azurerm_role_assignment" "tfstate_role1" {
-#   scope                = data.azurerm_subscription.primary.id
-#   role_definition_name = "Owner"
-#   principal_id         = azuread_service_principal.tfstate.object_id
-# }
-
-
 ###
 #    Grant conscent to the azure ad application
 ###
@@ -107,6 +94,7 @@ locals {
   microsoft_graph_AppRoleAssignment_ReadWrite_All                         = "06b708a9-e830-4db3-a914-8e69da51d44f"
   microsoft_graph_DelegatedPermissionGrant_ReadWrite_All                  = "8e8e4742-1d95-4f68-9d56-6ee75648c72a"
   microsoft_graph_GroupReadWriteAll                                       = "62a82d76-70ea-41e2-9197-370581804d09"
+  microsoft_graph_RoleManagement_ReadWrite_Directory                      = "9e3f62cf-ca93-4989-b6ce-bf83c28f9fe8"
 }
 
 
@@ -174,15 +162,16 @@ resource "null_resource" "grant_admin_consent" {
       }
   }
 
-   provisioner "local-exec" {
+  provisioner "local-exec" {
       command = "./scripts/grant_consent.sh"
       interpreter = ["/bin/sh"]
       on_failure = fail
 
       environment = {
         graphId       = local.microsoft_graph_id
-        principalId   = azuread_service_principal.launchpad.id
-        appRoleId     = local.microsoft_graph_GroupReadWriteAll
+        principalId   = azuread_service_principal.bootstrap.id
+        applicationId = azuread_application.bootstrap.application_id
+        appRoleId     = local.microsoft_graph_RoleManagement_ReadWrite_Directory
       }
   }
 
