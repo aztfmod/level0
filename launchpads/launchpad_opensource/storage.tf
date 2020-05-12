@@ -32,3 +32,27 @@ resource "azurerm_storage_container" "launchpad" {
   storage_account_name  = azurerm_storage_account.stg[count.index].name
   container_access_type = "private"
 }
+
+resource "azurerm_role_assignment" "storage_blob_contributor_developers_rover_level0" {
+  scope                = azurerm_storage_account.stg.0.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = data.azuread_group.devops_rover.id
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
+}
+
+resource "azurerm_role_assignment" "storage_blob_contributor_bootstrap" {
+  scope                = azurerm_storage_account.stg.0.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.logged_user_objectId
+
+  lifecycle {
+    ignore_changes = [
+      principal_id,
+    ]
+  }
+}
