@@ -33,13 +33,8 @@ jobs:
     steps:
       - name: Login azure
         run: |
-          printenv
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-
-          clientId=$(az account show --query user.name -o tsv)
-          logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
-          echo " - logged in Azure AD application:  ${logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
 
           echo "local user: $(whoami)"
       
@@ -87,11 +82,7 @@ jobs:
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-
-          clientId=$(az account show --query user.name -o tsv)
-          logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
-          echo " - logged in Azure AD application:  ${logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
- 
+          
           echo "local user: $(whoami)"
             
       - name: workspace      
