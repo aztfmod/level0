@@ -36,12 +36,22 @@ jobs:
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
 
+          clientId=$(az account show --query user.name -o tsv)
+          logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
+          echo " - logged in Azure AD application:  ${logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
+
           echo "local user: $(whoami)"
       
       - name: Locate launchpad
         run: |
           id=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
+
+            export ARM_CLIENT_ID=${{ env.ARM_CLIENT_ID }}
+            export ARM_CLIENT_SECRET=${{ env.ARM_CLIENT_SECRET }}
+            export ARM_SUBSCRIPTION_ID=${{ env.ARM_SUBSCRIPTION_ID }}
+            export ARM_TENANT_ID=${{ env.ARM_TENANT_ID }}
+
             /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ env.region }}
           fi
             
@@ -81,6 +91,16 @@ jobs:
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          clientId=$(az account show --query user.name -o tsv)
+          logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
+          echo " - logged in Azure AD application:  ${logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
+
+
+          export ARM_CLIENT_ID=${{ env.ARM_CLIENT_ID }}
+          export ARM_CLIENT_SECRET=${{ env.ARM_CLIENT_SECRET }}
+          export ARM_SUBSCRIPTION_ID=${{ env.ARM_SUBSCRIPTION_ID }}
+          export ARM_TENANT_ID=${{ env.ARM_TENANT_ID }}
 
           echo "local user: $(whoami)"
             
