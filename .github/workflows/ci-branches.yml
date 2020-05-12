@@ -95,7 +95,7 @@ jobs:
           clientId=$(az account show --query user.name -o tsv)
           logged_user_objectId=$(az ad sp show --id ${clientId} --query objectId -o tsv)
           echo " - logged in Azure AD application:  ${logged_user_objectId} ($(az ad sp show --id ${clientId} --query displayName -o tsv))"
-
+ 
 
           export ARM_CLIENT_ID=${{ env.ARM_CLIENT_ID }}
           export ARM_CLIENT_SECRET=${{ env.ARM_CLIENT_SECRET }}
