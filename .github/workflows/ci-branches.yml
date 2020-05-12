@@ -23,7 +23,7 @@ env:
 
 jobs:
   level0:
-    name: level0
+    name: Deploy level0
     runs-on: ubuntu-latest
     
     container:
@@ -116,4 +116,24 @@ jobs:
           stg_name=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].name)
 
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
+  cleanup:
+    name: Destroy launchpad
+    runs-on: ubuntu-latest
     
+    container:
+      image: aztfmod/roverdev:2005.120859
+      options: --user 0
+
+    steps:
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+      
+      - name: Locate launchpad
+        run: |
+
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource destroy -var location=${{ env.region }} -var environment=${{ github.run_id }} -auto-approve
+                
