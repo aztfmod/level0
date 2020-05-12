@@ -21,6 +21,10 @@ locals {
 resource "azuread_application" "bootstrap" {
   name    = "${local.prefix}${var.ad_application_name}"
   
+  owners = [
+    data.azurerm_client_config.current.object_id
+  ]
+
   # Access to Azure Active Directory Graph
   required_resource_access {
     resource_app_id = local.active_directory_graph_id
