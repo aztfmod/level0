@@ -3,7 +3,7 @@
 # connect to the storage account
 resource "azurerm_key_vault_secret" "launchpad_resource_group" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name          = "launchpad-resource-group"
@@ -13,7 +13,7 @@ resource "azurerm_key_vault_secret" "launchpad_resource_group" {
 
 resource "azurerm_key_vault_secret" "launchpad_storage_account_name" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-storage-account-name"
@@ -23,7 +23,7 @@ resource "azurerm_key_vault_secret" "launchpad_storage_account_name" {
 
 resource "azurerm_key_vault_secret" "launchpad_prefix" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-prefix"
@@ -33,7 +33,7 @@ resource "azurerm_key_vault_secret" "launchpad_prefix" {
 
 resource "azurerm_key_vault_secret" "launchpad_blob_name" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-blob-name"
@@ -43,7 +43,7 @@ resource "azurerm_key_vault_secret" "launchpad_blob_name" {
 
 resource "azurerm_key_vault_secret" "launchpad_blob_container" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-blob-container"
@@ -53,7 +53,7 @@ resource "azurerm_key_vault_secret" "launchpad_blob_container" {
 
 resource "azurerm_key_vault_secret" "level0_storage_account_name" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "level0-storage-account-name"
@@ -63,7 +63,7 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
 
 # resource "azurerm_key_vault_secret" "level1_storage_account_name" {
 #     depends_on    = [
-#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#         azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
 #          azuread_application.launchpad
 #     ]
 #     name         = "level1-storage-account-name"
@@ -73,7 +73,7 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
 
 # resource "azurerm_key_vault_secret" "level2_storage_account_name" {
 #     depends_on    = [
-#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#         azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
 #          azuread_application.launchpad
 #     ]
 #     name         = "level2-storage-account-name"
@@ -83,7 +83,7 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
 
 # resource "azurerm_key_vault_secret" "level3_storage_account_name" {
 #     depends_on    = [
-#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#         azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
 #          azuread_application.launchpad
 #     ]
 #     name         = "level3-storage-account-name"
@@ -93,7 +93,7 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
 
 # resource "azurerm_key_vault_secret" "level4_storage_account_name" {
 #     depends_on    = [
-#         azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+#         azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
 #          azuread_application.launchpad
 #     ]
 #     name         = "level4-storage-account-name"
@@ -125,7 +125,7 @@ resource "azurerm_key_vault_secret" "level0_storage_account_name" {
 
 resource "azurerm_key_vault_secret" "launchpad_name" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-name"
@@ -135,7 +135,7 @@ resource "azurerm_key_vault_secret" "launchpad_name" {
 
 resource "azurerm_key_vault_secret" "launchpad_application_id" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-application-id"
@@ -146,7 +146,7 @@ resource "azurerm_key_vault_secret" "launchpad_application_id" {
 
 resource "azurerm_key_vault_secret" "launchpad_client_id" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-service-principal-client-id"
@@ -156,7 +156,7 @@ resource "azurerm_key_vault_secret" "launchpad_client_id" {
 
 resource "azurerm_key_vault_secret" "launchpad_client_secret" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-service-principal-client-secret"
@@ -166,7 +166,7 @@ resource "azurerm_key_vault_secret" "launchpad_client_secret" {
 
 resource "azurerm_key_vault_secret" "launchpad_tenant_id" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-tenant-id"
@@ -176,7 +176,7 @@ resource "azurerm_key_vault_secret" "launchpad_tenant_id" {
 
 resource "azurerm_key_vault_secret" "launchpad_subscription_id" {
     depends_on    = [
-        azurerm_key_vault_access_policy.developer, azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
+        azurerm_key_vault_access_policy.developers_rover, azurerm_key_vault_access_policy.launchpad, 
          azuread_application.launchpad
     ]
     name         = "launchpad-subscription-id"
