@@ -10,6 +10,7 @@ resource "azurerm_role_definition" "launchpad" {
       "Microsoft.Authorization/roleAssignments/delete",
       "Microsoft.Authorization/roleAssignments/read",
       "Microsoft.Authorization/roleAssignments/write",
+      "Microsoft.Authorization/roleDefinitions/write",
     ]
 
   }
