@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/roverdev:2005.121302
+      image: aztfmod/roverdev:2005.122229
       options: --user 0
 
     steps:
@@ -61,7 +61,7 @@ jobs:
     
       
     container:
-      image: aztfmod/roverdev:2005.121302
+      image: aztfmod/roverdev:2005.122229
       options: --user 0
 
     steps:
@@ -124,7 +124,7 @@ jobs:
     needs: launchpad
 
     container:
-      image: aztfmod/roverdev:2005.121302
+      image: aztfmod/roverdev:2005.122229
       options: --user 0
 
     steps:
