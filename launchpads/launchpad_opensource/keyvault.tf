@@ -41,18 +41,12 @@ resource "azurerm_key_vault_access_policy" "launchpad" {
 
 }
 
-# Required to get the destroy working and clear the secrets from the keyvault
-data "azuread_service_principal" "rover_user" {
-  object_id = var.logged_user_objectId
-}
 
-# rover identity
-resource "azurerm_key_vault_access_policy" "developer" {
-  depends_on = [data.azuread_service_principal.rover_user]
+resource "azurerm_key_vault_access_policy" "bootstrap_account" {
   key_vault_id = azurerm_key_vault.launchpad.id
 
   tenant_id = data.azurerm_client_config.current.tenant_id
-  object_id = data.azuread_service_principal.rover_user.object_id
+  object_id = var.logged_user_objectId
 
   key_permissions = []
 

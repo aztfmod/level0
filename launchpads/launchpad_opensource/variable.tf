@@ -90,7 +90,7 @@ variable "resource_keyvault_name" {
 }
 
 variable "environment" {
-    
+    default = "sandpit"
 }
 
 variable "rover_version" {

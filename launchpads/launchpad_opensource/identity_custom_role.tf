@@ -1,7 +1,7 @@
 
 
 resource "azurerm_role_definition" "launchpad" {
-  name        = "caf-${local.prefix_with_hyphen}launchpad"
+  name        = "caf-${local.prefix_with_hyphen}${var.environment}-launchpad"
   scope       = data.azurerm_subscription.primary.id
   description = "Provide a least privilege role to the caf boostrap Azure AD application"
 

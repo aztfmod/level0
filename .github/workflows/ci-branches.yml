@@ -52,7 +52,7 @@ jobs:
             export ARM_SUBSCRIPTION_ID=${{ env.ARM_SUBSCRIPTION_ID }}
             export ARM_TENANT_ID=${{ env.ARM_TENANT_ID }}
 
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ env.region }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ env.region }} -var environment=${{ github.run_id }}
           fi
             
   launchpad:
