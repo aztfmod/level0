@@ -109,6 +109,7 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.active_directory_graph_id
+        applicationId = azuread_application.launchpad.application_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
       }
@@ -121,6 +122,7 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.active_directory_graph_id
+        applicationId = azuread_application.launchpad.application_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_All
       }
@@ -133,6 +135,7 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.active_directory_graph_id
+        applicationId = azuread_application.launchpad.application_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
       }
@@ -145,6 +148,7 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.microsoft_graph_id
+        applicationId = azuread_application.launchpad.application_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
       }
@@ -157,6 +161,7 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.microsoft_graph_id
+        applicationId = azuread_application.launchpad.application_id
         principalId   = azuread_service_principal.launchpad.id
         appRoleId     = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
       }
@@ -169,8 +174,8 @@ resource "null_resource" "grant_admin_consent" {
 
       environment = {
         graphId       = local.microsoft_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
+        principalId   = azuread_service_principal.launchpad.id
+        applicationId = azuread_application.launchpad.application_id
         appRoleId     = local.microsoft_graph_RoleManagement_ReadWrite_Directory
       }
   }
