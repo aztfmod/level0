@@ -43,7 +43,10 @@ jobs:
           id=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
 
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ env.region }} -var environment=${{ github.run_id }}
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply \
+              -var location=${{ env.region }} \
+              -var environment=${{ github.run_id }} \
+              -var prefix=${{ github.run_id }}
           fi
             
   launchpad:
@@ -93,23 +96,26 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}'
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
+              '-var convention=${{ matrix.convention }}' \
+              -var prefix=${{ github.run_id }}
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}'
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
+              '-var convention=${{ matrix.convention }}' \
+              -var prefix=${{ github.run_id }}
 
 
       - name: Terraform destroy
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}'
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
+              '-var convention=${{ matrix.convention }}' \
+              -var prefix=${{ github.run_id }}
 
       - name: cleanup
         run: |
@@ -137,6 +143,12 @@ jobs:
       
       - name: Locate launchpad
         run: |
-
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource destroy -var location=${{ env.region }} -var environment=${{ github.run_id }} -auto-approve
-                
+            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource destroy \
+              -var location=${{ env.region }} \
+              -var environment=${{ github.run_id }}  \
+              -var prefix=${{ github.run_id }} \
+              -auto-approve
+           
+      - name: Complete purge
+        run: |
+            for i in `az group list -o tsv --query "[?tags.testing_job_id=='${{ github.run_id }}'].name"`; do echo "purging rg: $i" && az group delete -n $i -y --no-wait; done
