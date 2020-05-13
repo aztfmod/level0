@@ -6,7 +6,7 @@ module "diagnostics" {
   name                  = var.resource_diagnostics_name
   convention            = var.convention
   resource_group_name   = azurerm_resource_group.rg_devops.name
-  prefix                = local.prefix
+  prefix                = local.prefix_start_alpha
   location              = azurerm_resource_group.rg_devops.location
   tags                  = local.tags
 
