@@ -26,12 +26,21 @@ resource "random_string" "prefix" {
     number  = false
 }
 
+resource "random_string" "alpha1" {
+    length  = 1
+    special = false
+    upper   = false
+    number  = false
+}
+
 locals {
   landingzone_tag          = {
     "landingzone"     = local.launchpad
   }
   tags                = merge(var.tags, local.landingzone_tag, {"workspace" = var.workspace}, {"rover_version" = var.rover_version})
   launchpad-blob-name = var.tf_name
-  prefix              = var.use_prefix == true ? random_string.prefix.result : null
+  prefix              = var.prefix == null ? random_string.prefix.result : var.prefix
+  prefix_with_hyphen  = local.prefix == "" ? "" : "${local.prefix}-"
+  prefix_start_alpha  = local.prefix == "" ? "" : "${random_string.alpha1.result}${local.prefix}"
   launchpad           = basename(abspath(path.root))
 }

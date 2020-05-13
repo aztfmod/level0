@@ -16,7 +16,7 @@ module "log_analytics" {
     convention                        = var.convention
     solution_plan_map                 = local.solution_plan_map
     resource_group_name               = azurerm_resource_group.rg.name
-    prefix                            = local.prefix
+    prefix                            = local.prefix_start_alpha
     location                          = var.location
     tags                              = var.tags
 }

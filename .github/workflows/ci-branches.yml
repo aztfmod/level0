@@ -54,8 +54,7 @@ jobs:
             /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource apply \
               -var location=${{ env.region }} \
               -var environment=${{ github.run_id }} \
-              '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              -var prefix=${{ github.run_id }}
+              '-var tags={testing_job_id="${{ github.run_id }}"}'
           fi
             
   launchpad:
@@ -106,16 +105,14 @@ jobs:
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}' \
-              -var prefix=${{ github.run_id }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}' \
-              -var prefix=${{ github.run_id }}
+              '-var convention=${{ matrix.convention }}
 
 
       - name: Terraform destroy
@@ -123,8 +120,7 @@ jobs:
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}' \
-              -var prefix=${{ github.run_id }}
+              '-var convention=${{ matrix.convention }}'
 
       - name: Cleanup
         run: |
@@ -143,6 +139,14 @@ jobs:
       options: --user 0
 
     steps:
+      - uses: actions/checkout@v2
+
+      - name:  setup context
+        id: context
+        run: |
+          ln -s ${GITHUB_WORKSPACE} /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+
       - name: Login azure
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
@@ -152,11 +156,10 @@ jobs:
       
       - name: Locate launchpad
         run: |
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource destroy \
+            /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource destroy \
               -var location=${{ env.region }} \
               -var environment=${{ github.run_id }} \
-              '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              -var prefix=${{ github.run_id }} \
+              '-var tags={testing_job_id="${{ github.run_id }}"}'
               -auto-approve
            
       - name: Purge

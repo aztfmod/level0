@@ -9,7 +9,7 @@ module "diagnostics" {
   name                  = "diag"
   convention            = "cafrandom"
   resource_group_name   = azurerm_resource_group.rg.name
-  prefix                = local.prefix
+  prefix                = local.prefix_start_alpha
   location              = var.location
   tags                  = local.tags
 
