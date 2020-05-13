@@ -159,7 +159,7 @@ jobs:
             /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource destroy \
               -var location=${{ env.region }} \
               -var environment=${{ github.run_id }} \
-              '-var tags={testing_job_id="${{ github.run_id }}"}'
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
               -auto-approve
            
       - name: Purge
