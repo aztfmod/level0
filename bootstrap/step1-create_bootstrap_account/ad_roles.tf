@@ -62,6 +62,12 @@ resource "azuread_application" "bootstrap" {
 			id    = local.microsoft_graph_RoleManagement_ReadWrite_Directory
 			type  = "Role"
     }
+
+    resource_access {
+			id    = local.microsoft_graph_GroupReadWriteAll
+			type  = "Role"
+    }
+    
   }
 }
 
@@ -93,14 +99,14 @@ resource "null_resource" "set_azure_ad_roles" {
   depends_on = [azuread_service_principal_password.bootstrap]
   
   provisioner "local-exec" {
-      command = "./scripts/set_ad_role.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+    command = "./scripts/set_ad_role.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        AD_ROLE_NAME  = "Application Developer"
-        SERVICE_PRINCIPAL_OBJECT_ID = azuread_service_principal.bootstrap.object_id
-      }
+    environment = {
+      AD_ROLE_NAME  = "Application Developer"
+      SERVICE_PRINCIPAL_OBJECT_ID = azuread_service_principal.bootstrap.object_id
+    }
   }
 }
 
@@ -110,69 +116,82 @@ resource "null_resource" "grant_admin_consent" {
   depends_on = [null_resource.set_azure_ad_roles]
 
   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        graphId       = local.active_directory_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
-        appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
-      }
+    environment = {
+      graphId       = local.active_directory_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.active_directory_graph_resource_access_id_Application_ReadWrite_OwnedBy
+    }
   }
 
   # Required to create and delete Azure AD groups + add members
   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        graphId       = local.active_directory_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
-        appRoleId     = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
-      }
+    environment = {
+      graphId       = local.active_directory_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.active_directory_graph_resource_access_id_Directory_ReadWrite_All
+    }
   }
 
   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        graphId       = local.microsoft_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
-        appRoleId     = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
-      }
+    environment = {
+      graphId       = local.microsoft_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.microsoft_graph_AppRoleAssignment_ReadWrite_All
+    }
   }
 
-   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+  provisioner "local-exec" {
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        graphId       = local.microsoft_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
-        appRoleId     = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
-      }
+    environment = {
+      graphId       = local.microsoft_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.microsoft_graph_DelegatedPermissionGrant_ReadWrite_All
+    }
   }
 
-   provisioner "local-exec" {
-      command = "./scripts/grant_consent.sh"
-      interpreter = ["/bin/sh"]
-      on_failure = fail
+  provisioner "local-exec" {
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
 
-      environment = {
-        graphId       = local.microsoft_graph_id
-        principalId   = azuread_service_principal.bootstrap.id
-        applicationId = azuread_application.bootstrap.application_id
-        appRoleId     = local.microsoft_graph_RoleManagement_ReadWrite_Directory
-      }
+    environment = {
+      graphId       = local.microsoft_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.microsoft_graph_RoleManagement_ReadWrite_Directory
+    }
+  }
+
+  provisioner "local-exec" {
+    command = "./scripts/grant_consent.sh"
+    interpreter = ["/bin/sh"]
+    on_failure = fail
+
+    environment = {
+      graphId       = local.microsoft_graph_id
+      principalId   = azuread_service_principal.bootstrap.id
+      applicationId = azuread_application.bootstrap.application_id
+      appRoleId     = local.microsoft_graph_GroupReadWriteAll
+    }
   }
 
 }

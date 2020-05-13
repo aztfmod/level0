@@ -17,4 +17,4 @@ check_session
 mkdir -p ${TF_DATA_DIR}/tfstates/step2
 
 terraform init
-terraform $@ -state=${TF_DATA_DIR}/tfstates/step2/terraform.tfstate
+terraform $@ -state=${TF_DATA_DIR}/tfstates/step2/terraform.tfstate -var step1_tfstate_path=${TF_DATA_DIR}/tfstates/step1
