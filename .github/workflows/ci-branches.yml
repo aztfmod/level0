@@ -19,17 +19,26 @@ env:
   ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
   TF_VAR_azure_devops_pat_token: ${{ secrets.TF_VAR_azure_devops_pat_token }}
   TF_VAR_azure_devops_url_organization: ${{ secrets.TF_VAR_azure_devops_url_organization }}
+  region: "westus2"
 
 jobs:
   level0:
-    name: level0
+    name: Deploy level0
     runs-on: ubuntu-latest
     
     container:
-      image: aztfmod/rover:2004.1606
+      image: aztfmod/roverdev:2005.122229
       options: --user 0
 
     steps:
+      - uses: actions/checkout@v2
+
+      - name:  setup context
+        id: context
+        run: |
+          ln -s ${GITHUB_WORKSPACE} /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+
       - name: Login azure
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
@@ -39,10 +48,13 @@ jobs:
       
       - name: Locate launchpad
         run: |
-         id=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].id)
+          id=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource plan -var location=${{ matrix.region }}
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply -var location=${{ matrix.region }}
+
+            /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource apply \
+              -var location=${{ env.region }} \
+              -var environment=${{ github.run_id }} \
+              '-var tags={testing_job_id="${{ github.run_id }}"}'
           fi
             
   launchpad:
@@ -60,7 +72,7 @@ jobs:
     
       
     container:
-      image: aztfmod/rover:2004.1606
+      image: aztfmod/roverdev:2005.122229
       options: --user 0
 
     steps:
@@ -81,7 +93,7 @@ jobs:
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
           az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
-
+          
           echo "local user: $(whoami)"
             
       - name: workspace      
@@ -92,14 +104,14 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} plan \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
               '-var convention=${{ matrix.convention }}'
 
       - name: Terraform apply
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
               '-var convention=${{ matrix.convention }}'
 
 
@@ -107,11 +119,55 @@ jobs:
         run: |
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} destroy \
               '-var location=${{ matrix.region }}' \
-              '-var tags={testing-job-id="${{ github.run_id }}"}' \
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
               '-var convention=${{ matrix.convention }}'
 
-      - name: cleanup
+      - name: Cleanup
         run: |
-          stg_name=$(az storage account list --query "[?tags.tfstate=='level0']" -o json | jq -r .[0].name)
+          stg_name=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].name)
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
+
+  cleanup:
+    name: Destroy launchpad
+    runs-on: ubuntu-latest
     
+    needs: launchpad
+    if: ${{ always() }}
+
+    container:
+      image: aztfmod/roverdev:2005.130147
+      options: --user 0
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name:  setup context
+        id: context
+        run: |
+          ln -s ${GITHUB_WORKSPACE} /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+
+      - name: Login azure
+        run: |
+          az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
+          az account set -s  ${{ env.ARM_SUBSCRIPTION_ID }}
+
+          echo "local user: $(whoami)"
+      
+      - name: Locate launchpad
+        run: |
+            /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource destroy \
+              -var location=${{ env.region }} \
+              -var environment=${{ github.run_id }} \
+              '-var tags={testing_job_id="${{ github.run_id }}"}' \
+              -auto-approve
+           
+      - name: Purge
+        if: ${{ always() }}
+        run: |
+          for i in `az ad group list --query "[?contains(displayName, '${{ github.run_id }}')].objectId" -o tsv`; do echo "purging Azure AD group: $i" && $(az ad group delete --verbose --group $i || true); done
+          for i in `az ad app list --query "[?contains(displayName, '${{ github.run_id }}')].appId" -o tsv`; do echo "purging Azure AD app: $i" && $(az ad app delete --verbose --id $i || true); done
+          for i in `az group list --query "[?tags.testing_job_id=='${{ github.run_id }}'].name" -o tsv`; do echo "purging resource group: $i" && $(az group delete -n $i -y --no-wait || true); done
+          for i in `az role assignment list --query "[?contains(roleDefinitionName, '${{ github.run_id }}')].roleDefinitionName" -o tsv`; do echo "purging role assignment: $i" && $(az role assignment delete --role $i || true); done
+          for i in `az role definition list --query "[?contains(roleName, '${{ github.run_id }}')].roleName" -o tsv`; do echo "purging custom role definition: $i" && $(az role definition delete --name $i || true); done
+

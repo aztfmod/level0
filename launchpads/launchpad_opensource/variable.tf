@@ -1,16 +1,8 @@
-variable "blueprint_devops_self_hosted_agent" {}
 variable "blueprint_networking" {}
-variable "blueprint_container_registry" {}
 
 variable "logged_user_objectId" {
     description = "objectId of the logged user initializing the launchpad"
 }
-
-variable "rover_pilot_client_id" {
-    description = "This variable is set when improving the launchpad to allow a rover to access the keyvault when running the rover command"
-    default = null
-}
-
 
 variable "location" {
     description = "Azure region to deploy the launchpad in the form or 'southeastasia' or 'westeurope'"
@@ -37,46 +29,70 @@ variable "workspace" {
 }
 
 
-variable "use_prefix" {
+variable "prefix" {
     description = "(Optional) (Default = true) Generate a prefix that will be used to prepend all resources names"
-    default = true
+    default = null
 }
-
-
-### Azure Devops variables
-variable "azure_devops_pat_token" {
-    description = "Azure DevOps Personal Access Token to register the self hosted agent"
-}
-
-
-# variable "azure_devops_project" {
-#     description = "Azure DevOps project name"
-# }
-
-variable "azure_devops_url_organization" {
-    description = "The value should be the URI of your Azure DevOps organization, for example: https://dev.azure.com/MyOrganization/ or your Azure DevOps Server organization"
-}
-
-# variable "azure_devops_agent_pool" {
-#     description = "Azure DevOps agent pool name to host the self hosted agent"
-# }
-
-variable "azure_devops" {}
 
 ## Feature flags
 variable "enable_collaboration" {
     type        = bool
-    description = "(Optional) (Default=false) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
-    default = false
-}
-
-variable "enable_azure_devops" {
-    description = "Feature flag to install Azure devops self hosted agent and setup the Azure devops project"
+    description = "(Optional) (Default=true) When enabled, create the Azure AD security group to allow multiple devops engineers to access the launchpad from different rover"
     default = true
 }
 
-variable "save_devops_agent_ssh_key_to_disk" {
-  type        = bool
-  default     = true
-  description = "Dump the ssh private key in the ~/.ssh folder with the name [public ip address].private"
+
+# Resource group names
+variable "resource_group_tfstate" {
+    description = "Name of the resource group hosting the terraform state storage accounts"
+    default = "launchpad-tfstate"
+}
+
+variable "resource_group_security" {
+    description = "Name of the resource group hosting the security services"
+    default = "launchpad-security"
+}
+
+variable "resource_group_devops" {
+    description = "Name of the resource group hosting the ops services"
+    default = "launchpad-ops"
+}
+
+variable "resource_group_networking" {
+    description = "Name of the resource group hosting the network services"
+    default = "launchpad-network"
+}
+
+# Resource names
+variable "resource_storage_tfstate_name_prefix" {
+    description = "Name of the storage account hosting the tfstate (note l0, l1, l2, l4 added automatically). Note the keyvault name applies a cafrandom policy."
+    default = "tfstate"
+}
+
+variable "resource_log_analytics_name" {
+    description = "Name of the log analytics used for the gitops environment"
+    default = "gitops"
+}
+
+variable "resource_diagnostics_name" {
+    description = "Name of the diagnotic storage account used for the gitops environment"
+    default = "diag"
+}
+
+variable "azure_diagnostics_logs_event_hub" {
+    default = false
+    type = bool
+}
+
+variable "resource_keyvault_name" {
+    description = "Name of the Azure Keyvault storing secrets required for rover and pipelines. Note the keyvault name applies a cafrandom policy."
+    default = "gitops"
+}
+
+variable "environment" {
+    default = "sandpit"
+}
+
+variable "rover_version" {
+    description = "Version of the rover used to deploy the landing zone"
 }

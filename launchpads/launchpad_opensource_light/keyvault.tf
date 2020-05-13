@@ -3,7 +3,7 @@ data "azurerm_client_config" "current" {}
 
 resource "azurecaf_naming_convention" "keyvault" {
   name          = var.workspace
-  prefix        = local.prefix
+  prefix        = local.prefix_start_alpha
   resource_type = "kv"
   convention    = "cafrandom"
 }
