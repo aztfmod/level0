@@ -31,6 +31,14 @@ jobs:
       options: --user 0
 
     steps:
+      - uses: actions/checkout@v2
+
+      - name:  setup context
+        id: context
+        run: |
+          ln -s ${GITHUB_WORKSPACE} /tf/caf
+          echo "ls /tf/caf" && ls -lsa /tf/caf
+
       - name: Login azure
         run: |
           az login --service-principal -u '${{ env.ARM_CLIENT_ID }}' -p '${{ env.ARM_CLIENT_SECRET }}' --tenant '${{ env.ARM_TENANT_ID }}'
@@ -43,7 +51,7 @@ jobs:
           id=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].id)
           if [ "${id}" == "null" ]; then
 
-            /tf/rover/launchpad.sh /tf/launchpads/launchpad_opensource apply \
+            /tf/rover/launchpad.sh /tf/caf/launchpads/launchpad_opensource apply \
               -var location=${{ env.region }} \
               -var environment=${{ github.run_id }} \
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
