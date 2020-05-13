@@ -23,7 +23,7 @@ We provide a set of launchpads with various capabilities and features:
 Launchpads are typically included in [rover](https://github.com/aztfmod/rover) releases and can be launched directly from the rover:
 
 ```bash
-launchpad /tf/launchpads/launchpad_opensource_light apply -var "location=<location>"
+launchpad /tf/launchpads/launchpad_opensource_light apply
 ```
 
 The launchpad should remain active in a subscription as long as you want to maintain the Terraform lifecycle of the environment. If for some reason the launchpad needs to be rmeoved, you can simply use the following command:
