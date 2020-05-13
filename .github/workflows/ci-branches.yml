@@ -112,7 +112,7 @@ jobs:
           /tf/rover/rover.sh /tf/caf/launchpads/${{ matrix.launchpad }} apply \
               '-var location=${{ matrix.region }}' \
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
-              '-var convention=${{ matrix.convention }}
+              '-var convention=${{ matrix.convention }}'
 
 
       - name: Terraform destroy
