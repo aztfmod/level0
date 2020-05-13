@@ -49,17 +49,6 @@ jobs:
               '-var tags={testing_job_id="${{ github.run_id }}"}' \
               -var prefix=${{ github.run_id }}
           fi
-
-      - name: Purge
-        if: ${{ failure() }}
-        run: |
-          for i in `az ad group list --query "[?contains(displayName, '${{ github.run_id }}')].objectId" -o tsv`; do echo "purging Azure AD group: $i" && $(az ad group delete --verbose --group $i || true); done
-          for i in `az ad app list --query "[?contains(displayName, '${{ github.run_id }}')].appId" -o tsv`; do echo "purging Azure AD app: $i" && $(az ad app delete --verbose --id $i || true); done
-          for i in `az group list --query "[?tags.testing_job_id=='${{ github.run_id }}'].name" -o tsv`; do echo "purging resource group: $i" && $(az group delete -n $i -y --no-wait || true); done
-          for i in `az role assignment list --query "[?contains(roleDefinitionName, '${{ github.run_id }}')].roleDefinitionName" -o tsv`; do echo "purging role assignment: $i" && $(az role assignment delete --role $i || true); done
-          for i in `az role definition list --query "[?contains(roleName, '${{ github.run_id }}')].roleName" -o tsv`; do echo "purging custom role definition: $i" && $(az role definition delete --name $i || true); done
-
-  
             
   launchpad:
     name: Launchpad tests
@@ -134,22 +123,12 @@ jobs:
           stg_name=$(az storage account list --query "[?tags.tfstate=='level0' && tags.workspace=='level0']" -o json | jq -r .[0].name)
           az storage container delete --account-name ${stg_name} --name ${TF_VAR_workspace} --auth-mode login
 
-             
-      - name: Purge
-        if: ${{ failure() }}
-        run: |
-          for i in `az ad group list --query "[?contains(displayName, '${{ github.run_id }}')].objectId" -o tsv`; do echo "purging Azure AD group: $i" && $(az ad group delete --verbose --group $i || true); done
-          for i in `az ad app list --query "[?contains(displayName, '${{ github.run_id }}')].appId" -o tsv`; do echo "purging Azure AD app: $i" && $(az ad app delete --verbose --id $i || true); done
-          for i in `az group list --query "[?tags.testing_job_id=='${{ github.run_id }}'].name" -o tsv`; do echo "purging resource group: $i" && $(az group delete -n $i -y --no-wait || true); done
-          for i in `az role assignment list --query "[?contains(roleDefinitionName, '${{ github.run_id }}')].roleDefinitionName" -o tsv`; do echo "purging role assignment: $i" && $(az role assignment delete --role $i || true); done
-          for i in `az role definition list --query "[?contains(roleName, '${{ github.run_id }}')].roleName" -o tsv`; do echo "purging custom role definition: $i" && $(az role definition delete --name $i || true); done
-
-
   cleanup:
     name: Destroy launchpad
     runs-on: ubuntu-latest
     
     needs: launchpad
+    if: ${{ always() }}
 
     container:
       image: aztfmod/roverdev:2005.122229
