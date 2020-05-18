@@ -29,6 +29,7 @@ export ROLE_AAD=$(az rest --method Get --uri https://graph.microsoft.com/v1.0/di
 
 if [ "${ROLE_AAD}" == '' ]; then
     active_directory_role
+    export ROLE_AAD=$(az rest --method Get --uri https://graph.microsoft.com/v1.0/directoryRoles -o json | jq -r '.value[] | select(.displayName == "'"$(echo ${AD_ROLE_NAME})"'") | .id')
 fi
 
 URI=$(echo  "https://graph.microsoft.com/v1.0/directoryRoles/${ROLE_AAD}/members/\$ref") && echo " - uri: $URI"
