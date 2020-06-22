@@ -12,7 +12,7 @@ output "resource_group" {
 
 
 output "prefix" {
-  value = random_string.prefix.result
+  value = local.prefix
 }
 
 
@@ -21,7 +21,7 @@ output "tfstate_map" {
     "storage_account_name", azurerm_storage_account.stg.name,
     "container", azurerm_storage_container.launchpad.name,
     "resource_group", azurerm_resource_group.rg.name,
-    "prefix", random_string.prefix.result
+    "prefix", local.prefix
   )
 }
 

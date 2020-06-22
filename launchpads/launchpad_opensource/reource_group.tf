@@ -1,7 +1,7 @@
 resource "azurecaf_naming_convention" "rg_tfstate" {
-  name          = "tfstate"
+  name          = var.resource_group_tfstate
   prefix        = local.prefix
-  resource_type = "rg"
+  resource_type = "azurerm_resource_group"
   convention    = var.convention
 }
 
@@ -13,9 +13,9 @@ resource "azurerm_resource_group" "rg_tfstate" {
 }
 
 resource "azurecaf_naming_convention" "rg_security" {
-  name          = "tfstate-security"
+  name          = var.resource_group_security
   prefix        = local.prefix
-  resource_type = "rg"
+  resource_type = "azurerm_resource_group"
   convention    = var.convention
 }
 
@@ -27,9 +27,9 @@ resource "azurerm_resource_group" "rg_security" {
 }
 
 resource "azurecaf_naming_convention" "rg_devops" {
-  name          = "tfstate-devops"
+  name          = var.resource_group_devops
   prefix        = local.prefix
-  resource_type = "rg"
+  resource_type = "azurerm_resource_group"
   convention    = var.convention
 }
 
@@ -41,9 +41,9 @@ resource "azurerm_resource_group" "rg_devops" {
 }
 
 resource "azurecaf_naming_convention" "rg_network" {
-  name          = "tfstate-network"
+  name          = var.resource_group_networking
   prefix        = local.prefix
-  resource_type = "rg"
+  resource_type = "azurerm_resource_group"
   convention    = var.convention
 }
 
