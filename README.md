@@ -1,3 +1,6 @@
+# Launchpad have moved!
+Starting in 2006 release, launchpad are now part of landing zones and are published here: [https://github.com/Azure/caf-terraform-landingzones](https://github.com/Azure/caf-terraform-landingzones). Launchpads present in this repository will no longer be maintainer and will be retired soon.
+
 # Introduction to launchpads
 
 Welcome to the [Cloud Adoption Framework](https://docs.microsoft.com/en-us/azure/cloud-adoption-framework/) for Azure landing zones for Terraform samples.
